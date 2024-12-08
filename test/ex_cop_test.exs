@@ -28,4 +28,11 @@ defmodule ExCopTest do
 
     assert formatted == good
   end
+
+  @tag fixture: "linting-avoid-needless-pipelines"
+  test "removes needless pipelines", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
 end

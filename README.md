@@ -23,8 +23,8 @@ are not already implemented by `mix format`.
 ## Linting
 
 * [x] Transform nested function calls into pipelines ([L1]),
-* [ ] Transform one-element pipelines into function calls ([L2]),
-* [ ] Don't use anonymous functions in pipelines ([L3]),
+* [x] Transform one-element pipelines into function calls ([L2]),
+* [?] Don't use anonymous functions in pipelines ([L3]),
 * [ ] Transform `unless...else...` into `if...else...` ([L4]),
 * [ ] Transform `if...else nil` into `if...` ([L5]),
 * [ ] Ensure match-all condition of `cond` has `true` ([L6]),
