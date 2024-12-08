@@ -35,4 +35,11 @@ defmodule ExCopTest do
 
     assert formatted == good
   end
+
+  @tag fixture: "linting-no-else-with-unless"
+  test "corrects unless/else to if/else", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
 end
