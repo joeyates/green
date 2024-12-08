@@ -28,7 +28,7 @@ are not already implemented by `mix format`.
 * [x] Transform `unless...else...` into `if...else...` ([L4]),
 * [x] Transform `if...else nil` into `if...` ([L5]),
 * [ ] Ensure match-all condition of `cond` has `true` ([L6]),
-* [ ] Use `and` and `or` instead of `&&` and `||` when the arguments are boolean ([L7]),
+* ? Use `and` and `or` instead of `&&` and `||` when the arguments are boolean ([L7]),
 * [ ] Use `<>` instead of bitstrings when pattern-matching binaries ([L8]).
 
 [L1]: https://github.com/lexmag/elixir-style-guide#pipeline-operator
@@ -42,11 +42,11 @@ are not already implemented by `mix format`.
 
 ## Naming
 
-[ ] Enforce snake_case for atoms, functions, variables, attributes ([N1]),
-[ ] Enforce CamelCase for modules ([N2]),
-[ ] Enforce predicate functions to end with a question mark ([N3]),
-[ ] Enforce snake_case for directories and files ([N4]),
-[ ] Disallow one-letter variable names ([N5]).
+* [ ] Enforce snake_case for atoms, functions, variables, attributes ([N1]),
+* [ ] Enforce CamelCase for modules ([N2]),
+* [ ] Enforce predicate functions to end with a question mark ([N3]),
+* [ ] Enforce snake_case for directories and files ([N4]),
+* [ ] Disallow one-letter variable names ([N5]).
 
 [N1]: https://github.com/lexmag/elixir-style-guide#snake-case-atoms-funs-vars-attrs
 [N2]: https://github.com/lexmag/elixir-style-guide#camelcase-modules
@@ -56,8 +56,8 @@ are not already implemented by `mix format`.
 
 ## Comments
 
-[-] Use only critical comments ([C1]),
-[-] Avoid superfluous comments ([C2]).
+* - Use only critical comments ([C1]),
+* - Avoid superfluous comments ([C2]).
 
 [C1]: https://github.com/lexmag/elixir-style-guide#critical-comments
 [C2]: https://github.com/lexmag/elixir-style-guide#no-superfluous-comments
