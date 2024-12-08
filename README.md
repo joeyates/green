@@ -26,7 +26,7 @@ are not already implemented by `mix format`.
 * [x] Transform one-element pipelines into function calls ([L2]),
 * [?] Don't use anonymous functions in pipelines ([L3]),
 * [x] Transform `unless...else...` into `if...else...` ([L4]),
-* [ ] Transform `if...else nil` into `if...` ([L5]),
+* [x] Transform `if...else nil` into `if...` ([L5]),
 * [ ] Ensure match-all condition of `cond` has `true` ([L6]),
 * [ ] Use `and` and `or` instead of `&&` and `||` when the arguments are boolean ([L7]),
 * [ ] Use `<>` instead of bitstrings when pattern-matching binaries ([L8]).
