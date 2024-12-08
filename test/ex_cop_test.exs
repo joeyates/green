@@ -1,17 +1,31 @@
 defmodule ExCopTest do
   use ExUnit.Case, async: true
 
-  @bad_files Path.wildcard("test/fixtures/*-bad.ex*")
+  setup context do
+    bad =
+      ["test", "fixtures", "#{context[:fixture]}-bad.ex"]
+      |> Path.join()
+      |> File.read!()
 
-  for bad <- @bad_files do
-    test "format #{bad}" do
-      bad = unquote(bad)
-      good = String.replace(bad, "-bad.ex", "-good.ex")
+    good =
+      ["test", "fixtures", "#{context[:fixture]}-good.ex"]
+      |> Path.join()
+      |> File.read!()
 
-      formatted = ExCop.format_file(bad)
-      expected = File.read!(good)
+    %{bad: bad, good: good}
+  end
 
-      assert formatted == expected
-    end
+  @tag fixture: "linting-modules-module-layout"
+  test "corrects the order of module references", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
+
+  @tag fixture: "linting-favor-pipeline-operator"
+  test "transforms nested function calls to pipelines", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
   end
 end

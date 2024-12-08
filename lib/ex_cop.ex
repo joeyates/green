@@ -1,5 +1,5 @@
 defmodule ExCop do
-  alias ExCop.Cops.SortModuleReferences
+  alias ExCop.Cops.{PreferPipelines, SortModuleReferences}
 
   @line_length 98
 
@@ -15,6 +15,7 @@ defmodule ExCop do
     formatted =
       code
       |> parse(opts)
+      |> PreferPipelines.apply()
       |> SortModuleReferences.apply()
       |> default_format(opts)
 
