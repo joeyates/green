@@ -4,6 +4,7 @@ defmodule ExCop do
     AvoidNeedlessPipelines,
     NoUnlessWithElse,
     NoNilElse,
+    TrueInCond,
     SortModuleReferences
   }
 
@@ -25,6 +26,7 @@ defmodule ExCop do
       |> AvoidNeedlessPipelines.apply()
       |> NoUnlessWithElse.apply()
       |> NoNilElse.apply()
+      |> TrueInCond.apply()
       |> SortModuleReferences.apply()
       |> default_format(opts)
 

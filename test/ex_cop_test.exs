@@ -49,4 +49,11 @@ defmodule ExCopTest do
 
     assert formatted == good
   end
+
+  @tag fixture: "linting-true-in-cond"
+  test "replaces symbols with true in cond", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
 end
