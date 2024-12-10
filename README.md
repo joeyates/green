@@ -24,11 +24,15 @@ are not already implemented by `mix format`.
 
 * [x] Transform nested function calls into pipelines ([L1]),
 * [x] Transform one-element pipelines into function calls ([L2]),
-* [?] Don't use anonymous functions in pipelines ([L3]),
+
+❔Don't use anonymous functions in pipelines ([L3]),
+
 * [x] Transform `unless...else...` into `if...else...` ([L4]),
 * [x] Transform `if...else nil` into `if...` ([L5]),
-* [ ] Ensure match-all condition of `cond` has `true` ([L6]),
-* ? Use `and` and `or` instead of `&&` and `||` when the arguments are boolean ([L7]),
+* [x] Ensure match-all condition of `cond` has `true` ([L6]),
+
+❔Use `and` and `or` instead of `&&` and `||` when the arguments are boolean ([L7]),
+
 * [ ] Use `<>` instead of bitstrings when pattern-matching binaries ([L8]).
 
 [L1]: https://github.com/lexmag/elixir-style-guide#pipeline-operator
@@ -56,8 +60,9 @@ are not already implemented by `mix format`.
 
 ## Comments
 
-* - Use only critical comments ([C1]),
-* - Avoid superfluous comments ([C2]).
+❔Use only critical comments ([C1]),
+
+❔Avoid superfluous comments ([C2]).
 
 [C1]: https://github.com/lexmag/elixir-style-guide#critical-comments
 [C2]: https://github.com/lexmag/elixir-style-guide#no-superfluous-comments
