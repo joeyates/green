@@ -3,62 +3,62 @@ defmodule ExCopTest do
 
   setup context do
     bad =
-      ["test", "fixtures", "#{context[:fixture]}-bad.ex"]
+      ["test", "fixtures", "#{context[:fixture]}_bad.ex"]
       |> Path.join()
       |> File.read!()
 
     good =
-      ["test", "fixtures", "#{context[:fixture]}-good.ex"]
+      ["test", "fixtures", "#{context[:fixture]}.ex"]
       |> Path.join()
       |> File.read!()
 
     %{bad: bad, good: good}
   end
 
-  @tag fixture: "linting-modules-module-layout"
+  @tag fixture: "linting_modules_module_layout"
   test "corrects the order of module references", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting-favor-pipeline-operator"
+  @tag fixture: "linting_favor_pipeline_operator"
   test "transforms nested function calls to pipelines", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting-avoid-needless-pipelines"
+  @tag fixture: "linting_avoid_needless_pipelines"
   test "removes needless pipelines", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting-no-else-with-unless"
+  @tag fixture: "linting_no_else_with_unless"
   test "corrects unless/else to if/else", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting-no-nil-else"
+  @tag fixture: "linting_no_nil_else"
   test "removes nil else clauses", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting-true-in-cond"
+  @tag fixture: "linting_true_in_cond"
   test "replaces symbols with true in cond", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting-use-string-concatenation-when-pattern-matching-binaries"
-  test "replaces bitstrings with <> when pattern-matching binaries", %{bad: bad, good: good} do
+  @tag fixture: "linting_use_string_concatenation_when_pattern_matching_binaries"
+  test "replaces bitstrings with <> when pattern_matching binaries", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
