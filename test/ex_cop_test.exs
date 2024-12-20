@@ -56,4 +56,11 @@ defmodule ExCopTest do
 
     assert formatted == good
   end
+
+  @tag fixture: "linting-use-string-concatenation-when-pattern-matching-binaries"
+  test "replaces bitstrings with <> when pattern-matching binaries", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
 end

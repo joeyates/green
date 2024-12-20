@@ -33,7 +33,7 @@ are not already implemented by `mix format`.
 
 ❔Use `and` and `or` instead of `&&` and `||` when the arguments are boolean ([L7]),
 
-* [ ] Use `<>` instead of bitstrings when pattern-matching binaries ([L8]).
+* [x] Use `<>` instead of bitstrings when pattern-matching binaries ([L8]).
 
 [L1]: https://github.com/lexmag/elixir-style-guide#pipeline-operator
 [L2]: https://github.com/lexmag/elixir-style-guide#needless-pipeline

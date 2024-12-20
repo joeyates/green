@@ -5,6 +5,7 @@ defmodule ExCop do
     NoUnlessWithElse,
     NoNilElse,
     TrueInCond,
+    UseStringConcatenationWhenMatchingBinaries,
     SortModuleReferences
   }
 
@@ -27,6 +28,7 @@ defmodule ExCop do
       |> NoUnlessWithElse.apply()
       |> NoNilElse.apply()
       |> TrueInCond.apply()
+      |> UseStringConcatenationWhenMatchingBinaries.apply()
       |> SortModuleReferences.apply()
       |> default_format(opts)
 
