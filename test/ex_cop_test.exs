@@ -15,50 +15,50 @@ defmodule ExCopTest do
     %{bad: bad, good: good}
   end
 
-  @tag fixture: "linting_modules_module_layout"
-  test "corrects the order of module references", %{bad: bad, good: good} do
-    formatted = ExCop.format_string(bad)
-
-    assert formatted == good
-  end
-
-  @tag fixture: "linting_favor_pipeline_operator"
+  @tag fixture: "linting/favor_pipeline_operator"
   test "transforms nested function calls to pipelines", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting_avoid_needless_pipelines"
+  @tag fixture: "linting/avoid_needless_pipelines"
   test "removes needless pipelines", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting_no_else_with_unless"
+  @tag fixture: "linting/no_else_with_unless"
   test "corrects unless/else to if/else", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting_no_nil_else"
+  @tag fixture: "linting/no_nil_else"
   test "removes nil else clauses", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting_true_in_cond"
+  @tag fixture: "linting/true_in_cond"
   test "replaces symbols with true in cond", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
   end
 
-  @tag fixture: "linting_use_string_concatenation_when_pattern_matching_binaries"
+  @tag fixture: "linting/use_string_concatenation_when_pattern_matching_binaries"
   test "replaces bitstrings with <> when pattern_matching binaries", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
+
+  @tag fixture: "modules/module_layout"
+  test "corrects the order of module references", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
 
     assert formatted == good
