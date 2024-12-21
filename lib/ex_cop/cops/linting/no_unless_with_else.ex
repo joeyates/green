@@ -1,4 +1,4 @@
-defmodule ExCop.Cops.NoUnlessWithElse do
+defmodule ExCop.Cops.Linting.NoUnlessWithElse do
   @moduledoc """
   This cop transforms `unless` with `else` into `if` with `else`.
   """

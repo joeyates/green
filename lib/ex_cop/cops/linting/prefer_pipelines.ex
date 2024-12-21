@@ -1,4 +1,4 @@
-defmodule ExCop.Cops.PreferPipelines do
+defmodule ExCop.Cops.Linting.PreferPipelines do
   @moduledoc """
   This cop transforms nested function calls into pipelines.
   """

@@ -1,4 +1,4 @@
-defmodule ExCop.Cops.TrueInCond do
+defmodule ExCop.Cops.Linting.TrueInCond do
   @moduledoc """
   This cop ensures final, always-matching clauses in `cond` use `true`.
   """

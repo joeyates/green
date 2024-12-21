@@ -1,4 +1,4 @@
-defmodule ExCop.Cops.UseStringConcatenationWhenMatchingBinaries do
+defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinaries do
   @moduledoc """
   This cop replaces use of bitstrings with the `<>` operator when matching binaries.
   """

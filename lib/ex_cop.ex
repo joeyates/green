@@ -1,13 +1,5 @@
 defmodule ExCop do
-  alias ExCop.Cops.{
-    PreferPipelines,
-    AvoidNeedlessPipelines,
-    NoUnlessWithElse,
-    NoNilElse,
-    TrueInCond,
-    UseStringConcatenationWhenMatchingBinaries,
-    SortModuleReferences
-  }
+  alias ExCop.Cops.{Linting, Modules}
 
   @line_length 98
 
@@ -23,13 +15,13 @@ defmodule ExCop do
     formatted =
       code
       |> parse(opts)
-      |> PreferPipelines.apply()
-      |> AvoidNeedlessPipelines.apply()
-      |> NoUnlessWithElse.apply()
-      |> NoNilElse.apply()
-      |> TrueInCond.apply()
-      |> UseStringConcatenationWhenMatchingBinaries.apply()
-      |> SortModuleReferences.apply()
+      |> Linting.PreferPipelines.apply()
+      |> Linting.AvoidNeedlessPipelines.apply()
+      |> Linting.NoUnlessWithElse.apply()
+      |> Linting.NoNilElse.apply()
+      |> Linting.TrueInCond.apply()
+      |> Linting.UseStringConcatenationWhenMatchingBinaries.apply()
+      |> Modules.SortReferences.apply()
       |> default_format(opts)
 
     [formatted, ?\n] |> IO.iodata_to_binary()

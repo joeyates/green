@@ -1,4 +1,4 @@
-defmodule ExCop.Cops.NoNilElse do
+defmodule ExCop.Cops.Linting.NoNilElse do
   @moduledoc """
   This module removes `else` clauses that return `nil`.
   """

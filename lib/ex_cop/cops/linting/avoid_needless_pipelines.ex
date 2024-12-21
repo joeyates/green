@@ -1,4 +1,4 @@
-defmodule ExCop.Cops.AvoidNeedlessPipelines do
+defmodule ExCop.Cops.Linting.AvoidNeedlessPipelines do
   @moduledoc """
   This cop transforms single-function pipelines into function calls.
   """

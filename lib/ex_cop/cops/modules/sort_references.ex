@@ -1,4 +1,4 @@
-defmodule ExCop.Cops.SortModuleReferences do
+defmodule ExCop.Cops.Modules.SortReferences do
   @module_reference_types [:use, :import, :alias, :require]
 
   def apply({forms, comments}) do
