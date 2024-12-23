@@ -73,7 +73,7 @@ NO Enforce CamelCase for modules ([N2]),
 ## Modules
 
 * [x] Group and order `use`, `import`, `assign` and `require` statements ([M1]),
-* [ ] Replace the current module name with `__MODULE__` ([M2]).
+* [x] Replace the current module name with `__MODULE__` ([M2]).
 
 Notes:
 

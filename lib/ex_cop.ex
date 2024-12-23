@@ -26,6 +26,7 @@ defmodule ExCop do
       |> Naming.AvoidCaps.apply()
       |> Naming.AvoidOneLetterVariables.apply()
       |> Modules.SortReferences.apply()
+      |> Modules.UseModulePseudoVariable.apply()
       |> default_format(opts)
 
     [formatted, ?\n] |> IO.iodata_to_binary()

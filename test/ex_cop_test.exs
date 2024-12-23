@@ -150,4 +150,11 @@ defmodule ExCopTest do
 
     assert formatted == good
   end
+
+  @tag fixture_pair: "modules/replace_current_module_reference"
+  test "replaces references to the current module with __MODULE__", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
 end
