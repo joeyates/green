@@ -1,5 +1,5 @@
 defmodule ExCop do
-  alias ExCop.Cops.{Linting, Modules}
+  alias ExCop.Cops.{Linting, Modules, Naming}
 
   @line_length 98
 
@@ -21,6 +21,7 @@ defmodule ExCop do
       |> Linting.NoNilElse.apply()
       |> Linting.TrueInCond.apply()
       |> Linting.UseStringConcatenationWhenMatchingBinaries.apply()
+      |> Naming.AvoidCaps.apply()
       |> Modules.SortReferences.apply()
       |> default_format(opts)
 
