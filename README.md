@@ -53,7 +53,7 @@ NO Enforce CamelCase for modules ([N2]),
 ❔ Enforce predicate functions to end with a question mark ([N3]),
 
 * [x] Enforce snake_case for directories and files ([N4]),
-* [ ] Disallow one-letter variable names ([N5]).
+* [x] Disallow one-letter variable names ([N5]).
 
 [N1]: https://github.com/lexmag/elixir-style-guide#snake-case-atoms-funs-vars-attrs
 [N2]: https://github.com/lexmag/elixir-style-guide#camelcase-modules

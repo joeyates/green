@@ -131,6 +131,19 @@ defmodule ExCopTest do
     assert message == "'-' found in file name 'filename-with-hyphens.ex'"
   end
 
+  @tag example: "naming/single_letter_variable"
+  test "warns when there are single-letter variable names", %{example: example} do
+    output = capture_io(:stderr, fn -> ExCop.format_string(example) end)
+
+    assert String.starts_with?(
+             output,
+             """
+             \e[33mwarning:\e[0m one-letter variable name found
+             2 | i
+             """
+           )
+  end
+
   @tag fixture_pair: "modules/module_layout"
   test "corrects the order of module references", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)

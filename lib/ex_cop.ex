@@ -24,6 +24,7 @@ defmodule ExCop do
       |> Linting.TrueInCond.apply()
       |> Linting.UseStringConcatenationWhenMatchingBinaries.apply()
       |> Naming.AvoidCaps.apply()
+      |> Naming.AvoidOneLetterVariables.apply()
       |> Modules.SortReferences.apply()
       |> default_format(opts)
 
