@@ -157,4 +157,21 @@ defmodule ExCopTest do
 
     assert formatted == good
   end
+
+  @tag fixture_pair: "structs/skip_nil_in_struct_definition"
+  test "removes `nil` defaults from struct definitions", %{bad: bad, good: good} do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
+
+  @tag fixture_pair: "structs/skip_nil_in_struct_definition_from_mixed"
+  test "removes `nil` defaults from struct definitions, starting from a mixed list", %{
+    bad: bad,
+    good: good
+  } do
+    formatted = ExCop.format_string(bad)
+
+    assert formatted == good
+  end
 end

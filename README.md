@@ -96,7 +96,7 @@ Notes:
 
 ## Structs
 
-* [ ] Don't specify `nil` default values for `defstruct` fields ([S1]).
+* [x] Don't specify `nil` default values for `defstruct` fields ([S1]).
 
 [S1]: https://github.com/lexmag/elixir-style-guide#defstruct-fields-default
 

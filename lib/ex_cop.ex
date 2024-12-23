@@ -1,5 +1,5 @@
 defmodule ExCop do
-  alias ExCop.Cops.{Linting, Modules, Naming}
+  alias ExCop.Cops.{Linting, Modules, Naming, Structs}
 
   @line_length 98
 
@@ -27,6 +27,7 @@ defmodule ExCop do
       |> Naming.AvoidOneLetterVariables.apply()
       |> Modules.SortReferences.apply()
       |> Modules.UseModulePseudoVariable.apply()
+      |> Structs.RemoveNilFromStructDefinition.apply()
       |> default_format(opts)
 
     [formatted, ?\n] |> IO.iodata_to_binary()
