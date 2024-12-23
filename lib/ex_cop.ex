@@ -5,6 +5,8 @@ defmodule ExCop do
 
   @spec format_file(String.t()) :: String.t()
   def format_file(file) do
+    check_file_name!(file)
+
     file
     |> File.read!()
     |> format_string(file: file)
@@ -45,5 +47,11 @@ defmodule ExCop do
     doc = Code.Formatter.to_algebra(forms, to_algebra_opts)
 
     Inspect.Algebra.format(doc, @line_length)
+  end
+
+  defp check_file_name!(file) do
+    if String.contains?(file, "-") do
+      raise ArgumentError, "'-' found in file name '#{file}'"
+    end
   end
 end

@@ -119,6 +119,18 @@ defmodule ExCopTest do
            )
   end
 
+  test "fails for filenames with hyphens" do
+    %ArgumentError{message: message} =
+      try do
+        ExCop.format_file("filename-with-hyphens.ex")
+      rescue
+        e in ArgumentError ->
+          e
+      end
+
+    assert message == "'-' found in file name 'filename-with-hyphens.ex'"
+  end
+
   @tag fixture_pair: "modules/module_layout"
   test "corrects the order of module references", %{bad: bad, good: good} do
     formatted = ExCop.format_string(bad)
