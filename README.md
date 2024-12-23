@@ -87,8 +87,9 @@ Notes:
 
 ## Regular Expressions
 
-* [ ] Prefer pattern matching over regular expressions ([R1]),
-* [ ] Use non-capturing regular expressions ([R2]).
+❔ Prefer pattern matching over regular expressions ([R1]),
+
+❔ Use non-capturing regular expressions ([R2]).
 
 [R1]: https://github.com/lexmag/elixir-style-guide#pattern-matching-over-regexp
 [R2]: https://github.com/lexmag/elixir-style-guide#non-capturing-regexp
