@@ -47,8 +47,9 @@ are not already implemented by `mix format`.
 ## Naming
 
 * [x] Enforce snake_case for atoms, functions, variables, attributes ([N1]),
-* [ ] Enforce CamelCase for modules ([N2]),
 * [ ] Enforce predicate functions to end with a question mark ([N3]),
+
+NO Enforce CamelCase for modules ([N2]),
 * [ ] Enforce snake_case for directories and files ([N4]),
 * [ ] Disallow one-letter variable names ([N5]).
 
