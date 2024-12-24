@@ -1,30 +1,8 @@
 defmodule ExCop.ElixirStyleGuideFormatterTest do
-  use ExUnit.Case, async: true
+  use ExCop.TestCase, async: true
 
   import ExCop.ElixirStyleGuideFormatter
   import ExUnit.CaptureIO
-
-  def read_fixture(filename) do
-    ["test", "fixtures", filename]
-    |> Path.join()
-    |> File.read!()
-  end
-
-  setup context do
-    case context do
-      %{fixture_pair: fixture} ->
-        bad = read_fixture("#{fixture}_bad.ex")
-        good = read_fixture("#{fixture}.ex")
-        %{bad: bad, good: good}
-
-      %{example: filename} ->
-        example = read_fixture("#{filename}.ex")
-        %{example: example}
-
-      _any ->
-        :ok
-    end
-  end
 
   describe "format/1" do
     @tag fixture_pair: "linting/favor_pipeline_operator"
