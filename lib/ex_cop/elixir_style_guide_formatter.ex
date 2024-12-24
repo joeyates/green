@@ -1,7 +1,14 @@
-defmodule ExCop do
+defmodule ExCop.ElixirStyleGuideFormatter do
   alias ExCop.Cops.{Exceptions, Linting, Modules, Naming, Structs}
 
+  @behaviour Mix.Tasks.Format
+
   @line_length 98
+
+  @impl true
+  def features(_opts) do
+    [extensions: [".ex", ".exs"]]
+  end
 
   @spec format_file(String.t()) :: String.t()
   def format_file(file) do
@@ -9,11 +16,11 @@ defmodule ExCop do
 
     file
     |> File.read!()
-    |> format_string(file: file)
+    |> format(file: file)
   end
 
-  @spec format_string(String.t()) :: String.t()
-  def format_string(code, opts \\ []) do
+  @impl true
+  def format(code, opts \\ []) do
     formatted =
       code
       |> parse(opts)
