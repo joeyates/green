@@ -5,6 +5,9 @@ defmodule ExCop.Cops.Naming.AvoidOneLetterVariables do
   def apply({forms, comments}) do
     forms =
       Macro.prewalk(forms, fn
+        {:_, _context, nil} = node ->
+          node
+
         {name, context, nil} = node ->
           if one_letter?(name) do
             IO.warn("""
