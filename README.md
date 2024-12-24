@@ -102,7 +102,7 @@ Notes:
 
 ## Exceptions
 
-* [ ] Use `Error` suffix for exception names ([E1]),
+* [x] Use `Error` suffix for exception names ([E1]),
 * [ ] Use non-capitalized error messages (except for Mix error messages) without trailing punctuation ([E2]).
 
 [E1]: https://github.com/lexmag/elixir-style-guide#exception-naming

@@ -174,4 +174,17 @@ defmodule ExCopTest do
 
     assert formatted == good
   end
+
+  @tag example: "exceptions/missing_error_suffix"
+  test "warns when exceptions are defined without the `Error` suffix", %{example: example} do
+    output = capture_io(:stderr, fn -> ExCop.format_string(example) end)
+
+    assert String.starts_with?(
+             output,
+             """
+             \e[33mwarning:\e[0m exception MissingErrorSuffix should have a suffix of `Error`
+             1 | MissingErrorSuffix
+             """
+           )
+  end
 end
