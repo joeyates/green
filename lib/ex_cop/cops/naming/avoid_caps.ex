@@ -32,6 +32,9 @@ defmodule ExCop.Cops.Naming.AvoidCaps do
 
             {node, acc}
 
+          {:__MODULE__, _context, nil} = node, acc ->
+            {node, acc}
+
           {name, context, nil} = node, %{is_attribute: false} = acc when is_atom(name) ->
             if contains_caps?(name) do
               IO.warn("""

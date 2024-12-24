@@ -121,6 +121,13 @@ defmodule ExCop.ElixirStyleGuideFormatterTest do
              )
     end
 
+    @tag example: "naming/capital_in_module_struct"
+    test "does not warn when the __MODULE__ struct is used", %{example: example} do
+      output = capture_io(:stderr, fn -> format(example) end)
+
+      assert output == ""
+    end
+
     @tag example: "naming/single_letter_variable"
     test "warns when there are single-letter variable names", %{example: example} do
       output = capture_io(:stderr, fn -> format(example) end)
