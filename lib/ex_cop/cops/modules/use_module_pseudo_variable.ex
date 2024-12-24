@@ -10,19 +10,19 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariable do
         %{},
         fn
           {:defmodule, context, right} = node, _acc ->
-            {:__aliases__, _context, [module]} = hd(right)
+            {:__aliases__, _context, module} = hd(right)
             {node, %{module: module, line: context[:line]}}
 
-          {:__aliases__, context, [module]}, %{module: module} = acc ->
+          {:__aliases__, context, module}, %{module: module} = acc ->
             # The module name should only appear on the line with `defmodule`
             module =
               if context[:line] != acc[:line] do
-                :__MODULE__
+                [:__MODULE__]
               else
                 module
               end
 
-            {{:__aliases__, context, [module]}, acc}
+            {{:__aliases__, context, module}, acc}
 
           other, acc ->
             {other, acc}
