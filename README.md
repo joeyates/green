@@ -103,13 +103,14 @@ Notes:
 ## Exceptions
 
 * [x] Use `Error` suffix for exception names ([E1]),
-* [ ] Use non-capitalized error messages (except for Mix error messages) without trailing punctuation ([E2]).
+
+❔ Use non-capitalized error messages (except for Mix error messages) without trailing punctuation ([E2]).
 
 [E1]: https://github.com/lexmag/elixir-style-guide#exception-naming
 [E2]: https://github.com/lexmag/elixir-style-guide#exception-message
 
 ## ExUnit
 
-* [ ] Put the expression being tested by comparison on the left side ([U1]).
+❔ Put the expression being tested by comparison on the left side ([U1]).
 
 [U1]: https://github.com/lexmag/elixir-style-guide#exunit-assertion-side
