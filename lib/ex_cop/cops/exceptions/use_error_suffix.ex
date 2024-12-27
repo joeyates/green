@@ -11,7 +11,7 @@ defmodule ExCop.Cops.Exceptions.UseErrorSuffix do
   In the example above, the exception should be named `MyBadError`.
   """
 
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,

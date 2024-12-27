@@ -3,7 +3,7 @@ defmodule ExCop.Cops.Linting.AvoidNeedlessPipelines do
   This cop transforms single-function pipelines into function calls.
   """
 
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     {forms, _acc} =
       Macro.prewalk(forms, %{in_pipeline: false}, fn
         # Skip nodes that are already in a pipeline

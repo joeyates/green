@@ -1,7 +1,7 @@
 defmodule ExCop.Cops.Modules.SortReferences do
   @module_reference_types [:use, :import, :alias, :require]
 
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     {lines_by_type, min_line} = initial_positions(forms)
 
     {forms, comments, lines_by_type} = reorder({forms, comments, lines_by_type, min_line})

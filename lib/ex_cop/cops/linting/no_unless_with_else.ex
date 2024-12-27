@@ -3,7 +3,7 @@ defmodule ExCop.Cops.Linting.NoUnlessWithElse do
   This cop transforms `unless` with `else` into `if` with `else`.
   """
 
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     forms =
       Macro.prewalk(forms, fn
         {:unless, context,

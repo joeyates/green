@@ -3,7 +3,7 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinaries do
   This cop replaces use of bitstrings with the `<>` operator when matching binaries.
   """
 
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     forms =
       Macro.prewalk(forms, fn
         # Pattern matching in parameters

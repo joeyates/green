@@ -3,7 +3,7 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
   This cop transforms nested function calls into pipelines.
   """
 
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     forms =
       Macro.prewalk(forms, fn
         # Transform function applications that have a function application as first argument

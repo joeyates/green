@@ -4,7 +4,7 @@ defmodule ExCop.Cops.Naming.AvoidCaps do
   attributes.
   """
 
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,

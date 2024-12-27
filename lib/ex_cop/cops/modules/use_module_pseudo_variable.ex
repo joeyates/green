@@ -3,7 +3,7 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariable do
   This cop replaces references to the current module by name with the pseudo-variable
   `__MODULE__`.
   """
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,

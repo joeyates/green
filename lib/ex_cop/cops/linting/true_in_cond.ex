@@ -4,7 +4,7 @@ defmodule ExCop.Cops.Linting.TrueInCond do
   """
   import Access
 
-  def apply({forms, comments}) do
+  def apply({forms, comments}, _opts) do
     forms =
       Macro.prewalk(forms, fn
         {:cond, cond_context, [[{{:__block__, do_context, [:do]}, clauses}]]} ->
