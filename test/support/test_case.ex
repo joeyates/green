@@ -10,6 +10,18 @@ defmodule ExCop.TestCase do
     |> File.read!()
   end
 
+  using(_opts) do
+    quote do
+      def default_format({forms, comments}) do
+        to_algebra_opts = [comments: comments]
+        doc = Code.Formatter.to_algebra(forms, to_algebra_opts)
+
+        formatted = Inspect.Algebra.format(doc, 98)
+        [formatted, ?\n] |> IO.iodata_to_binary()
+      end
+    end
+  end
+
   setup context do
     context
     |> Enum.reduce(

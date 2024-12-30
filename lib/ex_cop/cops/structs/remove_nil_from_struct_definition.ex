@@ -3,6 +3,9 @@ defmodule ExCop.Cops.Structs.RemoveNilFromStructDefinition do
   This module removes `nil` defaults from struct definitions.
   """
 
+  @behaviour ExCop.Cop
+
+  @impl true
   def apply({forms, comments}, _opts) do
     forms =
       Macro.prewalk(forms, fn

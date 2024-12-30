@@ -2,6 +2,10 @@ defmodule ExCop.Cops.Naming.AvoidOneLetterVariables do
   @moduledoc """
   This module prints a warning if there are one-letter variable names.
   """
+
+  @behaviour ExCop.Cop
+
+  @impl true
   def apply({forms, comments}, opts) do
     forms =
       Macro.prewalk(forms, fn

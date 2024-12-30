@@ -4,6 +4,9 @@ defmodule ExCop.Cops.Linting.TrueInCond do
   """
   import Access
 
+  @behaviour ExCop.Cop
+
+  @impl true
   def apply({forms, comments}, _opts) do
     forms =
       Macro.prewalk(forms, fn

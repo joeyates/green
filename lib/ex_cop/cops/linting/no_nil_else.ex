@@ -3,6 +3,9 @@ defmodule ExCop.Cops.Linting.NoNilElse do
   This module removes `else` clauses that return `nil`.
   """
 
+  @behaviour ExCop.Cop
+
+  @impl true
   def apply({forms, comments}, _opts) do
     forms =
       Macro.prewalk(forms, fn
