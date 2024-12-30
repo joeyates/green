@@ -4,7 +4,7 @@ defmodule ExCop.Cops.Naming.AvoidCaps do
   attributes.
   """
 
-  def apply({forms, comments}, _opts) do
+  def apply({forms, comments}, opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,
@@ -14,20 +14,26 @@ defmodule ExCop.Cops.Naming.AvoidCaps do
         fn
           {:__block__, context, [atom]} = node, acc when is_atom(atom) ->
             if contains_caps?(atom) do
-              IO.warn("""
-              capital letter found in atom (use snake_case for atoms)
-              #{context[:line]} | #{inspect(atom)}
-              """)
+              IO.warn(
+                """
+                capital letter found in atom (use snake_case for atoms)
+                #{context[:line]} | #{inspect(atom)}
+                """,
+                opts
+              )
             end
 
             {node, acc}
 
           {:def, context, [{name, _context2, _params}, _body]} = node, acc ->
             if contains_caps?(name) do
-              IO.warn("""
-              capital letter found in function name (use snake_case for function names)
-              #{context[:line]} | #{name}
-              """)
+              IO.warn(
+                """
+                capital letter found in function name (use snake_case for function names)
+                #{context[:line]} | #{name}
+                """,
+                opts
+              )
             end
 
             {node, acc}
@@ -37,20 +43,26 @@ defmodule ExCop.Cops.Naming.AvoidCaps do
 
           {name, context, nil} = node, %{is_attribute: false} = acc when is_atom(name) ->
             if contains_caps?(name) do
-              IO.warn("""
-              capital letter found in variable name (use snake_case for variable names)
-              #{context[:line]} | #{name}
-              """)
+              IO.warn(
+                """
+                capital letter found in variable name (use snake_case for variable names)
+                #{context[:line]} | #{name}
+                """,
+                opts
+              )
             end
 
             {node, acc}
 
           {:@, context, [{name, _context2, _expression}]} = node, acc ->
             if contains_caps?(name) do
-              IO.warn("""
-              capital letter found in attribute name (use snake_case for attribute names)
-              #{context[:line]} | @#{name}
-              """)
+              IO.warn(
+                """
+                capital letter found in attribute name (use snake_case for attribute names)
+                #{context[:line]} | @#{name}
+                """,
+                opts
+              )
             end
 
             {node, Map.put(acc, :is_attribute, true)}
