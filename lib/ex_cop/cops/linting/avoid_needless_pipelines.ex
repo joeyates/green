@@ -12,7 +12,7 @@ defmodule ExCop.Cops.Linting.AvoidNeedlessPipelines do
 
         # Transform
         {:|>, context, right}, %{in_pipeline: false} = acc ->
-          [first, {{:., _, _} = function, _ctx, rest}] = right
+          [first, {function, _ctx, rest}] = right
 
           {{function, context, [first | rest]}, acc}
 
