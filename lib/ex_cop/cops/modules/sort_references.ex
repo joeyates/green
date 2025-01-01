@@ -5,6 +5,20 @@ defmodule ExCop.Cops.Modules.SortReferences do
 
   @impl true
   def apply({forms, comments}, _opts) do
+    forms
+    |> Macro.prewalk(
+      comments,
+      fn
+        {:defmodule, _context, _right} = node, acc ->
+          sort_references({node, acc})
+
+        node, acc ->
+          {node, acc}
+      end
+    )
+  end
+
+  defp sort_references({forms, comments}) do
     {lines_by_type, min_line} = initial_positions(forms)
 
     {forms, comments, lines_by_type} = reorder({forms, comments, lines_by_type, min_line})
