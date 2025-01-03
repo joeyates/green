@@ -10,6 +10,9 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinaries do
     forms =
       Macro.prewalk(forms, fn
         # Pattern matching in parameters
+        {:def, _context1, [{_name, _context2, nil}, _body]} = node ->
+          node
+
         {:def, context1, [{name, context2, parameters}, body]} ->
           parameters = Enum.map(parameters, &binary_parts_to_concatenation/1)
           {:def, context1, [{name, context2, parameters}, body]}
