@@ -149,7 +149,10 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
   defp to_pipeline(node) do
     case function(node) do
-      {:ok, _} ->
+      {:ok, {_function, 0}} ->
+        node
+
+      {:ok, {_function, _arity}} ->
         {left, context, [first | rest]} = node
         # TODO: Create proper contexts
         {:|>, context, [to_pipeline(first), {left, context, rest}]}
