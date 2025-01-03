@@ -5,17 +5,35 @@ defmodule ExCop.Cops.Modules.SortReferences do
 
   @impl true
   def apply({forms, comments}, _opts) do
-    forms
-    |> Macro.prewalk(
-      comments,
-      fn
-        {:defmodule, _context, _right} = node, acc ->
-          sort_references({node, acc})
+    {forms, {comments, _state}} =
+      forms
+      |> Macro.traverse(
+        {comments, %{}},
+        fn
+          {:defmacro, _context, _right} = node, {comments, state} ->
+            {node, {comments, Map.put(state, :in_macro, true)}}
 
-        node, acc ->
-          {node, acc}
-      end
-    )
+          node, {_comments, %{in_macro: true}} = acc ->
+            {node, acc}
+
+          {:defmodule, _context, _right} = node, acc ->
+            {comments, state} = acc
+            {node, comments} = sort_references({node, comments})
+            {node, {comments, state}}
+
+          node, acc ->
+            {node, acc}
+        end,
+        fn
+          {:defmacro, _context, _right} = node, {comments, state} ->
+            {node, {comments, Map.delete(state, :in_macro)}}
+
+          node, acc ->
+            {node, acc}
+        end
+      )
+
+    {forms, comments}
   end
 
   defp sort_references({forms, comments}) do
@@ -28,6 +46,7 @@ defmodule ExCop.Cops.Modules.SortReferences do
   end
 
   defp initial_positions(forms) do
+    # Do a prewalk to get the initial positions of the module references
     {lines, min_line} =
       forms
       |> get_in(module_lines_access())
@@ -82,33 +101,50 @@ defmodule ExCop.Cops.Modules.SortReferences do
 
   defp set_blank_lines(forms, lines_by_type) do
     {forms, _acc} =
-      Macro.prewalk(forms, %{}, fn
-        {type, context, right}, seen when type in @module_reference_types ->
-          line = context[:line]
+      Macro.traverse(
+        forms,
+        %{seen: %{}},
+        fn
+          {:defmacro, _context, _right} = node, acc ->
+            {node, Map.put(acc, :in_macro, true)}
 
-          if line do
-            seen =
-              update_in(seen, [type], fn
-                nil -> [line]
-                lines -> [line | lines]
-              end)
+          node, %{in_macro: true} = acc ->
+            {node, acc}
 
-            last = length(lines_by_type[type]) == length(seen[type])
-            newlines = if last, do: 2, else: 1
-            # TODO: This assumes the expression lasts one line
-            last_line = line
+          {type, context, right}, acc when type in @module_reference_types ->
+            line = context[:line]
 
-            context =
-              Keyword.put(context, :end_of_expression, newlines: newlines, line: last_line)
+            if line do
+              acc =
+                update_in(acc, [:seen, type], fn
+                  nil -> [line]
+                  lines -> [line | lines]
+                end)
 
-            {{type, context, right}, seen}
-          else
-            {{type, context, right}, seen}
-          end
+              last = length(lines_by_type[type] || []) == length(acc[:seen][type])
+              newlines = if last, do: 2, else: 1
+              # TODO: This assumes the expression lasts one line
+              last_line = line
 
-        node, seen ->
-          {node, seen}
-      end)
+              context =
+                Keyword.put(context, :end_of_expression, newlines: newlines, line: last_line)
+
+              {{type, context, right}, acc}
+            else
+              {{type, context, right}, acc}
+            end
+
+          node, seen ->
+            {node, seen}
+        end,
+        fn
+          {:defmacro, _context, _right} = node, acc ->
+            {node, Map.delete(acc, :in_macro)}
+
+          node, acc ->
+            {node, acc}
+        end
+      )
 
     forms
   end
