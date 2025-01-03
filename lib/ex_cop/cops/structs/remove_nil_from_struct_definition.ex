@@ -34,6 +34,8 @@ defmodule ExCop.Cops.Structs.RemoveNilFromStructDefinition do
     Enum.any?(items, &nil_keyword?/1)
   end
 
+  defp nils?(_), do: false
+
   defp nil_keyword?({{:__block__, _ctx1, [_name]}, {:__block__, _ctx2, [nil]}}), do: true
 
   defp nil_keyword?(_node), do: false
