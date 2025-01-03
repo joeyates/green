@@ -17,6 +17,12 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariable do
             {:__aliases__, _context, module} = hd(right)
             {node, %{module: module, line: context[:line]}}
 
+          {:defmacro, _context, _right} = node, acc ->
+            {node, Map.put(acc, :in_macro, true)}
+
+          {:__aliases__, _context, _module} = node, %{in_macro: true} = acc ->
+            {node, acc}
+
           {:__aliases__, context, module}, %{module: module} = acc ->
             # The module name should only appear on the line with `defmodule`
             module =
@@ -32,8 +38,11 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariable do
             {other, acc}
         end,
         fn
-          {:defmodule, _context, _right} = node, _acc ->
-            {node, %{}}
+          {:defmodule, _context, _right} = node, acc ->
+            {node, Map.drop(acc, [:module, :line])}
+
+          {:defmacro, _context, _right} = node, acc ->
+            {node, Map.delete(acc, :in_macro)}
 
           other, acc ->
             {other, acc}
