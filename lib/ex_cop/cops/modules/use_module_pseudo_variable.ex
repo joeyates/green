@@ -13,8 +13,7 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariable do
         forms,
         %{},
         fn
-          {:defmodule, context, right} = node, _acc ->
-            {:__aliases__, _context, module} = hd(right)
+          {:defmodule, context, [{:__aliases__, _context, module} | _rest]} = node, _acc ->
             {node, %{module: module, line: context[:line]}}
 
           {:defmacro, _context, _right} = node, acc ->
