@@ -94,8 +94,8 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
   end
 
   @syntax ~w(
-    def defp defmodule defmacro defstruct defdelegate
-    if case when and not or in
+    def defp defmodule defmacro defmacrop defstruct defdelegate
+    if unless case when and not or in
     fn use alias import require
     unquote
     __block__
