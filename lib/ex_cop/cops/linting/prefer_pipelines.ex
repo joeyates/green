@@ -50,7 +50,7 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
             with nil <- context[:attribute],
                  nil <- context[:pipeline_parameter],
                  {:ok, {function, arity}} when arity > 0 <- function(node),
-                 true <- requires_parens({function, arity}, opts[:locals_without_parens]),
+                 true <- requires_parens?({function, arity}, opts[:locals_without_parens]),
                  {:ok, first} <- first_argument(node),
                  {:ok, {_child_function, child_arity}} when child_arity > 0 <- function(first) do
               {to_pipeline(node), acc}
@@ -140,12 +140,12 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
   defp first_argument(_other), do: nil
 
-  defp requires_parens({function, arity}, locals_without_parens)
+  defp requires_parens?({function, arity}, locals_without_parens)
        when is_atom(function) and is_list(locals_without_parens) do
     {function, arity} not in locals_without_parens
   end
 
-  defp requires_parens(_fn_arity, _locals_without_parens), do: true
+  defp requires_parens?(_fn_arity, _locals_without_parens), do: true
 
   defp to_pipeline(node) do
     case function(node) do
