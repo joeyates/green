@@ -7,4 +7,16 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariableTest do
   test "handles nested modules", %{forms: forms, comments: comments} do
     UseModulePseudoVariable.apply({forms, comments}, [])
   end
+
+  @tag parse: "modules/use_module_pseudo_variable/ignore_in_quote"
+  @tag example: "modules/use_module_pseudo_variable/ignore_in_quote"
+  test "ignores references to the current module in `quote`", %{
+    forms: forms,
+    comments: comments,
+    example: example
+  } do
+    {forms, comments} = UseModulePseudoVariable.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == example
+  end
 end

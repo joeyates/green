@@ -16,10 +16,10 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariable do
           {:defmodule, context, [{:__aliases__, _context, module} | _rest]} = node, _acc ->
             {node, %{module: module, line: context[:line]}}
 
-          {:defmacro, _context, _right} = node, acc ->
-            {node, Map.put(acc, :in_macro, true)}
+          {:quote, _context, _right} = node, acc ->
+            {node, Map.put(acc, :in_quote, true)}
 
-          {:__aliases__, _context, _module} = node, %{in_macro: true} = acc ->
+          {:__aliases__, _context, _module} = node, %{in_quote: true} = acc ->
             {node, acc}
 
           {:__aliases__, context, module}, %{module: module} = acc ->
@@ -40,8 +40,8 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariable do
           {:defmodule, _context, _right} = node, acc ->
             {node, Map.drop(acc, [:module, :line])}
 
-          {:defmacro, _context, _right} = node, acc ->
-            {node, Map.delete(acc, :in_macro)}
+          {:quote, _context, _right} = node, acc ->
+            {node, Map.delete(acc, :in_quote)}
 
           other, acc ->
             {other, acc}
