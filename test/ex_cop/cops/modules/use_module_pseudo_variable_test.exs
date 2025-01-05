@@ -3,7 +3,7 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariableTest do
 
   alias ExCop.Cops.Modules.UseModulePseudoVariable
 
-  @tag parse: "modules/nested_modules"
+  @tag parse: "modules/use_module_pseudo_variable/nested_modules"
   test "handles nested modules", %{forms: forms, comments: comments} do
     UseModulePseudoVariable.apply({forms, comments}, [])
   end

@@ -3,8 +3,8 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
 
   alias ExCop.Cops.Linting.PreferPipelines
 
-  @tag parse: "linting/ignore_map_access"
-  @tag example: "linting/ignore_map_access"
+  @tag parse: "linting/prefer_pipelines/ignore_map_access"
+  @tag example: "linting/prefer_pipelines/ignore_map_access"
   test "does not consider Map access as a function call", %{
     forms: forms,
     comments: comments,
