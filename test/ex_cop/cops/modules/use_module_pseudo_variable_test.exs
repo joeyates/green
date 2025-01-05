@@ -19,4 +19,16 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariableTest do
     output = default_format({forms, comments})
     assert output == example
   end
+
+  @tag parse: "modules/use_module_pseudo_variable/ignore_in_defimpl"
+  @tag example: "modules/use_module_pseudo_variable/ignore_in_defimpl"
+  test "ignores references to the current module in `defimpl`", %{
+    forms: forms,
+    comments: comments,
+    example: example
+  } do
+    {forms, comments} = UseModulePseudoVariable.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == example
+  end
 end
