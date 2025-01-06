@@ -154,8 +154,9 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
       {:ok, {_function, _arity}} ->
         {left, context, [first | rest]} = node
-        # TODO: Create proper contexts
-        {:|>, context, [to_pipeline(first), {left, context, rest}]}
+        # TODO: adjust context, e.g. the value of `:closing`
+        second_context = Keyword.put(context, :pipeline_parameter, true)
+        {:|>, context, [to_pipeline(first), {left, second_context, rest}]}
 
       _ ->
         node

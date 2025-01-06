@@ -14,4 +14,16 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
     output = default_format({forms, comments})
     assert output == example
   end
+
+  @tag parse: "linting/prefer_pipelines/nested_second_parameter_bad"
+  @tag fixture_pair: "linting/prefer_pipelines/nested_second_parameter"
+  test "only transforms the first parameter of a nested function call", %{
+    forms: forms,
+    comments: comments,
+    good: good
+  } do
+    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == good
+  end
 end
