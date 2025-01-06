@@ -41,7 +41,7 @@ defmodule ExCop.ElixirStyleGuideFormatterTest do
     end
 
     @tag fixture_pair: "linting/use_string_concatenation_when_pattern_matching_binaries"
-    test "replaces bitstrings with <> when pattern_matching binaries", %{bad: bad, good: good} do
+    test "extracts a final 'bytes' entry when pattern_matching binaries", %{bad: bad, good: good} do
       formatted = format(bad)
 
       assert formatted == good

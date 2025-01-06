@@ -18,9 +18,20 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinaries do
           {:def, context1, [{name, context2, parameters}, body]}
 
         # Pattern matching in assignment
-        {:=, context, [{:<<>>, _context2, _parts} = lhs, rhs]} ->
-          lhs = binary_parts_to_concatenation(lhs)
-          {:=, context, [lhs, rhs]}
+        {:=, _ctx1, [{:<<>>, _ctx2, [_part]}, _rhs]} = node ->
+          node
+
+        {:=, ctx1, [{:<<>>, ctx2, parts}, rhs]} = node ->
+          last = Enum.at(parts, -1)
+
+          case last do
+            {:"::", _ctx1, [string, {:bytes, _ctx2, _}]} ->
+              other = Enum.slice(parts, 0..-2//1)
+              {:=, ctx1, [{:<>, ctx2, [other, string]}, rhs]}
+
+            _ ->
+              node
+          end
 
         other ->
           other
