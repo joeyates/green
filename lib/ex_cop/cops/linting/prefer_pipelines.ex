@@ -105,16 +105,16 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
   @syntax ~w(
     def defp defmodule defmacro defmacrop defstruct defdelegate
-    if unless case when and not or in
-    fn use alias import require
-    unquote
+    if unless for case cond with when and not or in
+    fn use alias import require reraise
+    quote unquote
     __block__
     __aliases__
-    :: \\\\ / & @ || &&
-    <- -> <> | |> <<>>
-    = == != =~ > < >= <=
+    :: \\\\ / ! & @ || &&
+    <- -> <> | |> <<>> |||
+    = == != === !== =~ > < >= <=
     {} %{} %
-    + ++ - * ^ ..
+    + ++ - -- * ^ <<< >>> .. ..//
   )a
 
   defp function({left, _context, _right}) when left in @syntax, do: nil
