@@ -32,8 +32,18 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
           {:@, _context, _right} = node, acc ->
             {node, acc}
 
-          # Ignore existing pipelines
-          {:|>, context, parameters}, acc ->
+          # Handle existing pipelines
+          {:|>, context, [first | rest]}, acc ->
+            parameters =
+              with {:ok, {function, arity}} when arity > 0 <- function(first),
+                   true <- requires_parens?({function, arity}, opts[:locals_without_parens]) do
+                # We're in a pipeline, but the first parameter is a normal function call
+                [to_pipeline(first) | rest]
+              else
+                _ ->
+                  [first | rest]
+              end
+
             parameters =
               Enum.map(parameters, fn
                 {left, context, right} ->

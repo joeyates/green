@@ -19,6 +19,13 @@ defmodule ExCop.ElixirStyleGuideFormatterTest do
       assert formatted == good
     end
 
+    @tag fixture_pair: "linting/incomplete_pipeline"
+    test "transforms incomplete pipelines", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
     @tag fixture_pair: "linting/no_else_with_unless"
     test "corrects unless/else to if/else", %{bad: bad, good: good} do
       formatted = format(bad)
