@@ -26,4 +26,16 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
     output = default_format({forms, comments})
     assert output == good
   end
+
+  @tag parse: "linting/prefer_pipelines/record_usage"
+  @tag example: "linting/prefer_pipelines/record_usage"
+  test "does not consider record use as a function call", %{
+    forms: forms,
+    comments: comments,
+    example: example
+  } do
+    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == example
+  end
 end

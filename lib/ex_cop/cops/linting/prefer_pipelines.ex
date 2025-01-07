@@ -10,7 +10,7 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
     {forms, _acc} =
       Macro.traverse(
         forms,
-        %{},
+        %{records: []},
         fn
           {:@, _ctx1, [{:spec, _ctx2, _right}]} = node, acc ->
             {node, Map.put(acc, :in_spec, true)}
@@ -30,6 +30,16 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
             {{:@, ctx1, [{attribute, ctx2, right}]}, acc}
 
           {:@, _context, _right} = node, acc ->
+            {node, acc}
+
+          {{:., _ctx1, [{:__aliases__, _ctx2, [:Record]}, call]}, _ctx3,
+           [
+             {:__block__, _ctx4, [name]},
+             _fields
+           ]} = node,
+          acc
+          when call in [:defrecord, :defrecordp] ->
+            acc = update_in(acc, [:records], fn records -> [name | records] end)
             {node, acc}
 
           # Handle existing pipelines
@@ -62,7 +72,8 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
                  {:ok, {function, arity}} when arity > 0 <- function(node),
                  true <- requires_parens?({function, arity}, opts[:locals_without_parens]),
                  {:ok, first} <- first_argument(node),
-                 {:ok, {_child_function, child_arity}} when child_arity > 0 <- function(first) do
+                 {:ok, {child_function, child_arity}} when child_arity > 0 <- function(first),
+                 false <- child_function in acc[:records] do
               {to_pipeline(node), acc}
             else
               _ ->
