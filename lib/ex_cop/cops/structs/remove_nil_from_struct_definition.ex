@@ -42,7 +42,7 @@ defmodule ExCop.Cops.Structs.RemoveNilFromStructDefinition do
 
   defp to_mixed_list([items]) when is_list(items) do
     first = hd(items)
-    {{:__block__, context, [_name]}, {:__block__, _context, [_value]}} = first
+    {{:__block__, context, [_name]}, _value} = first
 
     items =
       items
@@ -87,5 +87,5 @@ defmodule ExCop.Cops.Structs.RemoveNilFromStructDefinition do
 
   defp keyword?({:__block__, _context, [name]}) when is_atom(name), do: false
 
-  defp keyword?({{:__block__, _ctx1, [_name]}, {:__block__, _ctx2, [_value]}}), do: true
+  defp keyword?({{:__block__, _ctx1, [_name]}, _value}), do: true
 end
