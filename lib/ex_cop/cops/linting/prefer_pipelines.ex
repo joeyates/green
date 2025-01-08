@@ -24,6 +24,12 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
           node, %{in_type: true} = acc ->
             {node, acc}
 
+          {:quote, _context, _right} = node, acc ->
+            {node, Map.put(acc, :in_quote, true)}
+
+          node, %{in_quote: true} = acc ->
+            {node, acc}
+
           # attribute definitions look like function calls - ignore them
           {:@, ctx1, [{attribute, ctx2, right}]}, acc ->
             ctx2 = Keyword.put(ctx2, :attribute, true)
@@ -94,6 +100,9 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
           {:@, _ctx1, [{:type, _ctx2, _right}]} = node, acc ->
             {node, Map.delete(acc, :in_type)}
+
+          {:quote, _context, _right} = node, acc ->
+            {node, Map.delete(acc, :in_quote)}
 
           {:@, ctx1, [{attribute, ctx2, right}]}, acc ->
             ctx2 = Keyword.delete(ctx2, :attribute)

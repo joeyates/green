@@ -38,4 +38,12 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
     output = default_format({forms, comments})
     assert output == example
   end
+
+  @tag parse: "linting/prefer_pipelines/skip_quotes"
+  @tag example: "linting/prefer_pipelines/skip_quotes"
+  test "ignore quote blocks", %{forms: forms, comments: comments, example: example} do
+    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == example
+  end
 end
