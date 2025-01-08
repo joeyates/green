@@ -193,6 +193,8 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
       {:ok, {_function, _arity}} ->
         {left, context, [first | rest]} = node
+        # Change keyword arguments to a proper Keyword, wrapped in `[]`
+        first = wrap_bare_keyword(first)
         # TODO: adjust context, e.g. the value of `:closing`
         second_context = Keyword.put(context, :pipeline_parameter, true)
         {:|>, context, [to_pipeline(first), {left, second_context, rest}]}
@@ -201,4 +203,23 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
         node
     end
   end
+
+  defp wrap_bare_keyword([first | _rest] = term) do
+    if Enum.all?(term, &keyword_value?/1) do
+      # Re-use the context of the first keyword
+      {{:__block__, ctx1, [_name]}, {:__block__, _ctx2, [_value]}} = first
+      # TODO: adjust context, e.g. the value of `:closing`
+      [{:__block__, ctx1, [term]}]
+    else
+      term
+    end
+  end
+
+  defp wrap_bare_keyword(term), do: term
+
+  defp keyword_value?({{:__block__, ctx1, [_name]}, {:__block__, _ctx2, [_value]}}) do
+    ctx1[:format] == :keyword
+  end
+
+  defp keyword_value?(_term), do: false
 end

@@ -27,6 +27,18 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
     assert output == good
   end
 
+  @tag parse: "linting/prefer_pipelines/keyword_arguments_bad"
+  @tag fixture_pair: "linting/prefer_pipelines/keyword_arguments"
+  test "wraps keyword aguments in square brackets", %{
+    forms: forms,
+    comments: comments,
+    good: good
+  } do
+    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == good
+  end
+
   @tag parse: "linting/prefer_pipelines/record_usage"
   @tag example: "linting/prefer_pipelines/record_usage"
   test "does not consider record use as a function call", %{
