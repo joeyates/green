@@ -29,6 +29,10 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
             ctx2 = Keyword.put(ctx2, :attribute, true)
             {{:@, ctx1, [{attribute, ctx2, right}]}, acc}
 
+          {call, ctx1, [{name, ctx2, parameters} | rest]}, acc when call in [:def, :defp] ->
+            ctx2 = Keyword.put(ctx2, :function, true)
+            {{call, ctx1, [{name, ctx2, parameters} | rest]}, acc}
+
           {:@, _context, _right} = node, acc ->
             {node, acc}
 
@@ -68,6 +72,7 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
           {_left, context, _right} = node, acc ->
             with nil <- context[:attribute],
+                 nil <- context[:function],
                  nil <- context[:pipeline_parameter],
                  {:ok, {function, arity}} when arity > 0 <- function(node),
                  true <- requires_parens?({function, arity}, opts[:locals_without_parens]),
@@ -93,6 +98,10 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
           {:@, ctx1, [{attribute, ctx2, right}]}, acc ->
             ctx2 = Keyword.delete(ctx2, :attribute)
             {{:@, ctx1, [{attribute, ctx2, right}]}, acc}
+
+          {call, ctx1, [{name, ctx2, parameters} | rest]}, acc when call in [:def, :defp] ->
+            ctx2 = Keyword.delete(ctx2, :function)
+            {{call, ctx1, [{name, ctx2, parameters} | rest]}, acc}
 
           {:|>, context, parameters}, acc ->
             parameters =
