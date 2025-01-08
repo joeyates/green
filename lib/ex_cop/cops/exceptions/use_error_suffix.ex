@@ -11,7 +11,7 @@ defmodule ExCop.Cops.Exceptions.UseErrorSuffix do
   In the example above, the exception should be named `MyBadError`.
   """
 
-  def apply({forms, comments}, _opts) do
+  def apply({forms, comments}, opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,
@@ -29,10 +29,13 @@ defmodule ExCop.Cops.Exceptions.UseErrorSuffix do
             name = Atom.to_string(module)
 
             if !String.ends_with?(name, "Error") do
-              IO.warn("""
-              exception #{name} should have a suffix of `Error`
-              #{context[:line]} | #{name}
-              """)
+              IO.warn(
+                """
+                exception #{name} should have a suffix of `Error`
+                #{context[:line]} | #{name}
+                """,
+                opts
+              )
             end
 
             {node, Map.put(acc, :exception, false)}
