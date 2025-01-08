@@ -28,7 +28,7 @@ defmodule ExCop.Cops.Naming.AvoidCaps do
 
             {node, acc}
 
-          {:def, context, [{name, _context2, _params}, _body]} = node, acc ->
+          {:def, context, [{name, _context2, _params}, _body]} = node, acc when is_atom(name) ->
             if contains_caps?(name) do
               IO.warn(
                 """
@@ -39,9 +39,6 @@ defmodule ExCop.Cops.Naming.AvoidCaps do
               )
             end
 
-            {node, acc}
-
-          {:__MODULE__, _context, nil} = node, acc ->
             {node, acc}
 
           {name, context, nil} = node, %{is_attribute: false} = acc when is_atom(name) ->
@@ -85,13 +82,19 @@ defmodule ExCop.Cops.Naming.AvoidCaps do
     {forms, comments}
   end
 
-  defp contains_caps?(:do), do: false
+  @elixir_variables ~w(
+    Elixir
+    __CALLER__
+    __DIR__
+    __ENV__
+    __FILE__
+    __MODULE__
+    __STACKTRACE__
+    DOWN
+    EXIT
+  )a
 
-  defp contains_caps?(:else), do: false
-
-  defp contains_caps?(true), do: false
-
-  defp contains_caps?(false), do: false
+  defp contains_caps?(term) when term in @elixir_variables, do: false
 
   defp contains_caps?(atom) do
     atom
