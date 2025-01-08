@@ -24,9 +24,9 @@ defmodule ExCop.Cops.Exceptions.UseErrorSuffix do
             {other, acc}
         end,
         fn
-          {:defmodule, context, right} = node, %{exception: true} = acc ->
-            {:__aliases__, _context, [module]} = hd(right)
-            name = Atom.to_string(module)
+          {:defmodule, context, {:__aliases__, _context, modules}} = node,
+          %{exception: true} = acc ->
+            name = modules |> Enum.at(-1) |> Atom.to_string()
 
             if !String.ends_with?(name, "Error") do
               IO.warn(
