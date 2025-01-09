@@ -24,7 +24,7 @@ defmodule ExCop.Cops.Exceptions.UseErrorSuffix do
             {other, acc}
         end,
         fn
-          {:defmodule, context, {:__aliases__, _context, modules}} = node,
+          {:defmodule, context, [{:__aliases__, _context, modules} | _rest]} = node,
           %{exception: true} = acc ->
             name = modules |> Enum.at(-1) |> Atom.to_string()
 
