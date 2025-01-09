@@ -180,6 +180,7 @@ defmodule ExCop.Cops.Modules.SortReferences do
       |> Enum.map(fn {type, lines} ->
         {type, Enum.map(lines, &new_position(&1, from, to))}
       end)
+      |> Enum.into(%{})
 
     {forms, comments, lines_by_type}
   end
