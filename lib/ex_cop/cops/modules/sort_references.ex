@@ -155,15 +155,12 @@ defmodule ExCop.Cops.Modules.SortReferences do
     forms =
       Macro.prewalk(forms, fn
         {left, context, right} ->
-          line = context[:line]
+          context =
+            context
+            |> shift([:line], from, to)
+            |> shift([:closing, :line], from, to)
 
-          if line do
-            moved = new_position(line, from, to)
-
-            {left, Keyword.put(context, :line, moved), right}
-          else
-            {left, context, right}
-          end
+          {left, context, right}
 
         node ->
           node
@@ -183,6 +180,17 @@ defmodule ExCop.Cops.Modules.SortReferences do
       |> Enum.into(%{})
 
     {forms, comments, lines_by_type}
+  end
+
+  defp shift(context, path, from, to) do
+    case get_in(context, path) do
+      nil ->
+        context
+
+      line ->
+        moved = new_position(line, from, to)
+        put_in(context, path, moved)
+    end
   end
 
   defp sort({forms, comments}) do
