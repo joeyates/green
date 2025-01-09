@@ -86,7 +86,7 @@ defmodule ExCop.Cops.Modules.SortReferences do
             {forms, comments, lines_by_type, current_line},
             fn line, {forms, comments, lines_by_type, current_line} ->
               {forms, comments, lines_by_type} =
-                renumber({forms, comments, lines_by_type}, line, current_line)
+                move({forms, comments, lines_by_type}, line, current_line)
 
               {forms, comments} = sort({forms, comments})
 
@@ -149,9 +149,9 @@ defmodule ExCop.Cops.Modules.SortReferences do
     forms
   end
 
-  defp renumber(refs, from, from), do: refs
+  defp move(refs, from, from), do: refs
 
-  defp renumber({forms, comments, lines_by_type}, from, to) do
+  defp move({forms, comments, lines_by_type}, from, to) do
     forms =
       Macro.prewalk(forms, fn
         {left, context, right} ->
