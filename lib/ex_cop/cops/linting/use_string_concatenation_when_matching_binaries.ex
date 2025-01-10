@@ -10,28 +10,19 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinaries do
     forms =
       Macro.prewalk(forms, fn
         # Pattern matching in parameters
-        {:def, _context1, [{_name, _context2, nil}, _body]} = node ->
-          node
+        {keyword, ctx1, [{:when, ctx2, [{name, ctx3, parameters} | guards]}, body]}
+        when keyword in [:def, :defp] and is_list(parameters) ->
+          parameters = Enum.map(parameters, &extract_concatenation/1)
+          {keyword, ctx1, [{:when, ctx2, [{name, ctx3, parameters} | guards]}, body]}
 
-        {:def, context1, [{name, context2, parameters}, body]} ->
-          parameters = Enum.map(parameters, &binary_parts_to_concatenation/1)
-          {:def, context1, [{name, context2, parameters}, body]}
+        {keyword, ctx1, [{name, ctx2, parameters}, body]}
+        when keyword in [:def, :defp] and is_list(parameters) ->
+          parameters = Enum.map(parameters, &extract_concatenation/1)
+          {keyword, ctx1, [{name, ctx2, parameters}, body]}
 
         # Pattern matching in assignment
-        {:=, _ctx1, [{:<<>>, _ctx2, [_part]}, _rhs]} = node ->
-          node
-
-        {:=, ctx1, [{:<<>>, ctx2, parts}, rhs]} = node ->
-          last = Enum.at(parts, -1)
-
-          case last do
-            {:"::", _ctx1, [string, {:bytes, _ctx2, _}]} ->
-              other = Enum.slice(parts, 0..-2//1)
-              {:=, ctx1, [{:<>, ctx2, [other, string]}, rhs]}
-
-            _ ->
-              node
-          end
+        {:=, ctx1, [{:<<>>, _ctx2, _parts} = lhs, rhs]} ->
+          {:=, ctx1, [extract_concatenation(lhs), rhs]}
 
         other ->
           other
@@ -40,24 +31,81 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinaries do
     {forms, comments}
   end
 
-  defp binary_parts_to_concatenation({:<<>>, context, parts}) do
-    parts = Enum.map(parts, &to_concatenated_part/1)
-    {:<>, context, parts}
+  defp extract_concatenation({:<<>>, context, []}), do: {:__block__, context, [""]}
+
+  defp extract_concatenation({:<<>>, context, entries}) do
+    entries
+    |> to_stretches()
+    |> wrap_entries(context)
+    |> join_stretches(context)
   end
 
-  defp binary_parts_to_concatenation(other), do: other
+  defp extract_concatenation(other), do: other
 
-  # param::bytes -> param
-  defp to_concatenated_part({:"::", context, [{param, context, nil}, {:bytes, context, nil}]}) do
-    {param, context, nil}
+  defp to_stretches(entries) do
+    entries
+    |> Enum.reverse()
+    |> Enum.reduce(
+      [],
+      fn
+        entry, [] ->
+          case variable_or_string(entry) do
+            nil ->
+              [[entry]]
+
+            variable ->
+              [variable]
+          end
+
+        entry, [first | rest] = stretches ->
+          case variable_or_string(entry) do
+            nil ->
+              if is_list(first) do
+                [[entry | first] | rest]
+              else
+                [[entry] | stretches]
+              end
+
+            variable ->
+              [variable | stretches]
+          end
+      end
+    )
   end
 
-  # param::other -> <<param::other>>
-  defp to_concatenated_part({:"::", context, _binary} = node) do
-    {:<<>>, context, [node]}
+  defp wrap_entries(stretches, context) do
+    Enum.map(stretches, &wrap_entry(&1, context))
   end
 
-  defp to_concatenated_part(part) do
-    part
+  defp wrap_entry(term, context) when is_list(term) do
+    {:<<>>, context, term}
   end
+
+  defp wrap_entry(term, _context), do: term
+
+  defp join_stretches([term], _context), do: term
+
+  defp join_stretches(stretches, context) do
+    stretches
+    |> Enum.reverse()
+    |> Enum.reduce(
+      nil,
+      fn
+        stretch, nil ->
+          stretch
+
+        stretch, acc ->
+          {:<>, context, [stretch, acc]}
+      end
+    )
+  end
+
+  defp variable_or_string({:"::", ctx1, [{name, _ctx2, nil}, {type, _ctx3, _}]})
+       when type in [:binary, :bytes] do
+    {name, ctx1, nil}
+  end
+
+  defp variable_or_string({:__block__, _ctx, [string]}) when is_binary(string), do: string
+
+  defp variable_or_string(_), do: nil
 end
