@@ -111,6 +111,12 @@ defmodule ExCop.Cops.Modules.SortReferences do
           node, %{in_macro: true} = acc ->
             {node, acc}
 
+          {:quote, _context, _right} = node, acc ->
+            {node, Map.put(acc, :in_quote, true)}
+
+          node, %{in_quote: true} = acc ->
+            {node, acc}
+
           {type, context, right}, acc when type in @module_reference_types ->
             line = context[:line]
 
@@ -140,6 +146,9 @@ defmodule ExCop.Cops.Modules.SortReferences do
         fn
           {:defmacro, _context, _right} = node, acc ->
             {node, Map.delete(acc, :in_macro)}
+
+          {:quote, _context, _right} = node, acc ->
+            {node, Map.delete(acc, :in_quote)}
 
           node, acc ->
             {node, acc}
