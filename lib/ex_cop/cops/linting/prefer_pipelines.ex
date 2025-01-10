@@ -83,8 +83,7 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
                  {:ok, {function, arity}} when arity > 0 <- function(node),
                  true <- requires_parens?({function, arity}, opts[:locals_without_parens]),
                  {:ok, first} <- first_argument(node),
-                 {:ok, {child_function, child_arity}} when child_arity > 0 <- function(first),
-                 false <- child_function in acc[:records] do
+                 true <- pipelinable?(first, acc[:records]) do
               {to_pipeline(node), acc}
             else
               _ ->
@@ -130,6 +129,18 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
       )
 
     {forms, comments}
+  end
+
+  defp pipelinable?({:|>, _ctx, _right}, _records), do: true
+
+  defp pipelinable?(node, records) do
+    with {:ok, {child_function, child_arity}} when child_arity > 0 <- function(node),
+         false <- child_function in records do
+      true
+    else
+      _ ->
+        false
+    end
   end
 
   @syntax ~w(
