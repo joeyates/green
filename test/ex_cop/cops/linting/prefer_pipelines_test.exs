@@ -3,6 +3,18 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
 
   alias ExCop.Cops.Linting.PreferPipelines
 
+  @tag example: "linting/favor_pipeline_operator_bad"
+  @tag fixture_pair: "linting/favor_pipeline_operator"
+  test "transforms triply-nested function calls into pipelines", %{
+    forms: forms,
+    comments: comments,
+    good: good
+  } do
+    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == good
+  end
+
   @tag example: "linting/prefer_pipelines/ignore_map_access"
   test "does not consider Map access as a function call", %{
     forms: forms,
