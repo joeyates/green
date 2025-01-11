@@ -5,7 +5,7 @@ defmodule ExCop.Cops.Naming.AvoidCapsTest do
 
   alias ExCop.Cops.Naming.AvoidCaps
 
-  @tag parse: "naming/avoid_caps/elixir_variables"
+  @tag example: "naming/avoid_caps/elixir_variables"
   test "ignores underscore variables", %{forms: forms, comments: comments} do
     output =
       capture_io(:stderr, fn ->

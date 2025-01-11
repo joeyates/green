@@ -40,11 +40,6 @@ defmodule ExCop.TestCase do
 
   defp handle_context(context, {:example, filename}) do
     example = read_fixture("#{filename}.ex")
-    Map.merge(context, %{example: example})
-  end
-
-  defp handle_context(context, {:parse, parse}) do
-    code = read_fixture("#{parse}.ex")
 
     to_quoted_opts =
       [
@@ -54,8 +49,8 @@ defmodule ExCop.TestCase do
         emit_warnings: false
       ]
 
-    {forms, comments} = Code.string_to_quoted_with_comments!(code, to_quoted_opts)
-    Map.merge(context, %{forms: forms, comments: comments})
+    {forms, comments} = Code.string_to_quoted_with_comments!(example, to_quoted_opts)
+    Map.merge(context, %{example: example, forms: forms, comments: comments})
   end
 
   defp handle_context(context, _other), do: context
