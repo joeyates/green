@@ -57,14 +57,11 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
           # Handle existing pipelines
           {:|>, context, [first | rest]}, acc ->
             parameters =
-              with {:ok, function} <- function(first),
-                   arity when arity > 0 <- function.arity,
-                   true <- requires_parens?(function, opts[:locals_without_parens]) do
+              if pipelinable?(first, opts, acc) do
                 # We're in a pipeline, but the first parameter is a normal function call
                 [to_pipeline(first) | rest]
               else
-                _ ->
-                  [first | rest]
+                [first | rest]
               end
 
             parameters =
@@ -83,11 +80,9 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
             with nil <- context[:attribute],
                  nil <- context[:function],
                  nil <- context[:pipeline_parameter],
-                 {:ok, function} <- function(node),
-                 arity when arity > 0 <- function.arity,
-                 true <- requires_parens?(function, opts[:locals_without_parens]),
+                 true <- pipelinable?(node, opts, acc),
                  {:ok, first} <- first_argument(node),
-                 true <- pipelinable?(first, acc[:records]) do
+                 true <- pipelinable?(first, opts, acc) do
               {to_pipeline(node), acc}
             else
               _ ->
@@ -135,12 +130,13 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
     {forms, comments}
   end
 
-  defp pipelinable?({:|>, _ctx, _right}, _records), do: true
+  defp pipelinable?({:|>, _ctx, _right}, _opts, _acc), do: false
 
-  defp pipelinable?(node, records) do
+  defp pipelinable?(node, opts, acc) do
     with {:ok, function} <- function(node),
          arity when arity > 0 <- function.arity,
-         false <- function.name in records do
+         true <- requires_parens?(function, opts[:locals_without_parens]),
+         false <- function.name in acc[:records] do
       true
     else
       _ ->
