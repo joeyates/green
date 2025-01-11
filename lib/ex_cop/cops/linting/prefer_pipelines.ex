@@ -3,6 +3,8 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
   This cop transforms nested function calls into pipelines.
   """
 
+  alias ExCop.Function.Signature
+
   @behaviour ExCop.Cop
 
   @impl true
@@ -55,8 +57,9 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
           # Handle existing pipelines
           {:|>, context, [first | rest]}, acc ->
             parameters =
-              with {:ok, {function, arity}} when arity > 0 <- function(first),
-                   true <- requires_parens?({function, arity}, opts[:locals_without_parens]) do
+              with {:ok, function} <- function(first),
+                   arity when arity > 0 <- function.arity,
+                   true <- requires_parens?(function, opts[:locals_without_parens]) do
                 # We're in a pipeline, but the first parameter is a normal function call
                 [to_pipeline(first) | rest]
               else
@@ -80,8 +83,9 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
             with nil <- context[:attribute],
                  nil <- context[:function],
                  nil <- context[:pipeline_parameter],
-                 {:ok, {function, arity}} when arity > 0 <- function(node),
-                 true <- requires_parens?({function, arity}, opts[:locals_without_parens]),
+                 {:ok, function} <- function(node),
+                 arity when arity > 0 <- function.arity,
+                 true <- requires_parens?(function, opts[:locals_without_parens]),
                  {:ok, first} <- first_argument(node),
                  true <- pipelinable?(first, acc[:records]) do
               {to_pipeline(node), acc}
@@ -134,8 +138,9 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
   defp pipelinable?({:|>, _ctx, _right}, _records), do: true
 
   defp pipelinable?(node, records) do
-    with {:ok, {child_function, child_arity}} when child_arity > 0 <- function(node),
-         false <- child_function in records do
+    with {:ok, function} <- function(node),
+         arity when arity > 0 <- function.arity,
+         false <- function.name in records do
       true
     else
       _ ->
@@ -159,17 +164,13 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
   defp function({left, _context, _right}) when left in @syntax, do: nil
 
-  defp function(
-         {{:., _ctx1, [{:__aliases__, _ctx2, _modules}, _name]} = function, _ctx3, arguments}
-       ) do
-    {:ok, {function, length(arguments)}}
+  defp function({{:., _ctx1, [{:__aliases__, _ctx2, modules}, name]}, _ctx3, arguments}) do
+    {:ok, Signature.new(modules, name, length(arguments))}
   end
 
   # Erlang function invocation
-  defp function(
-         {{:., _ctx1, [{:__block__, _ctx2, [_module]}, _name]} = function, _ctx3, arguments}
-       ) do
-    {:ok, {function, length(arguments)}}
+  defp function({{:., _ctx1, [{:__block__, _ctx2, [module]}, name]}, _ctx3, arguments}) do
+    {:ok, Signature.new([module], name, length(arguments))}
   end
 
   defp function({:., _context, _right}), do: nil
@@ -180,7 +181,7 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
       nil
     else
       # Local or imported function invocation
-      {:ok, {left, length(arguments)}}
+      {:ok, Signature.new([], left, length(arguments))}
     end
   end
 
@@ -190,19 +191,25 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
   defp first_argument(_other), do: nil
 
-  defp requires_parens?({function, arity}, locals_without_parens)
-       when is_atom(function) and is_list(locals_without_parens) do
-    {function, arity} not in locals_without_parens
+  defp requires_parens?({_name, _arity}, nil), do: true
+
+  defp requires_parens?({name, arity}, locals_without_parens)
+       when is_atom(name) and is_integer(arity) do
+    {name, arity} not in locals_without_parens
   end
 
-  defp requires_parens?(_fn_arity, _locals_without_parens), do: true
+  defp requires_parens?(%Signature{modules: []} = function, locals_without_parens) do
+    requires_parens?({function.name, function.arity}, locals_without_parens)
+  end
+
+  defp requires_parens?(_function, _locals_without_parens), do: true
 
   defp to_pipeline(node) do
     case function(node) do
-      {:ok, {_function, 0}} ->
+      {:ok, %Signature{arity: 0}} ->
         node
 
-      {:ok, {_function, _arity}} ->
+      {:ok, _function} ->
         {left, context, [first | rest]} = node
         # Change keyword arguments to a proper Keyword, wrapped in `[]`
         first = wrap_bare_keyword(first)
