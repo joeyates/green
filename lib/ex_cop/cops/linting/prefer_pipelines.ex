@@ -9,6 +9,8 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
   @impl true
   def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+
     {forms, _acc} =
       Macro.traverse(
         forms,
@@ -51,7 +53,7 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
            ]} = node,
           acc
           when call in [:defrecord, :defrecordp] ->
-            acc = update_in(acc, [:records], fn records -> [name | records] end)
+            acc = update_in(acc, [:records], fn records -> [to_string(name) | records] end)
             {node, acc}
 
           # Handle existing pipelines
@@ -130,12 +132,39 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
     {forms, comments}
   end
 
+  defp prepare_opts(opts) do
+    opts
+    |> update_in([:ex_cop], &(&1 || []))
+    |> update_in([:ex_cop, :prefer_pipelines], &(&1 || []))
+    |> update_in(
+      [:ex_cop, :prefer_pipelines, :ignore_functions],
+      fn
+        nil ->
+          []
+
+        list ->
+          Enum.map(list, &build_function/1)
+      end
+    )
+  end
+
+  defp build_function({modules_and_name, arity}) when is_atom(modules_and_name) do
+    build_function({to_string(modules_and_name), arity})
+  end
+
+  defp build_function({modules_and_name, arity})
+       when is_binary(modules_and_name) and is_integer(arity) do
+    [name | modules] = modules_and_name |> String.split(".") |> Enum.reverse()
+    Signature.new(Enum.reverse(modules), name, arity)
+  end
+
   defp pipelinable?({:|>, _ctx, _right}, _opts, _acc), do: false
 
   defp pipelinable?(node, opts, acc) do
     with {:ok, function} <- function(node),
          arity when arity > 0 <- function.arity,
          true <- requires_parens?(function, opts[:locals_without_parens]),
+         false <- ignore?(function, opts[:ex_cop][:prefer_pipelines][:ignore_functions]),
          false <- function.name in acc[:records] do
       true
     else
@@ -199,6 +228,10 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
   end
 
   defp requires_parens?(_function, _locals_without_parens), do: true
+
+  defp ignore?(function, ignore_functions) do
+    Enum.any?(ignore_functions, &(&1 == function))
+  end
 
   defp to_pipeline(node) do
     case function(node) do

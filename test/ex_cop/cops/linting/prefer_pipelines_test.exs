@@ -15,6 +15,22 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
     assert output == good
   end
 
+  @tag example: "linting/favor_pipeline_operator_bad"
+  @tag fixture_pair: "linting/favor_pipeline_operator"
+  test "supports configuration of functions to ignore", %{
+    forms: forms,
+    comments: comments,
+    bad: bad
+  } do
+    {forms, comments} =
+      PreferPipelines.apply({forms, comments},
+        ex_cop: [prefer_pipelines: [ignore_functions: ["String.downcase": 1]]]
+      )
+
+    output = default_format({forms, comments})
+    assert output == bad
+  end
+
   @tag example: "linting/prefer_pipelines/ignore_map_access"
   test "does not consider Map access as a function call", %{
     forms: forms,
