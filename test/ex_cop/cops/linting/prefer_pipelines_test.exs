@@ -42,6 +42,17 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
     assert output == example
   end
 
+  @tag example: "linting/prefer_pipelines/try_rescue"
+  test "does not consider try as a function call", %{
+    forms: forms,
+    comments: comments,
+    example: example
+  } do
+    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == example
+  end
+
   @tag example: "linting/prefer_pipelines/nested_second_parameter_bad"
   @tag fixture_pair: "linting/prefer_pipelines/nested_second_parameter"
   test "only transforms the first parameter of a nested function call", %{

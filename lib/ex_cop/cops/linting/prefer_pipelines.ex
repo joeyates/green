@@ -175,7 +175,7 @@ defmodule ExCop.Cops.Linting.PreferPipelines do
 
   @syntax ~w(
     def defp defmodule defmacro defmacrop defstruct defdelegate
-    if unless for case cond with when and not or in
+    if unless for case cond try with when and not or in
     fn use alias import require reraise
     quote unquote
     __block__
