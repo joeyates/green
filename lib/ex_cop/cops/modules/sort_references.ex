@@ -1,4 +1,6 @@
 defmodule ExCop.Cops.Modules.SortReferences do
+  alias ExCop.Quoted
+
   @module_reference_types [:use, :import, :alias, :require]
 
   @behaviour ExCop.Cop
@@ -161,45 +163,17 @@ defmodule ExCop.Cops.Modules.SortReferences do
   defp move(refs, from, from), do: refs
 
   defp move({forms, comments, lines_by_type}, from, to) do
-    forms =
-      Macro.prewalk(forms, fn
-        {left, context, right} ->
-          context =
-            context
-            |> shift([:line], from, to)
-            |> shift([:closing, :line], from, to)
-
-          {left, context, right}
-
-        node ->
-          node
-      end)
-
-    comments =
-      Enum.map(comments, fn comment ->
-        line = new_position(comment.line, from, to)
-        Map.put(comment, :line, line)
-      end)
+    forms = Quoted.Forms.move_line(forms, from, to)
+    comments = Quoted.Comments.move_line(comments, from, to)
 
     lines_by_type =
       lines_by_type
       |> Enum.map(fn {type, lines} ->
-        {type, Enum.map(lines, &new_position(&1, from, to))}
+        {type, Enum.map(lines, &Quoted.new_position(&1, from, to))}
       end)
       |> Enum.into(%{})
 
     {forms, comments, lines_by_type}
-  end
-
-  defp shift(context, path, from, to) do
-    case get_in(context, path) do
-      nil ->
-        context
-
-      line ->
-        moved = new_position(line, from, to)
-        put_in(context, path, moved)
-    end
   end
 
   defp sort({forms, comments}) do
@@ -208,29 +182,10 @@ defmodule ExCop.Cops.Modules.SortReferences do
         Enum.sort_by(lines, &get_in(&1, [Access.elem(1), :line]))
       end)
 
-    comments = Enum.sort_by(comments, & &1[:line])
+    comments = Quoted.Comments.sort(comments)
+
     {forms, comments}
   end
-
-  defp new_position(current, from, to) when from > to do
-    cond do
-      current < to -> current
-      current > from -> current
-      current == from -> to
-      true -> current + 1
-    end
-  end
-
-  defp new_position(current, from, to) when from < to do
-    cond do
-      current < from -> current
-      current > to -> current
-      current == from -> to
-      true -> current - 1
-    end
-  end
-
-  defp new_position(current, _from, _to), do: current
 
   defp module_lines_access do
     [
