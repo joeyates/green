@@ -3,12 +3,11 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariableTest do
 
   alias ExCop.Cops.Modules.UseModulePseudoVariable
 
-  @tag parse: "modules/use_module_pseudo_variable/nested_modules"
+  @tag example: "modules/use_module_pseudo_variable/nested_modules"
   test "handles nested modules", %{forms: forms, comments: comments} do
     UseModulePseudoVariable.apply({forms, comments}, [])
   end
 
-  @tag parse: "modules/use_module_pseudo_variable/ignore_in_quote"
   @tag example: "modules/use_module_pseudo_variable/ignore_in_quote"
   test "ignores references to the current module in `quote`", %{
     forms: forms,
@@ -20,7 +19,6 @@ defmodule ExCop.Cops.Modules.UseModulePseudoVariableTest do
     assert output == example
   end
 
-  @tag parse: "modules/use_module_pseudo_variable/ignore_in_defimpl"
   @tag example: "modules/use_module_pseudo_variable/ignore_in_defimpl"
   test "ignores references to the current module in `defimpl`", %{
     forms: forms,

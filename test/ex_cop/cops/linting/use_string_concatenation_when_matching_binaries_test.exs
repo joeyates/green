@@ -3,7 +3,7 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinariesTest do
 
   alias ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinaries
 
-  @tag parse: "linting/use_string_concatenation_when_matching_binaries/single_bytes_entry_bad"
+  @tag example: "linting/use_string_concatenation_when_matching_binaries/single_bytes_entry_bad"
   @tag fixture_pair: "linting/use_string_concatenation_when_matching_binaries/single_bytes_entry"
   test "extracts bytes match from bitstrings with a single entry", %{
     forms: forms,
@@ -15,7 +15,7 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinariesTest do
     assert output == good
   end
 
-  @tag parse: "linting/use_string_concatenation_when_matching_binaries/single_binary_entry_bad"
+  @tag example: "linting/use_string_concatenation_when_matching_binaries/single_binary_entry_bad"
   @tag fixture_pair: "linting/use_string_concatenation_when_matching_binaries/single_binary_entry"
   test "extracts binary match from bitstrings with a single entry", %{
     forms: forms,
@@ -27,7 +27,7 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinariesTest do
     assert output == good
   end
 
-  @tag parse: "linting/use_string_concatenation_when_matching_binaries/single_string_entry_bad"
+  @tag example: "linting/use_string_concatenation_when_matching_binaries/single_string_entry_bad"
   @tag fixture_pair: "linting/use_string_concatenation_when_matching_binaries/single_string_entry"
   test "extracts string from bitstrings with a single entry", %{
     forms: forms,
@@ -39,7 +39,7 @@ defmodule ExCop.Cops.Linting.UseStringConcatenationWhenMatchingBinariesTest do
     assert output == good
   end
 
-  @tag parse: "linting/use_string_concatenation_when_matching_binaries/mixed_entries_bad"
+  @tag example: "linting/use_string_concatenation_when_matching_binaries/mixed_entries_bad"
   @tag fixture_pair: "linting/use_string_concatenation_when_matching_binaries/mixed_entries"
   test "extracts strings and binaries, grouping remaining entries", %{
     forms: forms,

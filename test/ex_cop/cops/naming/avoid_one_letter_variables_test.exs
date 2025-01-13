@@ -5,7 +5,7 @@ defmodule ExCop.Cops.Naming.AvoidOneLetterVariablesTest do
 
   alias ExCop.Cops.Naming.AvoidOneLetterVariables
 
-  @tag parse: "naming/avoid_one_letter_variables/underscore_variable"
+  @tag example: "naming/avoid_one_letter_variables/underscore_variable"
   test "ignores underscore variables", %{forms: forms, comments: comments} do
     output =
       capture_io(:stderr, fn ->
