@@ -1,3 +1,3 @@
 defmodule SkipNilInDefstructFromMixed do
-  defstruct points: 20, name: nil, admin?: false
+  defstruct [:aaa, points: 20, name: nil, admin?: false]
 end
