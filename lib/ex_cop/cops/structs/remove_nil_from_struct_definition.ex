@@ -10,11 +10,11 @@ defmodule ExCop.Cops.Structs.RemoveNilFromStructDefinition do
     forms =
       Macro.prewalk(forms, fn
         {:defstruct, context, right} = node ->
-          if !nils?(right) do
-            node
-          else
+          if nils?(right) do
             right = to_mixed_list(right)
             {:defstruct, context, right}
+          else
+            node
           end
 
         other ->
