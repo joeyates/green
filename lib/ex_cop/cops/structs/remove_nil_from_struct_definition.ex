@@ -9,10 +9,18 @@ defmodule ExCop.Cops.Structs.RemoveNilFromStructDefinition do
   def apply({forms, comments}, _opts) do
     forms =
       Macro.prewalk(forms, fn
-        {:defstruct, context, right} = node ->
-          if nils?(right) do
-            right = to_mixed_list(right)
-            {:defstruct, context, right}
+        {:defstruct, ctx1, [{:__block__, ctx2, [items]}]} = node when is_list(items) ->
+          if nils?(items) do
+            items = to_mixed_list(items)
+            {:defstruct, ctx1, [{:__block__, ctx2, [items]}]}
+          else
+            node
+          end
+
+        {:defstruct, context, [items]} = node when is_list(items) ->
+          if nils?(items) do
+            items = to_mixed_list(items)
+            {:defstruct, context, [{:__block__, context, [items]}]}
           else
             node
           end
@@ -24,41 +32,18 @@ defmodule ExCop.Cops.Structs.RemoveNilFromStructDefinition do
     {forms, comments}
   end
 
-  # Keyword
-  defp nils?([items]) when is_list(items) do
+  defp nils?(items) do
     Enum.any?(items, &nil_keyword?/1)
   end
-
-  # Mixed list
-  defp nils?([{:__block__, _ctx, [items]}]) do
-    Enum.any?(items, &nil_keyword?/1)
-  end
-
-  defp nils?(_), do: false
 
   defp nil_keyword?({{:__block__, _ctx1, [_name]}, {:__block__, _ctx2, [nil]}}), do: true
 
   defp nil_keyword?(_node), do: false
 
-  defp to_mixed_list([items]) when is_list(items) do
-    first = hd(items)
-    {{:__block__, context, [_name]}, _value} = first
-
-    items =
-      items
-      |> Enum.map(&to_mixed_list_item/1)
-      |> sort_atoms_first()
-
-    [{:__block__, [line: context[:line]], [items]}]
-  end
-
-  defp to_mixed_list([{:__block__, context, [items]}]) do
-    items =
-      items
-      |> Enum.map(&to_mixed_list_item/1)
-      |> sort_atoms_first()
-
-    [{:__block__, context, [items]}]
+  defp to_mixed_list(items) do
+    items
+    |> Enum.map(&to_mixed_list_item/1)
+    |> sort_atoms_first()
   end
 
   defp to_mixed_list_item(item) do
