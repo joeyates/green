@@ -140,18 +140,8 @@ defmodule ExCop.ElixirStyleGuideFormatterTest do
       assert formatted == good
     end
 
-    @tag fixture_pair: "structs/skip_nil_in_struct_definition"
+    @tag fixture_pair: "structs/skip_nil_in_struct_definition/key_value"
     test "removes `nil` defaults from struct definitions", %{bad: bad, good: good} do
-      formatted = format(bad)
-
-      assert formatted == good
-    end
-
-    @tag fixture_pair: "structs/skip_nil_in_struct_definition_from_mixed"
-    test "removes `nil` defaults from struct definitions, starting from a mixed list", %{
-      bad: bad,
-      good: good
-    } do
       formatted = format(bad)
 
       assert formatted == good
