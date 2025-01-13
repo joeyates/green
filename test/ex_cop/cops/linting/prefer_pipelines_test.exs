@@ -94,4 +94,16 @@ defmodule ExCop.Cops.Linting.PreferPipelinesTest do
     output = default_format({forms, comments})
     assert output == example
   end
+
+  @tag example: "linting/prefer_pipelines/__module___bad"
+  @tag fixture_pair: "linting/prefer_pipelines/__module__"
+  test "handles __MODULE__.function", %{
+    forms: forms,
+    comments: comments,
+    good: good
+  } do
+    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == good
+  end
 end
