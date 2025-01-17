@@ -14,7 +14,11 @@ defmodule ExCop.Cops.Linting.AvoidNeedlessPipelines do
         {:|>, context, right}, %{in_pipeline: false} = acc ->
           [first, {function, _ctx, rest}] = right
 
-          {{function, context, [first | rest]}, acc}
+          if rest do
+            {{function, context, [first | rest]}, acc}
+          else
+            {{function, context, [first]}, acc}
+          end
 
         other, acc ->
           {other, acc}
