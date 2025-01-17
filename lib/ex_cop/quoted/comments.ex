@@ -15,4 +15,41 @@ defmodule ExCop.Quoted.Comments do
   def sort(comments) do
     Enum.sort_by(comments, & &1[:line])
   end
+
+  def line_comments(comments, line) do
+    comments
+    |> Enum.reverse()
+    |> Enum.reduce(
+      {line - 1, []},
+      fn
+        _comment, {nil, lines} ->
+          {nil, lines}
+
+        comment, {current, []} ->
+          line = comment[:line]
+
+          cond do
+            line > current ->
+              {current, []}
+
+            line == current ->
+              {current - 1, [line]}
+
+            true ->
+              {nil, []}
+          end
+
+        comment, {current, lines} ->
+          line = comment[:line]
+
+          if line == current do
+            {current - 1, [line | lines]}
+          else
+            {nil, lines}
+          end
+      end
+    )
+    |> elem(1)
+    |> Enum.reverse()
+  end
 end
