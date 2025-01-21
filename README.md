@@ -2,7 +2,9 @@
 
 An Elixir code formatter.
 
-By default, it enforces [lexmag's Elixir style guide](https://github.com/lexmag/elixir-style-guide)
+Currently, it can enforce [lexmag's Elixir style guide][lexmag].
+
+[lexmag]: https://github.com/lexmag/elixir-style-guide
 
 # Motivation
 
@@ -13,25 +15,78 @@ enforce additional styling rules beyond those covered by the standard formatter.
 
 The name is a play on `ex` for Elixir and `cop` from [RuboCop](https://rubocop.org/).
 
+# Status
+
+ExCop provides `ExCop.Lexmag.ElixirStyleGuideFormatter` which,
+as far as is possible, implements the rules of [lexmag's style guide][lexmag]
+that are not already implemented by `mix format`.
+
+# Limitations
+
+ExCop changes the order of lines in two cases:
+
+* When moving `use`, `import`, `assign` and `require` statements to the top of
+  a module,
+* When modifying `defstruct` fields which are assigned `nil` as a default value.
+
+Where possible, when shifting lines around, ExCop will try to keep
+associated comments with the lines that follow them. However, this is not
+always possible. Please check the output of the formatter to ensure that
+comments are in the correct place.
+
 # Roadmap
 
-Ths initial roadmap is to implement the rules of lexmag's style guide that
-are not already implemented by `mix format`.
+Implement the other well-known Elixir style guides:
 
-# Rules
+* [Credo's Style Guide](https://github.com/rrrene/elixir-style-guide#readme)
+* [Christopher Adams' Elixir Style Guide](https://github.com/christopheradams/elixir_style_guide)
+
+# Lexmag.ElixirStyleGuideFormatter
+
+## Usage
+
+Add the following to your `mix.exs`:
+
+```elixir
+defp deps do
+  [
+    {:ex_cop, "~> 0.1.0"}
+  ]
+end
+```
+
+Modify `.formatter.exs` to include the following:
+
+```elixir
+[
+  plugins: [ExCop.Lexmag.ElixirStyleGuideFormatter]
+]
+```
+
+## Limitations
+
+Some rules cannot be enforced by a formatter. For example, the rule that
+comments should be critical. This is a matter of opinion and cannot be
+automatically enforced.
+
+The implemented rules are marked with a check `✓`.
+
+When it is possible to transform the code to match the style guide, ExCop will
+do so. However, it is not always possible to do so. In these cases, ExCop will
+leave the code as it is and print a warning.
 
 ## Linting
 
 * [x] Transform nested function calls into pipelines ([L1]),
 * [x] Transform one-element pipelines into function calls ([L2]),
 
-❔Don't use anonymous functions in pipelines ([L3]),
+❔ Don't use anonymous functions in pipelines ([L3]),
 
 * [x] Transform `unless...else...` into `if...else...` ([L4]),
 * [x] Transform `if...else nil` into `if...` ([L5]),
 * [x] Ensure match-all condition of `cond` has `true` ([L6]),
 
-❔Use `and` and `or` instead of `&&` and `||` when the arguments are boolean ([L7]),
+❔ Use `and` and `or` instead of `&&` and `||` when the arguments are boolean ([L7]),
 
 * [x] Use `<>` instead of bitstrings when pattern-matching binaries ([L8]).
 
@@ -63,9 +118,9 @@ NO Enforce CamelCase for modules ([N2]),
 
 ## Comments
 
-❔Use only critical comments ([C1]),
+❔ Use only critical comments ([C1]),
 
-❔Avoid superfluous comments ([C2]).
+❔ Avoid superfluous comments ([C2]).
 
 [C1]: https://github.com/lexmag/elixir-style-guide#critical-comments
 [C2]: https://github.com/lexmag/elixir-style-guide#no-superfluous-comments
