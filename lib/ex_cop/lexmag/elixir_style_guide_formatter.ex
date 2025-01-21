@@ -1,4 +1,4 @@
-defmodule ExCop.ElixirStyleGuideFormatter do
+defmodule ExCop.Lexmag.ElixirStyleGuideFormatter do
   alias ExCop.Cops.{Exceptions, Linting, Modules, Naming, Structs}
 
   @behaviour Mix.Tasks.Format

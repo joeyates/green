@@ -1,7 +1,7 @@
-defmodule ExCop.ElixirStyleGuideFormatterTest do
+defmodule ExCop.Lexmag.ElixirStyleGuideFormatterTest do
   use ExCop.TestCase, async: true
 
-  import ExCop.ElixirStyleGuideFormatter
+  import ExCop.Lexmag.ElixirStyleGuideFormatter
   import ExUnit.CaptureIO
 
   describe "format/1" do
