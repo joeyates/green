@@ -167,8 +167,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
         try do
           format_file("filename-with-hyphens.ex")
         rescue
-          e in ArgumentError ->
-            e
+          error in ArgumentError ->
+            error
         end
 
       assert message == "'-' found in file name 'filename-with-hyphens.ex'"

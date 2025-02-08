@@ -8,8 +8,8 @@ defmodule Green.Rules.Modules.SortReferences do
   @impl true
   def apply({forms, comments}, _opts) do
     {forms, {comments, _state}} =
-      forms
-      |> Macro.traverse(
+      Macro.traverse(
+        forms,
         {comments, %{}},
         fn
           {:defmacro, _context, _right} = node, {comments, state} ->

@@ -38,7 +38,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
       |> Exceptions.UseErrorSuffix.apply(opts)
       |> default_format(opts)
 
-    [formatted, ?\n] |> IO.iodata_to_binary()
+    IO.iodata_to_binary([formatted, ?\n])
   end
 
   defp parse(code, opts) do

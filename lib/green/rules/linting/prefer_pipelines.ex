@@ -155,7 +155,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
   defp build_function({modules_and_name, arity})
        when is_binary(modules_and_name) and is_integer(arity) do
     [name | modules] = modules_and_name |> String.split(".") |> Enum.reverse()
-    Signature.new(Enum.reverse(modules), name, arity)
+    modules |> Enum.reverse() |> Signature.new(name, arity)
   end
 
   defp pipelinable?({:|>, _ctx, _right}, _opts, _acc), do: false
