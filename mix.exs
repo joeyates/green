@@ -1,9 +1,9 @@
-defmodule ExCop.MixProject do
+defmodule Green.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :ex_cop,
+      app: :green,
       version: "0.1.0",
       elixir: "~> 1.14",
       deps: deps(),
@@ -26,7 +26,7 @@ defmodule ExCop.MixProject do
     %{
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/joeyates/ex_cop"
+        "GitHub" => "https://github.com/joeyates/green"
       },
       maintainers: ["Joe Yates"]
     }

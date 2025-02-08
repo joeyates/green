@@ -1,4 +1,4 @@
-defmodule ExCop.TestCase do
+defmodule Green.TestCase do
   @moduledoc """
   This module provides functions for fixture loading and test case setup.
   """

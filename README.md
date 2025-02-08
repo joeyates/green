@@ -1,4 +1,4 @@
-# ExCop
+# Green
 
 An Elixir code formatter.
 
@@ -13,23 +13,23 @@ enforce additional styling rules beyond those covered by the standard formatter.
 
 # Name
 
-The name is a play on `ex` for Elixir and `cop` from [RuboCop](https://rubocop.org/).
+The name "Green" is a reference to bikeshedding, i.e. "The bike shed is green."
 
 # Status
 
-ExCop provides `ExCop.Lexmag.ElixirStyleGuideFormatter` which,
+Green provides `Green.Lexmag.ElixirStyleGuideFormatter` which,
 as far as is possible, implements the rules of [lexmag's style guide][lexmag]
 that are not already implemented by `mix format`.
 
 # Limitations
 
-ExCop changes the order of lines in two cases:
+Green changes the order of lines in two cases:
 
 * When moving `use`, `import`, `assign` and `require` statements to the top of
   a module,
 * When modifying `defstruct` fields which are assigned `nil` as a default value.
 
-Where possible, when shifting lines around, ExCop will try to keep
+Where possible, when shifting lines around, Green will try to keep
 associated comments with the lines that follow them. However, this is not
 always possible. Please check the output of the formatter to ensure that
 comments are in the correct place.
@@ -50,7 +50,7 @@ Add the following to your `mix.exs`:
 ```elixir
 defp deps do
   [
-    {:ex_cop, "~> 0.1.0"}
+    {:green, "~> 0.1.0"}
   ]
 end
 ```
@@ -59,7 +59,7 @@ Modify `.formatter.exs` to include the following:
 
 ```elixir
 [
-  plugins: [ExCop.Lexmag.ElixirStyleGuideFormatter]
+  plugins: [Green.Lexmag.ElixirStyleGuideFormatter]
 ]
 ```
 
@@ -71,8 +71,8 @@ automatically enforced.
 
 The implemented rules are marked with a check `✓`.
 
-When it is possible to transform the code to match the style guide, ExCop will
-do so. However, it is not always possible to do so. In these cases, ExCop will
+When it is possible to transform the code to match the style guide, Green will
+do so. However, it is not always possible to do so. In these cases, Green will
 leave the code as it is and print a warning.
 
 ## Linting
