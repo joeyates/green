@@ -53,7 +53,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
            ]} = node,
           acc
           when call in [:defrecord, :defrecordp] ->
-            acc = update_in(acc, [:records], fn records -> [to_string(name) | records] end)
+            acc = update_in(acc, [:records], fn records -> [name | records] end)
             {node, acc}
 
           # Handle existing pipelines
@@ -148,13 +148,15 @@ defmodule Green.Rules.Linting.PreferPipelines do
     )
   end
 
-  defp build_function({modules_and_name, arity}) when is_atom(modules_and_name) do
-    build_function({to_string(modules_and_name), arity})
-  end
-
   defp build_function({modules_and_name, arity})
-       when is_binary(modules_and_name) and is_integer(arity) do
-    [name | modules] = modules_and_name |> String.split(".") |> Enum.reverse()
+       when is_atom(modules_and_name) and is_integer(arity) do
+    [name | modules] =
+      modules_and_name
+      |> to_string()
+      |> String.split(".")
+      |> Enum.map(&String.to_atom/1)
+      |> Enum.reverse()
+
     modules |> Enum.reverse() |> Signature.new(name, arity)
   end
 
@@ -219,7 +221,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
   defp requires_parens?({_name, _arity}, nil), do: true
 
   defp requires_parens?({name, arity}, locals_without_parens)
-       when is_atom(name) and is_integer(arity) do
+       when is_binary(name) and is_integer(arity) do
     {name, arity} not in locals_without_parens
   end
 
