@@ -221,7 +221,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
   defp requires_parens?({_name, _arity}, nil), do: true
 
   defp requires_parens?({name, arity}, locals_without_parens)
-       when is_binary(name) and is_integer(arity) do
+       when is_atom(name) and is_integer(arity) do
     {name, arity} not in locals_without_parens
   end
 
