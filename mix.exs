@@ -1,13 +1,16 @@
 defmodule Green.MixProject do
   use Mix.Project
 
+  @version "0.1.1"
+
   def project do
     [
       app: :green,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.14",
       deps: deps(),
       description: "Format Elixir code according to a consistent style",
+      docs: docs(),
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package()
     ]
@@ -19,6 +22,21 @@ defmodule Green.MixProject do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+    ]
+  end
+
+  defp docs do
+    [
+      source_ref: "v#{@version}",
+      main: "readme",
+      extra_section: "GUIDES",
+      extras: extras()
+    ]
+  end
+
+  defp extras do
+    [
+      "README.md"
     ]
   end
 
