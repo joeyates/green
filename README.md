@@ -1,5 +1,7 @@
 # Green
 
+![Version](https://img.shields.io/hexpm/v/green)
+
 An Elixir code formatter.
 
 Currently, it can enforce [lexmag's Elixir style guide][lexmag].
@@ -52,7 +54,7 @@ Add the following to your `mix.exs`:
 ```elixir
 defp deps do
   [
-    {:green, "~> 0.1.0"}
+    {:green, "~> (See the badge above)"}
   ]
 end
 ```
