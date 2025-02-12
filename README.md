@@ -10,13 +10,13 @@ Currently, it can enforce [lexmag's Elixir style guide][lexmag].
 
 ## Motivation
 
-The standard Elixir formatter only enforces a small number of certain rules.
+The standard Elixir formatter only enforces a small number of rules.
 This project aims to enforce enough rules so that the "house style" of a project
 can be enforced by the formatter.
 
 ## Name
 
-The name "Green" is a reference to bikeshedding, i.e. "All bike shed shoul
+The name "Green" is a reference to bikeshedding, i.e. "All bike sheds should
 be green."
 
 ## Status
