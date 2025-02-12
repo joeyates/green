@@ -29,7 +29,7 @@ that are not already implemented by `mix format`.
 
 Two rules change the order of lines:
 
-* `PreferPipelines` groups `use`, `import`, `assign` and `require` statements,
+* `PreferPipelines` groups `use`, `import`, `alias` and `require` statements,
 * `RemoveNilFromStructDefinition` places the list of `nil`-default fields
   at the top of the struct definition.
 
@@ -170,7 +170,7 @@ a thumbs up `👍`.
 
 ### Modules
 
-✅ Group and order `use`, `import`, `assign` and `require` statements ([M1]),
+✅ Group and order `use`, `import`, `alias` and `require` statements ([M1]),
 
 ✅ Replace the current module name with `__MODULE__` ([M2]).
 
@@ -178,7 +178,7 @@ Notes:
 
 * [M1][M1]:
   This transformation does not take into account comments. Any comment before
-  or on the same line as a `use`, `import`, `assign` or `require` statement
+  or on the same line as a `use`, `import`, `alias` or `require` statement
   will be left where it is.
 
 [M1]: https://github.com/lexmag/elixir-style-guide#module-layout
