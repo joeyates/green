@@ -72,7 +72,7 @@ Modify `.formatter.exs` to include the following:
 The implemented rules are marked with a check `✅`.
 
 When it is possible to transform the code to match the style guide, Green will
-do so. However, it is not always possible to do so. In these cases, Green will
+do so. When automatic transformation is not possible, Green will
 leave the code as it is and print a warning. These are marked with an
 exclamation mark `❗`.
 
