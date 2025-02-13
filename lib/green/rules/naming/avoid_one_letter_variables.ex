@@ -7,12 +7,20 @@ defmodule Green.Rules.Naming.AvoidOneLetterVariables do
 
   @impl true
   def apply({forms, comments}, opts) do
-    forms =
-      Macro.prewalk(forms, fn
-        {:_, _context, nil} = node ->
-          node
+    Macro.traverse(
+      forms,
+      %{in_type: false},
+      fn
+        {:@, _ctx1, [{:type, _ctx2, _right}]} = node, acc ->
+          {node, Map.put(acc, :in_type, true)}
 
-        {name, context, nil} = node ->
+        node, %{in_type: true} = acc ->
+          {node, acc}
+
+        {:_, _context, nil} = node, acc ->
+          {node, acc}
+
+        {name, context, nil} = node, acc ->
           if one_letter?(name) do
             IO.warn(
               """
@@ -23,11 +31,19 @@ defmodule Green.Rules.Naming.AvoidOneLetterVariables do
             )
           end
 
-          node
+          {node, acc}
 
-        other ->
-          other
-      end)
+        other, acc ->
+          {other, acc}
+      end,
+      fn
+        {:@, _ctx1, [{:type, _ctx2, _right}]} = node, acc ->
+          {node, Map.delete(acc, :in_type)}
+
+        other, acc ->
+          {other, acc}
+      end
+    )
 
     {forms, comments}
   end

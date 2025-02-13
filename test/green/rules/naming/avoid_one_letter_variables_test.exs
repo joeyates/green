@@ -14,4 +14,14 @@ defmodule Green.Rules.Naming.AvoidOneLetterVariablesTest do
 
     assert output == ""
   end
+
+  @tag example: "naming/avoid_one_letter_variables/types"
+  test "ignores variables in types", %{forms: forms, comments: comments} do
+    output =
+      capture_io(:stderr, fn ->
+        AvoidOneLetterVariables.apply({forms, comments}, [])
+      end)
+
+    assert output == ""
+  end
 end
