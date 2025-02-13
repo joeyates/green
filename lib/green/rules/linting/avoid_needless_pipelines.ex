@@ -1,6 +1,6 @@
 defmodule Green.Rules.Linting.AvoidNeedlessPipelines do
   @moduledoc """
-  This cop transforms single-function pipelines into function calls.
+  This rule transforms single-function pipelines into function calls.
   """
 
   @behaviour Green.Rule

@@ -1,6 +1,6 @@
 defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinaries do
   @moduledoc """
-  This cop replaces use of bitstrings with the `<>` operator when matching binaries.
+  This rule replaces use of bitstrings with the `<>` operator when matching binaries.
   """
 
   @behaviour Green.Rule

@@ -1,6 +1,6 @@
 defmodule Green.Rules.Exceptions.UseErrorSuffix do
   @moduledoc """
-  This cop warns if exceptions are defined with a suffix of `Error`.
+  This rule warns if exceptions are defined with a suffix of `Error`.
 
   ## Examples
 

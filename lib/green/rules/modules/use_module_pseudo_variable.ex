@@ -1,6 +1,6 @@
 defmodule Green.Rules.Modules.UseModulePseudoVariable do
   @moduledoc """
-  This cop replaces references to the current module by name with the pseudo-variable
+  This rule replaces references to the current module by name with the pseudo-variable
   `__MODULE__`.
   """
 

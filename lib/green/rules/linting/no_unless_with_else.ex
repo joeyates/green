@@ -1,6 +1,6 @@
 defmodule Green.Rules.Linting.NoUnlessWithElse do
   @moduledoc """
-  This cop transforms `unless` with `else` into `if` with `else`.
+  This rule transforms `unless` with `else` into `if` with `else`.
   """
 
   @behaviour Green.Rule

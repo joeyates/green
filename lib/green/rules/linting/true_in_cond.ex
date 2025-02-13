@@ -1,6 +1,6 @@
 defmodule Green.Rules.Linting.TrueInCond do
   @moduledoc """
-  This cop ensures final, always-matching clauses in `cond` use `true`.
+  This rule ensures final, always-matching clauses in `cond` use `true`.
   """
   import Access
 
