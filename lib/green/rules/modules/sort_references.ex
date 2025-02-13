@@ -48,7 +48,6 @@ defmodule Green.Rules.Modules.SortReferences do
   end
 
   defp initial_positions(forms) do
-    # Do a prewalk to get the initial positions of the module references
     {lines, min_line} =
       forms
       |> get_in(module_lines_access())
