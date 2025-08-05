@@ -19,10 +19,16 @@ defmodule Green.Rules.Modules.UseModulePseudoVariable do
           {:defimpl, _context, _right} = node, acc ->
             {node, Map.put(acc, :in_defimpl, true)}
 
+          {:defmacro, _context, _right} = node, acc ->
+            {node, Map.put(acc, :in_macro, true)}
+
           {:quote, _context, _right} = node, acc ->
             {node, Map.put(acc, :in_quote, true)}
 
           {:__aliases__, _context, _module} = node, %{in_defimpl: true} = acc ->
+            {node, acc}
+
+          {:__aliases__, _context, _module} = node, %{in_macro: true} = acc ->
             {node, acc}
 
           {:__aliases__, _context, _module} = node, %{in_quote: true} = acc ->
@@ -48,6 +54,9 @@ defmodule Green.Rules.Modules.UseModulePseudoVariable do
 
           {:defimpl, _context, _right} = node, acc ->
             {node, Map.delete(acc, :in_defimpl)}
+
+          {:defmacro, _context, _right} = node, acc ->
+            {node, Map.delete(acc, :in_macro)}
 
           {:quote, _context, _right} = node, acc ->
             {node, Map.delete(acc, :in_quote)}
