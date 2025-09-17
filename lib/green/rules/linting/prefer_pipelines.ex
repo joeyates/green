@@ -256,7 +256,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
   defp wrap_bare_keyword([first | _rest] = term) do
     if Enum.all?(term, &keyword_value?/1) do
       # Re-use the context of the first keyword
-      {{:__block__, ctx1, [_name]}, {:__block__, _ctx2, [_value]}} = first
+      {{:__block__, ctx1, [_name]}, _second} = first
       # TODO: adjust context, e.g. the value of `:closing`
       [{:__block__, ctx1, [term]}]
     else
@@ -266,7 +266,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
 
   defp wrap_bare_keyword(term), do: term
 
-  defp keyword_value?({{:__block__, ctx1, [_name]}, {:__block__, _ctx2, [_value]}}) do
+  defp keyword_value?({{:__block__, ctx1, [_name]}, _second}) do
     ctx1[:format] == :keyword
   end
 
