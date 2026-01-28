@@ -1,5 +1,5 @@
 defmodule Green.Lexmag.ElixirStyleGuideFormatter do
-  alias Green.Rules.{Exceptions, Linting, Modules, Naming, Structs}
+  alias Green.Rules.{Exceptions, Linting, Modules, Naming, Parentheses, Structs}
 
   @behaviour Mix.Tasks.Format
 
@@ -34,6 +34,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
       |> Naming.AvoidOneLetterVariables.apply(opts)
       |> Modules.SortReferences.apply(opts)
       |> Modules.UseModulePseudoVariable.apply(opts)
+      |> Parentheses.UseParenthesesWithZeroArityFunctions.apply(opts)
       |> Structs.RemoveNilFromStructDefinition.apply(opts)
       |> Exceptions.UseErrorSuffix.apply(opts)
       |> default_format(opts)
