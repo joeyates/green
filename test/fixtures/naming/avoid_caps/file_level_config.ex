@@ -1,6 +1,6 @@
-# green:configure-for-this-file Naming.AvoidCaps, accept_atoms: [:MyAtom, :Other]
+# green:configure-for-this-file Naming.AvoidCaps, accept_atoms: [:MyAtom, :OtherAtom, :ExtraAtom]
 defmodule Configurable do
   def foo() do
-    [:MyAtom, :BadAtom]
+    [:MyAtom, :OtherAtom, :BadAtom]
   end
 end

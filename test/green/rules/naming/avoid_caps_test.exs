@@ -26,6 +26,7 @@ defmodule Green.Rules.Naming.AvoidCapsTest do
       end)
 
     refute output =~ ~r/\bMyAtom\b/
+    refute output =~ ~r/\bOtherAtom\b/
   end
 
   @tag example: "naming/avoid_caps/file_level_config"

@@ -105,34 +105,33 @@ defmodule Green.Rules.Naming.AvoidCaps do
       accept_atoms:
       \s*
       \[               # Start of list
-        \s*
-        :([_\.\w]+)    # First atom
-        (?:            # Non-capturing group for additional atoms
-          ,
-          \s*
-          :([_\.\w]+)  # Additional atoms
-        )*
-        \s*
+        ([:\w_\. ,]+)  # Capture one or more atoms (with optional spaces and commas)
       \]               # End of list
     /x
 
     Enum.reduce(comments, %{file_accept_atoms: []}, fn
       %{text: "# green:configure-for-this-file #{@configuration_label}," <> rest}, acc ->
-        matches = Regex.run(accept_atoms_regex, rest, capture: :all_but_first)
+        match = Regex.run(accept_atoms_regex, rest, capture: :all_but_first)
 
-        if matches do
-          Map.put(acc, :file_accept_atoms, matches)
+        case match do
+          nil ->
+            acc
 
-          update_in(acc, [:file_accept_atoms], fn existing ->
-            existing ++ matches
-          end)
-        else
-          acc
+          [atom_list_string] ->
+            atom_strings = extract_atom_names(atom_list_string)
+            update_in(acc, [:file_accept_atoms], fn existing -> existing ++ atom_strings end)
         end
 
       _other_comment, acc ->
         acc
     end)
+  end
+
+  defp extract_atom_names(string) do
+    case Regex.scan(~r/:([\w_\.]+)/, string, capture: :all_but_first) do
+      nil -> []
+      matches -> List.flatten(matches)
+    end
   end
 
   @elixir_special_forms ~w(
