@@ -1,3 +1,4 @@
+# green:configure-for-this-file Naming.AvoidCaps, accept_atoms: [:String.downcase]
 defmodule Green.Rules.Linting.PreferPipelinesTest do
   use Green.TestCase, async: true
 

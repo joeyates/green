@@ -1,3 +1,4 @@
+# green:configure-for-this-file Naming.AvoidCaps, accept_atoms: [:Record]
 defmodule Green.Rules.Linting.PreferPipelines do
   @moduledoc """
   This rule transforms nested function calls into pipelines.
