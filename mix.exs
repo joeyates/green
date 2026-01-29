@@ -3,7 +3,7 @@ defmodule Green.MixProject do
 
   @version "0.1.7"
 
-  def project do
+  def project() do
     [
       app: :green,
       version: @version,
@@ -19,13 +19,13 @@ defmodule Green.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  defp deps do
+  defp deps() do
     [
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
-  defp docs do
+  defp docs() do
     [
       source_ref: "v#{@version}",
       main: "readme",
@@ -34,13 +34,13 @@ defmodule Green.MixProject do
     ]
   end
 
-  defp extras do
+  defp extras() do
     [
       "README.md"
     ]
   end
 
-  defp package do
+  defp package() do
     %{
       licenses: ["MIT"],
       links: %{

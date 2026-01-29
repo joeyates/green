@@ -186,7 +186,7 @@ defmodule Green.Rules.Modules.SortReferences do
     {forms, comments}
   end
 
-  defp module_lines_access do
+  defp module_lines_access() do
     [
       Access.elem(2),
       Access.at(1),
