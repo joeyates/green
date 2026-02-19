@@ -2,6 +2,27 @@ defmodule Green.Rules.Naming.AvoidCaps do
   @moduledoc """
   This module prints warnings when capital letters are used in atoms, functions, variables or
   attributes.
+
+  ## Configuration
+
+  Acceptable capitalized atoms can be configured with the `accept_atoms` option.
+  This can be set globally in the configuration file or per-file using a comment.
+
+  In `.formatter.exs`:
+
+  ```elixir
+  green: [
+    avoid_caps: [
+      accept_atoms: [:Record, :MyApp.SpecialAtom]
+    ]
+  ]
+  ```
+
+  In a file:
+
+  ```elixir
+  # green:configure-for-this-file Naming.AvoidCaps, accept_atoms: [:Record]
+  ```
   """
 
   @behaviour Green.Rule
@@ -12,8 +33,8 @@ defmodule Green.Rules.Naming.AvoidCaps do
 
   @impl true
   def apply({forms, comments}, opts) do
-    opts = prepare_opts(opts)
-    %{file_accept_atoms: file_accept_atoms} = extract_config(comments)
+    file_opts = extract_config(comments)
+    opts = prepare_opts(opts, file_opts)
 
     {forms, _acc} =
       Macro.traverse(
@@ -23,11 +44,6 @@ defmodule Green.Rules.Naming.AvoidCaps do
         %{is_attribute: false},
         fn
           {:__block__, context, [atom]} = node, acc when is_atom(atom) ->
-            opts =
-              update_in(opts, [:green, :avoid_caps, :accept_atoms], fn existing ->
-                existing ++ file_accept_atoms
-              end)
-
             if contains_caps?(atom, opts) do
               IO.warn(
                 """
@@ -94,8 +110,9 @@ defmodule Green.Rules.Naming.AvoidCaps do
     {forms, comments}
   end
 
-  defp prepare_opts(opts) do
-    Options.set_value(opts, [:avoid_caps, :accept_atoms], &(&1 || []))
+  defp prepare_opts(opts, file_opts) do
+    file_accept_atoms = get_in(file_opts, [:file_accept_atoms]) || []
+    Options.set_value(opts, [:avoid_caps, :accept_atoms], &((&1 || []) ++ file_accept_atoms))
   end
 
   defp extract_config(comments) do
@@ -170,9 +187,9 @@ defmodule Green.Rules.Naming.AvoidCaps do
     code
   end
 
-  def capital?(code) when code < ?A, do: false
+  defp capital?(code) when code < ?A, do: false
 
-  def capital?(code) when code > ?Z, do: false
+  defp capital?(code) when code > ?Z, do: false
 
-  def capital?(_code), do: true
+  defp capital?(_code), do: true
 end

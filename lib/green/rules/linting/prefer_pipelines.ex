@@ -2,6 +2,20 @@
 defmodule Green.Rules.Linting.PreferPipelines do
   @moduledoc """
   This rule transforms nested function calls into pipelines.
+
+  ## Configuration
+
+  Functions that should be ignored can be configured with the `ignore_functions` option.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      prefer_pipelines: [
+        ignore_functions: ["My.Module.foo": 1]
+      ]
+    ]
+  ```
   """
 
   alias Green.Function.Signature

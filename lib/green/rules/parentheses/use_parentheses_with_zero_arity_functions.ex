@@ -1,6 +1,20 @@
 defmodule Green.Rules.Parentheses.UseParenthesesWithZeroArityFunctions do
   @moduledoc """
   This module adds parentheses to zero-arity function and macro definitions.
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      use_parentheses_with_zero_arity_functions: [
+        enabled: *true | false
+      ]
+    ]
+  ```
   """
 
   @behaviour Green.Rule

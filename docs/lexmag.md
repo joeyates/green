@@ -59,7 +59,8 @@ a thumbs up `👍`.
 
 ## Naming
 
-❗ Enforce snake_case for atoms, functions, variables, attributes ([Source](https://github.com/lexmag/elixir-style-guide#snake-case-atoms-funs-vars-attrs)),
+❗ Enforce snake_case for atoms, functions, variables, attributes ([Source](https://github.com/lexmag/elixir-style-guide#snake-case-atoms-funs-vars-attrs),
+[Configuration](Green.Rules.Naming.AvoidCaps.html)),
 
 👍 Enforce CamelCase for modules ([Source](https://github.com/lexmag/elixir-style-guide#camelcase-modules)),
 
@@ -107,5 +108,8 @@ Notes:
 
 ❔ Put the expression being tested by comparison on the left side ([Source](https://github.com/lexmag/elixir-style-guide#exunit-assertion-side)).
 
+## Parentheses
 
+✅ Parentheses are a must for local or imported zero-arity function calls ([Source](https://github.com/lexmag/elixir-style-guide?tab=readme-ov-file#zero-arity-parens),
+[Configuration](Green.Rules.Parentheses.UseParenthesesWithZeroArityFunctions.html)).
 
