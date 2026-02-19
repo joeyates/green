@@ -5,10 +5,20 @@ defmodule Green.Rules.Parentheses.UseParenthesesWithZeroArityFunctions do
 
   @behaviour Green.Rule
 
+  alias Green.Options
+
   @definition_keywords [:def, :defp, :defmacro, :defmacrop]
 
   @impl true
-  def apply({forms, comments}, _opts) do
+  def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:use_parentheses_with_zero_arity_functions][:enabled]
+    do_apply({forms, comments}, enabled)
+  end
+
+  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy) do
     forms =
       Macro.prewalk(forms, fn
         # The `nil`, and the lack of a `:closing` value means no parameters
@@ -30,5 +40,13 @@ defmodule Green.Rules.Parentheses.UseParenthesesWithZeroArityFunctions do
       end)
 
     {forms, comments}
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:use_parentheses_with_zero_arity_functions],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 end
