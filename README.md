@@ -23,7 +23,7 @@ be green."
 
 Currently, Green provides `Green.Lexmag.ElixirStyleGuideFormatter` which,
 as far as is possible, implements the rules of [lexmag's style guide][lexmag]
-that are not already implemented by `mix format`. See [docs/lexmag.md](docs/lexmag.md) for details.
+that are not already implemented by `mix format`.
 
 ## Usage
 
