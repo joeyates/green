@@ -6,6 +6,8 @@ defmodule Green.Rules.Naming.AvoidCaps do
 
   @behaviour Green.Rule
 
+  alias Green.Options
+
   @configuration_label "Naming.AvoidCaps"
 
   @impl true
@@ -93,10 +95,7 @@ defmodule Green.Rules.Naming.AvoidCaps do
   end
 
   defp prepare_opts(opts) do
-    opts
-    |> update_in([:green], &(&1 || []))
-    |> update_in([:green, :avoid_caps], &(&1 || []))
-    |> update_in([:green, :avoid_caps, :accept_atoms], &(&1 || []))
+    Options.set_value(opts, [:avoid_caps, :accept_atoms], &(&1 || []))
   end
 
   defp extract_config(comments) do

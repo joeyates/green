@@ -5,6 +5,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
   """
 
   alias Green.Function.Signature
+  alias Green.Options
 
   @behaviour Green.Rule
 
@@ -134,19 +135,13 @@ defmodule Green.Rules.Linting.PreferPipelines do
   end
 
   defp prepare_opts(opts) do
-    opts
-    |> update_in([:green], &(&1 || []))
-    |> update_in([:green, :prefer_pipelines], &(&1 || []))
-    |> update_in(
-      [:green, :prefer_pipelines, :ignore_functions],
-      fn
-        nil ->
-          []
+    Options.set_value(opts, [:prefer_pipelines, :ignore_functions], fn
+      nil ->
+        []
 
-        list ->
-          Enum.map(list, &build_function/1)
-      end
-    )
+      list ->
+        Enum.map(list, &build_function/1)
+    end)
   end
 
   defp build_function({modules_and_name, arity})
