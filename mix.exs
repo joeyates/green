@@ -36,7 +36,8 @@ defmodule Green.MixProject do
 
   defp extras() do
     [
-      "README.md"
+      "README.md",
+      "docs/lexmag.md"
     ]
   end
 
