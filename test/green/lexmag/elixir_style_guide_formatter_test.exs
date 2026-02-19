@@ -160,7 +160,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
              )
     end
 
-    @tag fixture_pair: "parentheses/always_use_parentheses_around_arguments_to_definitions"
+    @tag fixture_pair: "parentheses/use_parentheses_with_zero_arity_functions"
     test "adds parentheses to function definitions", %{bad: bad, good: good} do
       formatted = format(bad)
 
