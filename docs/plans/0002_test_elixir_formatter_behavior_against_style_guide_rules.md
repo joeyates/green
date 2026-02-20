@@ -17,15 +17,15 @@ The test project will be configured for Elixir 1.19.5 to ensure consistent and r
 - [x] Create test Mix project structure under `test/projects/elixir_formatter/` with mix.exs specifying Elixir 1.19.5 and basic configuration
 - [x] Set up test infrastructure in main project to run formatter tests (test file with excluded tags, helper configuration)
 - [x] Create test cases for Whitespace rules (~7 formatting rules)
-- [ ] Create test cases for Indentation rules (~6 formatting rules)
-- [ ] Create test cases for Numeric Literals rules (~2 formatting rules)
-- [ ] Create test cases for Atoms and Strings rules (~2 formatting rules)
-- [ ] Create test cases for Data Structures rules (~3 formatting rules)
-- [ ] Create test cases for Control Flow rules (~1 formatting rule)
-- [ ] Create test cases for Parentheses rules (~7 formatting rules)
-- [ ] Create test cases for Layout rules (~2 formatting rules)
-- [ ] Create test cases for Comments rules (~2 formatting rules)
-- [ ] Document helper functions/utilities for running `mix format` and comparing outputs
+- [x] Create test cases for Indentation rules (~6 formatting rules)
+- [x] Create test cases for Numeric Literals rules (~2 formatting rules)
+- [x] Create test cases for Atoms and Strings rules (~2 formatting rules)
+- [x] Create test cases for Data Structures rules (~3 formatting rules)
+- [x] Create test cases for Control Flow rules (~1 formatting rule)
+- [x] Create test cases for Parentheses rules (~7 formatting rules)
+- [x] Create test cases for Layout rules (~2 formatting rules)
+- [x] Create test cases for Comments rules (~2 formatting rules)
+- [x] Document helper functions/utilities for running `mix format` and comparing outputs
 - [ ] Review and consolidate test results to identify patterns in formatter behavior
 - [ ] Update [elixir-style-guide-comparison.md](docs/elixir-style-guide-comparison.md) with empirical findings based on test outcomes
 - [ ] Address any additional implementation details that arise during development
