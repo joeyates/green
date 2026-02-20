@@ -23,9 +23,9 @@ Analyze the four style guide documents in the `tmp/` directory and create a comp
   - Create `tmp/rules-christopheradams.md` - extracted rules from Christopher Adams guide
 - [x] Determine categorization strategy (consensus-based vs flat list)
   - Document decision in `tmp/categorization-decision.md`
-- [ ] Create comparison matrix in markdown format
+- [x] Create comparison matrix in markdown format
   - Rows: individual rules
-  - Columns: lexmag, Official Elixir, Credo, Christopher Adams
+  - Columns: Official Elixir, lexmag, Credo, Christopher Adams
   - Cell values: indicator if guide proposes this rule
   - Create `tmp/comparison-grid-draft.md` as working document
 - [ ] Generate the final comparison grid document
