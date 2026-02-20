@@ -14,7 +14,7 @@ The test project will be configured for Elixir 1.19.5 to ensure consistent and r
 
 ## Tasks
 
-- [ ] Create test Mix project structure under `test/projects/elixir_formatter/` with mix.exs specifying Elixir 1.19.5 and basic configuration
+- [x] Create test Mix project structure under `test/projects/elixir_formatter/` with mix.exs specifying Elixir 1.19.5 and basic configuration
 - [ ] Set up test infrastructure in main project to run formatter tests (test file with excluded tags, helper configuration)
 - [ ] Create test cases for Whitespace rules (~7 formatting rules)
 - [ ] Create test cases for Indentation rules (~6 formatting rules)
