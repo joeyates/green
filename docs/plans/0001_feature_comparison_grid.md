@@ -16,7 +16,7 @@ Analyze the four style guide documents in the `tmp/` directory and create a comp
   - Credo uses: Code Readability, Documentation, Refactoring Opportunities, Software Design, Pitfalls
   - Elixir-lang-code uses: design principles and formatting discussions
   - Create `tmp/categorization-analysis.md` with findings
-- [ ] Extract all unique rules from each guide with anchors/identifiers
+- [x] Extract all unique rules from each guide with anchors/identifiers
   - Create `tmp/rules-lexmag.md` - extracted rules from lexmag guide
   - Create `tmp/rules-elixir-lang.md` - extracted rules from official Elixir formatter docs
   - Create `tmp/rules-credo.md` - extracted rules from Credo guide
