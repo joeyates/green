@@ -35,7 +35,7 @@ The test project will be configured for Elixir 1.19.5 to ensure consistent and r
 
 - `test/projects/elixir_formatter/mix.exs` - Test project configuration (Elixir 1.19.5)
 - `test/projects/elixir_formatter/.formatter.exs` - Formatter configuration for test project
-- `test/green/elixir_formatter_test.exs` - Main test file with formatter behavior tests
+- `test/elixir_formatter_test.exs` - Main test file with formatter behavior tests
 - `test/test_helper.exs` - Update to configure tag exclusion
 - `docs/elixir-style-guide-comparison.md` - Update with empirical results
 
