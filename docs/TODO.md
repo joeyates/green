@@ -46,3 +46,37 @@ The comparison document currently has limited information about what the officia
 - Update [elixir-style-guide-comparison.md](docs/elixir-style-guide-comparison.md) with empirical results based on test outcomes
 - Priority: Focus first on rules where the "Official Elixir" column has a checkmark, as these are claimed to be formatter-enforced
 - Approximately ~45 formatting rules to test across categories: whitespace, indentation, parentheses, numeric literals, data structures, etc.
+
+# Add Tests for Missing Lexmag Style Guide Rules
+
+Status: [ ]
+
+## Description
+
+The project currently has tests for 18 out of ~23 automatable Lexmag style guide rules. Add test coverage for the remaining 5 testable linting rules to ensure complete implementation of the Lexmag Elixir Style Guide.
+
+## Technical Specifics
+
+Missing tests for the following rules from [tmp/rules-lexmag.md](tmp/rules-lexmag.md):
+
+1. **`anonymous-pipeline`** - Don't use anonymous functions in pipelines
+   - Location: Linting > General
+   - Should warn/transform: `pipeline |> (fn x -> x + 1 end).()`
+
+2. **`boolean-operators`** - Use `||`, `&&`, `!` only for non-boolean checks (and/or/not for booleans)
+   - Location: Linting > General
+   - Should warn about: Using `||`/`&&` with boolean values instead of `or`/`and`
+
+3. **`camelcase-modules`** - Use CamelCase for module names, keep acronyms uppercase
+   - Location: Linting > Naming
+   - Should warn about: `My_module`, `Mymodule` (incorrect cases)
+
+4. **`predicate-funs-name`** - Predicate functions should have trailing `?`; guard-safe macros use `is_` prefix
+   - Location: Linting > Naming
+   - Should warn/transform: Functions returning booleans without `?` suffix
+
+5. **`exception-message`** - Use non-capitalized error messages when raising (no trailing punctuation except Mix)
+   - Location: Linting > Exceptions
+   - Should warn about: `raise MyError, "This is wrong."` or `raise MyError, "this is wrong."`
+
+Each test should follow the existing pattern in [test/green/lexmag/elixir_style_guide_formatter_test.exs](test/green/lexmag/elixir_style_guide_formatter_test.exs) with appropriate fixture files or examples.
