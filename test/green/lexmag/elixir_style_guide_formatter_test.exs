@@ -395,6 +395,34 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     assert output == ""
   end
 
+  describe "when module names don't use CamelCase" do
+    @describetag example: "naming/camelcase_modules"
+
+    test "warns for lower camel-case module names", %{example: example} do
+      output = capture_io(:stderr, fn -> format(example) end)
+
+      assert String.contains?(
+                output,
+                """
+                \e[33mwarning:\e[0m found badly formed module name (use UpperCamelCase for module names)
+                1 | defmodule :appStack do
+                """
+              )
+    end
+
+    test "warns with underscores in module names", %{example: example} do
+      output = capture_io(:stderr, fn -> format(example) end)
+
+      assert String.contains?(
+                output,
+                """
+                \e[33mwarning:\e[0m found badly formed module name (use UpperCamelCase for module names)
+                5 | defmodule App_Stack do
+                """
+              )
+    end
+  end
+
   @tag example: "naming/single_letter_variable"
   test "warns when there are single-letter variable names", %{example: example} do
     output = capture_io(:stderr, fn -> format(example) end)
