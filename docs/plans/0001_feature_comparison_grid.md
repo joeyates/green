@@ -17,8 +17,8 @@ Analyze the four style guide documents in the `tmp/` directory and create a comp
   - Elixir-lang-code uses: design principles and formatting discussions
   - Create `tmp/categorization-analysis.md` with findings
 - [x] Extract all unique rules from each guide with anchors/identifiers
-  - Create `tmp/rules-lexmag.md` - extracted rules from lexmag guide
   - Create `tmp/rules-elixir-lang.md` - extracted rules from official Elixir formatter docs
+  - Create `tmp/rules-lexmag.md` - extracted rules from lexmag guide
   - Create `tmp/rules-credo.md` - extracted rules from Credo guide
   - Create `tmp/rules-christopheradams.md` - extracted rules from Christopher Adams guide
 - [x] Determine categorization strategy (consensus-based vs flat list)
@@ -36,15 +36,15 @@ Analyze the four style guide documents in the `tmp/` directory and create a comp
 ## Principal Files
 
 **Input files:**
-- `/home/joe/code/gh/joeyates/green/tmp/lexmag-elixir-style-guide.md` (922 lines)
 - `/home/joe/code/gh/joeyates/green/tmp/elixir-lang-code.md` (313 lines)
+- `/home/joe/code/gh/joeyates/green/tmp/lexmag-elixir-style-guide.md` (922 lines)
 - `/home/joe/code/gh/joeyates/green/tmp/credo-elixir-style-guide.md` (662 lines)
 - `/home/joe/code/gh/joeyates/green/tmp/christopheradams-elixir_style_guide.md` (1373 lines)
 
 **Intermediate files (created in tmp/):**
 - `tmp/categorization-analysis.md` - analysis of categorization schemes
-- `tmp/rules-lexmag.md` - extracted rules from lexmag
 - `tmp/rules-elixir-lang.md` - extracted rules from official Elixir
+- `tmp/rules-lexmag.md` - extracted rules from lexmag
 - `tmp/rules-credo.md` - extracted rules from Credo
 - `tmp/rules-christopheradams.md` - extracted rules from Christopher Adams
 - `tmp/categorization-decision.md` - categorization strategy decision
