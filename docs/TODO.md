@@ -49,7 +49,7 @@ The comparison document currently has limited information about what the officia
 
 # Add Tests for Missing Lexmag Style Guide Rules
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
