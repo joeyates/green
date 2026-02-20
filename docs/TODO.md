@@ -1,6 +1,6 @@
 # Feature Comparison Grid
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
