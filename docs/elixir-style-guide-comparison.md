@@ -4,6 +4,8 @@ A comprehensive comparison of style guide rules across four major Elixir style g
 
 **Last Updated**: February 2026
 
+> **📊 Empirical Formatter Testing**: See [Elixir Formatter Test Results](elixir-formatter-test-results.md) for empirical data on which rules marked "F" (Formatting) are actually enforced by the Elixir 1.19.5 formatter. Testing shows **28 rules are enforced** and **6 rules are not enforced** by `mix format`.
+
 ---
 
 ## Introduction
@@ -37,11 +39,13 @@ This document compares style and formatting rules from four authoritative Elixir
 
 ### Type Codes
 
-- **F** = Formatting (automated by formatter)
+- **F** = Formatting (automated by formatter) - *See [test results](elixir-formatter-test-results.md) for which F rules are empirically verified as enforced*
 - **S** = Style (manual adherence)
 - **B** = Best Practice
 - **P** = Pitfall/Warning
 - **T** = Testing
+
+> **Note on "F" (Formatting) Rules**: While many rules are marked as "F" indicating they could be automated, empirical testing with Elixir 1.19.5 shows that not all "F" rules are actually enforced by `mix format`. See the [Elixir Formatter Test Results](elixir-formatter-test-results.md) document for detailed findings on which specific rules are enforced versus left to developer discretion.
 
 ---
 
