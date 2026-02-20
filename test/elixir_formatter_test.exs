@@ -11,10 +11,6 @@ defmodule Green.ElixirFormatterTest do
 
       mix test --include elixir_formatter
 
-  To run a specific test category:
-
-      mix test test/elixir_formatter_test.exs --include elixir_formatter --only "Whitespace rules"
-
   ## Test Structure
 
   Tests are organized by rule categories matching the style guide comparison document:
@@ -31,9 +27,11 @@ defmodule Green.ElixirFormatterTest do
 
   ## Helper Functions
 
+  - `with_formatter_config/1` - Wraps tests with temporary formatter configuration
   - `format_code/1` - Runs `mix format` on code and returns result
   - `assert_formats/2` - Asserts formatter transforms input to expected output
   - `assert_unchanged/1` - Asserts formatter preserves code as-is
+  - `assert_fails/1` - Asserts formatter raises an error (for invalid code)
 
   ## Test Project
 
@@ -46,6 +44,22 @@ defmodule Green.ElixirFormatterTest do
   @moduletag :elixir_formatter
 
   @formatter_project_path "test/projects/elixir_formatter"
+
+  @formatter_config_path Path.join(@formatter_project_path, ".formatter.exs")
+
+  @default_formatter_exs [inputs: ["{mix,.formatter}.exs", "{config,lib,test}/**/*.{ex,exs}"]]
+
+  def with_formatter_config(config, test_fun) do
+    original_config = File.read!(@formatter_config_path)
+
+    try do
+      File.write!(@formatter_config_path, inspect(config))
+
+      test_fun.()
+    after
+      File.write!(@formatter_config_path, original_config)
+    end
+  end
 
   @doc """
   Runs `mix format` on the given code string and returns the formatted result.
@@ -60,15 +74,12 @@ defmodule Green.ElixirFormatterTest do
 
   """
   def format_code(code) do
-    # Create a unique temporary file
     tmp_file =
       Path.join([@formatter_project_path, "tmp_format_test_#{:erlang.unique_integer()}.ex"])
 
     try do
-      # Write the code to the file
       File.write!(tmp_file, code)
 
-      # Run mix format in the test project directory
       {output, exit_code} =
         System.cmd(
           "mix",
@@ -81,10 +92,8 @@ defmodule Green.ElixirFormatterTest do
         raise "mix format failed with exit code #{exit_code}: #{output}"
       end
 
-      # Read the formatted result
       File.read!(tmp_file)
     after
-      # Clean up the temporary file
       File.rm(tmp_file)
     end
   end
@@ -95,35 +104,25 @@ defmodule Green.ElixirFormatterTest do
   def assert_formats(input, expected) do
     actual = format_code(input)
 
-    assert actual == expected, """
-    Formatter output did not match expected.
-
-    Input:
-    #{input}
-
-    Expected:
-    #{expected}
-
-    Actual:
-    #{actual}
-    """
+    assert actual == expected
   end
 
   @doc """
-  Asserts that the formatter does NOT change the given code.
+  Asserts that the formatter does not change the given code.
   """
   def assert_unchanged(code) do
     actual = format_code(code)
 
-    assert actual == code, """
-    Formatter unexpectedly changed the code.
+    assert actual == code
+  end
 
-    Input:
-    #{code}
-
-    Output:
-    #{actual}
-    """
+  @doc """
+  Asserts that the formatter raises an error when given invalid code.
+  """
+  def assert_fails(code) do
+    assert_raise RuntimeError, ~r/mix format failed/, fn ->
+      format_code(code)
+    end
   end
 
   # ============================================================================
@@ -152,26 +151,23 @@ defmodule Green.ElixirFormatterTest do
     end
 
     test "ensures newline at end of file" do
-      # File without newline at EOF
       input = "defmodule Example do\n  def hello, do: :world\nend"
 
-      # Formatter adds newline
-      expected = "defmodule Example do\n  def hello, do: :world\nend\n"
+      expected = "#{input}\n"
 
       assert_formats(input, expected)
     end
 
-    test "uses Unix-style line endings" do
+    test "enforces Unix-style line endings" do
       # Input with Windows line endings
       input = "defmodule Example do\r\n  def hello, do: :world\r\nend\r\n"
 
-      # Formatter converts to Unix line endings
       expected = "defmodule Example do\n  def hello, do: :world\nend\n"
 
       assert_formats(input, expected)
     end
 
-    test "uses two-space indentation" do
+    test "ensures two-space indentation" do
       input = """
       defmodule Example do
       def hello do
@@ -195,7 +191,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "uses spaces around operators" do
+    test "ensures a single space around operators" do
       input = """
       defmodule Example do
         def calc do
@@ -221,7 +217,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "no spaces around matched pairs (brackets, braces, parentheses)" do
+    test "removes spaces inside matched pairs (brackets, braces, parentheses)" do
       input = """
       defmodule Example do
         def example do
@@ -247,7 +243,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "uses space after comment #" do
+    test "inserts a space after comment #" do
       input = """
       defmodule Example do
         #This is a comment
@@ -271,7 +267,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "uses space before -> in 0-arity anonymous functions" do
+    test "ensures a space before -> in 0-arity anonymous functions" do
       input = """
       defmodule Example do
         def example do
@@ -291,7 +287,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "uses spaces around default arguments \\\\" do
+    test "ensures a space around default arguments \\\\" do
       input = """
       defmodule Example do
         def greet(name\\\\\"World\") do
@@ -311,7 +307,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "no spaces around bitstring segment options" do
+    test "removes spaces around bitstring segment options" do
       input = """
       defmodule Example do
         def parse(<<value :: size(8), rest :: binary>>) do
@@ -331,7 +327,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "no spaces after unary operators and inside range literals" do
+    test "removes spaces after unary operators and inside range literals" do
       input = """
       defmodule Example do
         def example do
@@ -353,6 +349,18 @@ defmodule Green.ElixirFormatterTest do
       """
 
       assert_formats(input, expected)
+    end
+
+    test "fails when there's a space between function name and opening parenthesis" do
+      input = """
+      defmodule Example do
+        def example do
+          result = calculate (1, 2, 3)
+        end
+      end
+      """
+
+      assert_fails(input)
     end
   end
 
@@ -386,7 +394,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "uses single level indentation for multi-line pipelines" do
+    test "enforces single level indentation for multi-line pipelines" do
       input = """
       defmodule Example do
         def example do
@@ -412,7 +420,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "indents and aligns successive with clauses" do
+    test "aligns successive 'with' clauses" do
       input = """
       defmodule Example do
         def example do
@@ -440,7 +448,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "uses specific indentation for for special form" do
+    test "aligns successive 'for' clauses" do
       input = """
       defmodule Example do
         def example do
@@ -468,7 +476,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "avoids expression alignment" do
+    test "resets alignment of the match (=) operator" do
       input = """
       defmodule Example do
         def example do
@@ -522,7 +530,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "uses uppercase letters for hex literals" do
+    test "enforces uppercase letters for hex literals" do
       input = """
       defmodule Example do
         def example do
@@ -550,7 +558,7 @@ defmodule Green.ElixirFormatterTest do
   # ============================================================================
 
   describe "Atoms and Strings rules" do
-    test "uses double quotes (not single) for quoted atoms" do
+    test "enforces double quotes (not single) for quoted atoms" do
       input = """
       defmodule Example do
         def example do
@@ -572,8 +580,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "does NOT preserve charlist single quote syntax (converts to ~c sigil)" do
-      # Actually, the formatter DOES preserve single quote syntax in Elixir 1.19.5
+    test "preserves charlist single quote syntax (does not convert to ~c sigil)" do
       code = """
       defmodule Example do
         def example do
@@ -583,7 +590,6 @@ defmodule Green.ElixirFormatterTest do
       end
       """
 
-      # Code remains unchanged - formatter preserves charlist syntax
       assert_unchanged(code)
     end
   end
@@ -593,7 +599,27 @@ defmodule Green.ElixirFormatterTest do
   # ============================================================================
 
   describe "Data Structures rules" do
-    test "no trailing comma on last element of multiline collections" do
+    test "removes trailing commas from single-line collections" do
+      input = """
+      defmodule Example do
+        def example do
+          list = [1, 2, 3,]
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def example do
+          list = [1, 2, 3]
+        end
+      end
+      """
+
+      assert_formats(input, expected)
+    end
+
+    test "removes trailing comma on last element of multiline collections" do
       input = """
       defmodule Example do
         def example do
@@ -621,8 +647,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "does NOT force multiline collections to have each element on own line" do
-      # The formatter only expands to multiline if it's beneficial for line length
+    test "collects multiline collections on a single line when possible" do
       input = """
       defmodule Example do
         def example do
@@ -632,11 +657,60 @@ defmodule Green.ElixirFormatterTest do
       end
       """
 
-      # Formatter collapses to single line for short lists
       expected = """
       defmodule Example do
         def example do
           list = [1, 2, 3, 4]
+        end
+      end
+      """
+
+      assert_formats(input, expected)
+    end
+
+    test "breaks collections across multiple lines when lines are too long" do
+      input = """
+      defmodule Example do
+        def example do
+          list = [some_long_function_name(), another_very_long_function(), yet_another_very_long_function()]
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def example do
+          list = [
+            some_long_function_name(),
+            another_very_long_function(),
+            yet_another_very_long_function()
+          ]
+        end
+      end
+      """
+
+      assert_formats(input, expected)
+    end
+
+    test "leaves collections on multiple lines if there is a newline after the opening delimiter" do
+      input = """
+      defmodule Example do
+        def example do
+          list = [
+            1, 2, 3
+          ]
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def example do
+          list = [
+            1,
+            2,
+            3
+          ]
         end
       end
       """
@@ -670,15 +744,8 @@ defmodule Green.ElixirFormatterTest do
   # ============================================================================
 
   describe "Control Flow rules" do
-    test "choice between :do keyword and do-end blocks left to user" do
-      # Test that both forms are preserved
-      input_do_keyword = """
-      defmodule Example do
-        def short, do: :ok
-      end
-      """
-
-      input_do_end = """
+    test "does not collapse short do-end blocks into :do keyword" do
+      code = """
       defmodule Example do
         def short do
           :ok
@@ -686,9 +753,23 @@ defmodule Green.ElixirFormatterTest do
       end
       """
 
-      # Both should be preserved as-is
-      assert_unchanged(input_do_keyword)
-      assert_unchanged(input_do_end)
+      assert_unchanged(code)
+    end
+
+    test "does not expand long :do keyword blocks into do-end" do
+      code = """
+      defmodule Example do
+        def long,
+          do:
+            [1..100]
+            |> Enum.filter(&(div(&1, 2) == 0))
+            |> Enum.map(&(&1 * 2))
+            |> Enum.filter(&(&1 > 100))
+            |> Enum.sum()
+      end
+      """
+
+      assert_unchanged(code)
     end
   end
 
@@ -697,33 +778,63 @@ defmodule Green.ElixirFormatterTest do
   # ============================================================================
 
   describe "Parentheses rules" do
-    test "does NOT add parentheses to zero-arity function calls (leaves as-is)" do
-      # The formatter does not automatically add parentheses to zero-arity calls
+    test "does not add parentheses to zero-arity function calls" do
       code = """
       defmodule Example do
         def example do
-          result = some_function
+          result = some_zero_arity_function
         end
       end
       """
 
-      # Code remains unchanged
       assert_unchanged(code)
     end
 
-    test "uses parentheses in def/defp/defmacro when function has parameters" do
-      input = """
+    test "adds parentheses to def/defp/defmacro/defmacrop when function has parameters" do
+      input = ~S"""
       defmodule Example do
         def greet name do
           "Hello, " <> name
         end
+
+        defp up string do
+          String.upcase(string)
+        end
+
+        defmacro example_macro arg do
+          quote do
+            IO.puts("This is a macro with arg: #{arg}")
+          end
+        end
+
+        defmacrop another_macro arg do
+          quote do
+            IO.puts("Another macro with arg: #{arg}")
+          end
+        end
       end
       """
 
-      expected = """
+      expected = ~S"""
       defmodule Example do
         def greet(name) do
           "Hello, " <> name
+        end
+
+        defp up(string) do
+          String.upcase(string)
+        end
+
+        defmacro example_macro(arg) do
+          quote do
+            IO.puts("This is a macro with arg: #{arg}")
+          end
+        end
+
+        defmacrop another_macro(arg) do
+          quote do
+            IO.puts("Another macro with arg: #{arg}")
+          end
         end
       end
       """
@@ -731,7 +842,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "uses parentheses when calling functions with arguments" do
+    test "adds parentheses when calling functions with arguments" do
       input = """
       defmodule Example do
         def example do
@@ -752,7 +863,6 @@ defmodule Green.ElixirFormatterTest do
     end
 
     test "adds parentheses to functions in pipe chains" do
-      # The formatter adds parens to all functions in pipe chains
       input = """
       defmodule Example do
         def example do
@@ -776,7 +886,7 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "never wraps arguments of anonymous functions in parentheses" do
+    test "removes parentheses from arguments of anonymous functions" do
       input = """
       defmodule Example do
         def example do
@@ -796,55 +906,78 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "does NOT remove space between function name and opening parenthesis" do
-      # The formatter does not remove this space (interprets as function call with tuple)
-      code = """
-      defmodule Example do
-        def example do
-          result = some_function(1, 2)
-        end
-      end
-      """
-
-      # Code remains unchanged when written correctly
-      assert_unchanged(code)
-    end
-
-    test "does NOT add parens to zero-arity types in typespecs" do
-      # The formatter does not automatically add parentheses to types
+    test "does not add parens to zero-arity global types in typespecs" do
       code = """
       defmodule Example do
         @type my_type :: integer | atom
       end
       """
 
-      # Code remains unchanged
       assert_unchanged(code)
     end
 
-    test "respects :locals_without_parens config for local calls" do
-      # This test verifies the formatter respects the .formatter.exs config
-      # The test project should have a default config
+    test "does not remove parens from zero-arity global types in typespecs" do
+      code = """
+      defmodule Example do
+        @type my_type :: integer() | atom()
+      end
+      """
+
+      assert_unchanged(code)
+    end
+
+    test "add parens to module-scoped types in typespecs" do
       input = """
       defmodule Example do
+        @type my_type :: String.t
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        @type my_type :: String.t()
+      end
+      """
+
+      assert_formats(input, expected)
+    end
+
+    test "respects :locals_without_parens config for local calls" do
+      input = """
+      defmodule Example do
+        import String
+
         def example do
-          import String
           upcase "hello"
         end
       end
       """
 
-      # With default config, import should not require parens
       expected = """
       defmodule Example do
+        import String
+
         def example do
-          import String
-          upcase("hello")
+          upcase "hello"
         end
       end
       """
 
-      assert_formats(input, expected)
+      config = Keyword.put(@default_formatter_exs, :locals_without_parens, upcase: 1)
+
+      with_formatter_config(config, fn ->
+        assert_formats(input, expected)
+      end)
+    end
+
+    test "fails when there are unbalanced parentheses in typespecs" do
+      input = """
+      defmodule Example do
+        @type my_type :: list(integer
+      end
+      """
+
+      assert_fails(input)
     end
   end
 
@@ -853,7 +986,7 @@ defmodule Green.ElixirFormatterTest do
   # ============================================================================
 
   describe "Layout rules" do
-    test "uses one expression per line (no semicolons)" do
+    test "enforces one expression per line (no semicolons)" do
       input = """
       defmodule Example do
         def example do
@@ -875,26 +1008,43 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "does NOT consistently keep binary operators at end of line" do
-      # The formatter doesn't always keep operators at end of line
+    test "when a **possibly** unary operator is placed at the beginning of a line, it is treated as unary" do
       input = """
       defmodule Example do
         def example do
-          result = some_value
-          + another_value
-          * third_value
+          1
+           + 2
         end
       end
       """
 
-      # Formatter may leave operators at beginning or handle inconsistently
       expected = """
       defmodule Example do
         def example do
-          result = some_value
+          1
+          +2
+        end
+      end
+      """
 
-          +another_value *
-            third_value
+      assert_formats(input, expected)
+    end
+
+    test "when non-unary operators are placed at the beginning of a line, they are moved to the end of the previous line" do
+      input = """
+      defmodule Example do
+        def example do
+          2
+          * 3
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def example do
+          2 *
+            3
         end
       end
       """
@@ -932,18 +1082,28 @@ defmodule Green.ElixirFormatterTest do
       assert_formats(input, expected)
     end
 
-    test "does NOT always move comments around operators optimally" do
-      # The formatter may not always move operator comments to ideal locations
+    test "when comments are between terms separated by operators, it moves the comment before the expression" do
       code = """
       defmodule Example do
         def example do
-          result = a + b
+          a +
+          # add b
+            b
         end
       end
       """
 
-      # For simple cases without comments, code remains unchanged
-      assert_unchanged(code)
+      expected = """
+      defmodule Example do
+        def example do
+          # add b
+          a +
+            b
+        end
+      end
+      """
+
+      assert_formats(code, expected)
     end
   end
 end
