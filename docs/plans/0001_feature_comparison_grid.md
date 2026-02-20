@@ -28,8 +28,8 @@ Analyze the four style guide documents in the `tmp/` directory and create a comp
   - Columns: Official Elixir, lexmag, Credo, Christopher Adams
   - Cell values: indicator if guide proposes this rule
   - Create `tmp/comparison-grid-draft.md` as working document
-- [ ] Generate the final comparison grid document
-- [ ] Place final document in `docs/` folder with appropriate naming
+- [x] Generate the final comparison grid document
+- [x] Place final document in `docs/` folder with appropriate naming
 - [ ] Address any additional implementation details that arise during development
 - [ ] Mark the plan as "done"
 
