@@ -28,8 +28,8 @@ The test project will be configured for Elixir 1.19.5 to ensure consistent and r
 - [x] Document helper functions/utilities for running `mix format` and comparing outputs
 - [x] Review and consolidate test results to identify patterns in formatter behavior
 - [x] Update [elixir-style-guide-comparison.md](docs/elixir-style-guide-comparison.md) with empirical findings based on test outcomes
-- [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Address any additional implementation details that arise during development
+- [x] Mark the plan as "done"
 
 ## Principal Files
 
