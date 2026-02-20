@@ -151,6 +151,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
       |> Linting.UseStringConcatenationWhenMatchingBinaries.apply(opts)
       |> Naming.AvoidCaps.apply(opts)
       |> Naming.AvoidOneLetterVariables.apply(opts)
+      |> Naming.PredicateFunctions.apply(opts)
       |> Naming.UpperCamelCaseForModules.apply(opts)
       |> Modules.SortReferences.apply(opts)
       |> Modules.UseModulePseudoVariable.apply(opts)

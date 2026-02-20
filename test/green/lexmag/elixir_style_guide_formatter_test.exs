@@ -436,6 +436,34 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
             )
   end
 
+  describe "predicate functions" do
+    @describetag example: "naming/predicate_funs_name"
+
+    test "warns when predicate functions don't have ? suffix", %{example: example} do
+      output = capture_io(:stderr, fn -> format(example) end)
+
+      assert String.contains?(
+                output,
+                """
+                \e[33mwarning:\e[0m predicate function should have `?` suffix
+                3 | def is_even(number) do
+                """
+              )
+    end
+
+    test "warns when guard-style macros have ? suffix", %{example: example} do
+      output = capture_io(:stderr, fn -> format(example) end)
+
+      assert String.contains?(
+                output,
+                """
+                \e[33mwarning:\e[0m guard-style macros should not have `?` suffix, use `is_` prefix instead
+                12 | defmacro valid?(value) do
+                """
+              )
+    end
+  end
+
   @tag fixture_pair: "modules/module_layout"
   test "corrects the order of module references", %{bad: bad, good: good} do
     formatted = format(bad)
