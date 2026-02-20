@@ -54,6 +54,19 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       assert formatted == good
     end
 
+    @tag example: "linting/anonymous_pipeline"
+    test "warns when anonymous functions are used in pipelines", %{example: example} do
+      output = capture_io(:stderr, fn -> format(example) end)
+
+      assert String.starts_with?(
+               output,
+               """
+               \e[33mwarning:\e[0m anonymous function found in pipeline (consider defining a named function instead)
+               7 | (fn words -> [@sentence_start | words] end).()
+               """
+             )
+    end
+
     @tag example: "naming/capital_in_atom"
     test "warns when capital letters are used in atoms", %{example: example} do
       output = capture_io(:stderr, fn -> format(example) end)

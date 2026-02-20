@@ -143,6 +143,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
       |> parse(opts)
       |> Linting.PreferPipelines.apply(opts)
       |> Linting.AvoidNeedlessPipelines.apply(opts)
+      |> Linting.NoAnonymousFunctionsInPipelines.apply(opts)
       |> Linting.NoUnlessWithElse.apply(opts)
       |> Linting.NoNilElse.apply(opts)
       |> Linting.TrueInCond.apply(opts)

@@ -10,7 +10,7 @@ The project currently has tests for 18 out of ~23 automatable Lexmag style guide
 
 ## Tasks
 
-- [ ] Add test for `anonymous-pipeline` rule (warn about anonymous functions in pipelines)
+- [x] Add test for `anonymous-pipeline` rule (warn about anonymous functions in pipelines)
 - [ ] Add test for `boolean-operators` rule (warn about `||`/`&&` with boolean values)
 - [ ] Add test for `camelcase-modules` rule (warn about incorrect module name casing)
 - [ ] Add test for `predicate-funs-name` rule (warn about boolean functions without `?` suffix)
