@@ -7,10 +7,12 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
   ```elixir
   defp deps do
     [
-      {:green, "~> (See the badge above)"}
+      {:green, "~> VERSION"}
     ]
   end
   ```
+
+  Check the latest version of Green on [Hex.pm](https://hex.pm/packages/green).
 
   Modify `.formatter.exs` to activate the formatter plugin:
 
