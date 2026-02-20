@@ -30,8 +30,8 @@ Analyze the four style guide documents in the `tmp/` directory and create a comp
   - Create `tmp/comparison-grid-draft.md` as working document
 - [x] Generate the final comparison grid document
 - [x] Place final document in `docs/` folder with appropriate naming
-- [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Address any additional implementation details that arise during development
+- [x] Mark the plan as "done"
 
 ## Principal Files
 
