@@ -147,6 +147,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
       |> Linting.NoUnlessWithElse.apply(opts)
       |> Linting.NoNilElse.apply(opts)
       |> Linting.TrueInCond.apply(opts)
+      |> Linting.BooleanOperators.apply(opts)
       |> Linting.UseStringConcatenationWhenMatchingBinaries.apply(opts)
       |> Naming.AvoidCaps.apply(opts)
       |> Naming.AvoidOneLetterVariables.apply(opts)
