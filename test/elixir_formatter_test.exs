@@ -7,30 +7,32 @@ defmodule Green.ElixirFormatterTest do
 
   @doc """
   Runs `mix format` on the given code string and returns the formatted result.
-  
+
   This function writes the code to a temporary file in the test project,
   runs the formatter, reads the result, and cleans up.
   """
   def format_code(code) do
     # Create a unique temporary file
-    tmp_file = Path.join([@formatter_project_path, "tmp_format_test_#{:erlang.unique_integer()}.ex"])
-    
+    tmp_file =
+      Path.join([@formatter_project_path, "tmp_format_test_#{:erlang.unique_integer()}.ex"])
+
     try do
       # Write the code to the file
       File.write!(tmp_file, code)
-      
+
       # Run mix format in the test project directory
-      {output, exit_code} = System.cmd(
-        "mix",
-        ["format", Path.basename(tmp_file)],
-        cd: @formatter_project_path,
-        stderr_to_stdout: true
-      )
-      
+      {output, exit_code} =
+        System.cmd(
+          "mix",
+          ["format", Path.basename(tmp_file)],
+          cd: @formatter_project_path,
+          stderr_to_stdout: true
+        )
+
       if exit_code != 0 do
         raise "mix format failed with exit code #{exit_code}: #{output}"
       end
-      
+
       # Read the formatted result
       File.read!(tmp_file)
     after
@@ -44,15 +46,16 @@ defmodule Green.ElixirFormatterTest do
   """
   def assert_formats(input, expected) do
     actual = format_code(input)
+
     assert actual == expected, """
     Formatter output did not match expected.
-    
+
     Input:
     #{input}
-    
+
     Expected:
     #{expected}
-    
+
     Actual:
     #{actual}
     """
@@ -63,12 +66,13 @@ defmodule Green.ElixirFormatterTest do
   """
   def assert_unchanged(code) do
     actual = format_code(code)
+
     assert actual == code, """
     Formatter unexpectedly changed the code.
-    
+
     Input:
     #{code}
-    
+
     Output:
     #{actual}
     """
@@ -79,54 +83,228 @@ defmodule Green.ElixirFormatterTest do
   # ============================================================================
 
   describe "Whitespace rules" do
-    @tag :skip
     test "removes trailing whitespace" do
-      # TODO: Implement test
+      input = """
+      defmodule Example do
+        def hello do  \s\s
+          :world\s
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def hello do
+          :world
+        end
+      end
+      """
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
     test "ensures newline at end of file" do
-      # TODO: Implement test
+      # File without newline at EOF
+      input = "defmodule Example do\n  def hello, do: :world\nend"
+
+      # Formatter adds newline
+      expected = "defmodule Example do\n  def hello, do: :world\nend\n"
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
     test "uses Unix-style line endings" do
-      # TODO: Implement test
+      # Input with Windows line endings
+      input = "defmodule Example do\r\n  def hello, do: :world\r\nend\r\n"
+
+      # Formatter converts to Unix line endings
+      expected = "defmodule Example do\n  def hello, do: :world\nend\n"
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
+    test "uses two-space indentation" do
+      input = """
+      defmodule Example do
+      def hello do
+      case :value do
+      :value -> :ok
+      end
+      end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def hello do
+          case :value do
+            :value -> :ok
+          end
+        end
+      end
+      """
+
+      assert_formats(input, expected)
+    end
+
     test "uses spaces around operators" do
-      # TODO: Implement test
+      input = """
+      defmodule Example do
+        def calc do
+          a=1
+          b=2+3
+          c=a*b
+          {a,b,c}
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def calc do
+          a = 1
+          b = 2 + 3
+          c = a * b
+          {a, b, c}
+        end
+      end
+      """
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
     test "no spaces around matched pairs (brackets, braces, parentheses)" do
-      # TODO: Implement test
+      input = """
+      defmodule Example do
+        def example do
+          list = [ 1, 2, 3 ]
+          tuple = { :a, :b }
+          map = %{ key: "value" }
+          call( :arg )
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def example do
+          list = [1, 2, 3]
+          tuple = {:a, :b}
+          map = %{key: "value"}
+          call(:arg)
+        end
+      end
+      """
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
     test "uses space after comment #" do
-      # TODO: Implement test
+      input = """
+      defmodule Example do
+        #This is a comment
+        def hello do
+          #Another comment
+          :world
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        # This is a comment
+        def hello do
+          # Another comment
+          :world
+        end
+      end
+      """
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
     test "uses space before -> in 0-arity anonymous functions" do
-      # TODO: Implement test
+      input = """
+      defmodule Example do
+        def example do
+          fn-> :result end
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def example do
+          fn -> :result end
+        end
+      end
+      """
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
     test "uses spaces around default arguments \\\\" do
-      # TODO: Implement test
+      input = """
+      defmodule Example do
+        def greet(name\\\\\"World\") do
+          "Hello, " <> name
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def greet(name \\\\ "World") do
+          "Hello, " <> name
+        end
+      end
+      """
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
     test "no spaces around bitstring segment options" do
-      # TODO: Implement test
+      input = """
+      defmodule Example do
+        def parse(<<value :: size(8), rest :: binary>>) do
+          {value, rest}
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def parse(<<value::size(8), rest::binary>>) do
+          {value, rest}
+        end
+      end
+      """
+
+      assert_formats(input, expected)
     end
 
-    @tag :skip
     test "no spaces after unary operators and inside range literals" do
-      # TODO: Implement test
+      input = """
+      defmodule Example do
+        def example do
+          x = - 5
+          y = ! true
+          range = 1 .. 10
+        end
+      end
+      """
+
+      expected = """
+      defmodule Example do
+        def example do
+          x = -5
+          y = !true
+          range = 1..10
+        end
+      end
+      """
+
+      assert_formats(input, expected)
     end
   end
 
