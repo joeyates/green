@@ -499,12 +499,25 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   @tag example: "exceptions/exception_message"
-  test "warns when exception messages are capitalized or have punctuation", %{example: example} do
+  test "warns when exception messages are capitalized", %{example: example} do
     output = capture_io(:stderr, fn -> format(example) end)
 
     assert String.contains?(
               output,
-              "\e[33mwarning:\e[0m exception message should be lowercase with no trailing punctuation"
+              """
+              \e[33mwarning:\e[0m exception message should be lowercase
+              4 | raise RuntimeError, "Invalid input"
+              """
+            )
+  end
+
+  @tag example: "exceptions/exception_message"
+  test "warns when exception messages have trailing punctuation", %{example: example} do
+    output = capture_io(:stderr, fn -> format(example) end)
+
+    assert String.contains?(
+              output,
+              "\e[33mwarning:\e[0m exception message should not have trailing punctuation"
             )
   end
 

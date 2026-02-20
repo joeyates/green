@@ -158,6 +158,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
       |> Parentheses.UseParenthesesWithZeroArityFunctions.apply(opts)
       |> Structs.RemoveNilFromStructDefinition.apply(opts)
       |> Exceptions.UseErrorSuffix.apply(opts)
+      |> Exceptions.LowercaseExceptionMessages.apply(opts)
+      |> Exceptions.NoTrailingPunctuationInExceptionMessages.apply(opts)
       |> default_format(opts)
 
     IO.iodata_to_binary([formatted, ?\n])
