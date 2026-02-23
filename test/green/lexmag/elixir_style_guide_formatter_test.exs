@@ -257,7 +257,9 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       refute String.contains?(output, "99 | true && 1")
     end
 
-    test "doesn't warn when local non-boolean function call is second operand", %{example: example} do
+    test "doesn't warn when local non-boolean function call is second operand", %{
+      example: example
+    } do
       output = capture_io(:stderr, fn -> format(example) end)
 
       refute String.contains?(output, "103 | false || title(name)")

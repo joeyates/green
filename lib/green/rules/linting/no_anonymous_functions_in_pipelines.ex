@@ -15,22 +15,22 @@ defmodule Green.Rules.Linting.NoAnonymousFunctionsInPipelines do
           :|>,
           _ctx1,
           [
-            _first |
-            [
-              {
+            _first
+            | [
                 {
-                  # Anonymous function application
-                  :.,
-                  _ctx2,
-                  [
-                    # Anonymous function
-                    {:fn, context, _body}
-                  ]
-                },
-                _ctx3,
-                _args
-              } = fun
-            ]
+                  {
+                    # Anonymous function application
+                    :.,
+                    _ctx2,
+                    [
+                      # Anonymous function
+                      {:fn, context, _body}
+                    ]
+                  },
+                  _ctx3,
+                  _args
+                } = fun
+              ]
           ]
         } = node ->
           IO.warn(
@@ -40,6 +40,7 @@ defmodule Green.Rules.Linting.NoAnonymousFunctionsInPipelines do
             """,
             opts
           )
+
           node
 
         other ->
