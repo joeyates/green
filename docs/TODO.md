@@ -80,3 +80,42 @@ Missing tests for the following rules from [tmp/rules-lexmag.md](tmp/rules-lexma
    - Should warn about: `raise MyError, "This is wrong."` or `raise MyError, "this is wrong."`
 
 Each test should follow the existing pattern in [test/green/lexmag/elixir_style_guide_formatter_test.exs](test/green/lexmag/elixir_style_guide_formatter_test.exs) with appropriate fixture files or examples.
+
+# Validate Green Formatter Against Major Elixir Projects
+
+Status: [x]
+
+## Description
+
+Create an automated testing system that checks out code from major Elixir projects and validates whether the Green formatter correctly identifies formatting issues according to lexmag's Elixir style guide. This will help ensure the formatter works properly on real-world codebases and identify both false positives (incorrectly flagging compliant code) and false negatives (missing actual issues).
+
+## Technical Specifics
+
+- Test against the following projects:
+  - elixir-lang (monorepo - test each subproject separately, including Elixir core, ExUnit, Mix, IEx, Logger, etc.)
+  - Phoenix
+  - Phoenix LiveView
+  - Hexpm
+  - Nerves
+  - Absinthe
+  - Broadway
+  - Credo
+
+- Create a script/tool that:
+  - Clones or checks out the selected projects
+  - For elixir-lang, identifies and processes each subproject within the monorepo
+  - Runs Green formatter against each project's codebase
+  - Captures and categorizes any formatting changes or warnings
+  - Reports statistics on:
+    - Number of files processed
+    - Number of changes proposed
+    - Types of rules triggered
+    - Files with no issues found
+
+- Store test results as JSON for analysis and versioning
+- Maintain a baseline/snapshot of results to track improvements over time
+- Generate summary reports showing:
+  - Which rules from lexmag's style guide are most frequently triggered in real codebases
+  - Potential false positives that need investigation
+  - Projects that are already compliant with lexmag's Elixir style guide
+  - Per-project breakdown of results
