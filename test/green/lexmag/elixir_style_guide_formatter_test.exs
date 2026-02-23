@@ -61,15 +61,13 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
 
   @tag example: "linting/anonymous_pipeline"
   test "warns when anonymous functions are used in pipelines", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.starts_with?(
-              output,
-              """
-              \e[33mwarning:\e[0m anonymous function found in pipeline (consider defining a named function instead)
-              7 | (fn words -> [@sentence_start | words] end).()
-              """
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m anonymous function found in pipeline (consider defining a named function instead)
+      7 | (fn words -> [@sentence_start | words] end).()
+      """
+    )
   end
 
   describe "warns when &&/||/! is used for strictly boolean checks" do
@@ -338,54 +336,46 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
 
   @tag example: "naming/capital_in_atom"
   test "warns when capital letters are used in atoms", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.starts_with?(
-              output,
-              """
-              \e[33mwarning:\e[0m capital letter found in atom (use snake_case for atoms)
-              3 | :someAtom
-              """
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m capital letter found in atom (use snake_case for atoms)
+      3 | :someAtom
+      """
+    )
   end
 
   @tag example: "naming/capital_in_function_name"
   test "warns when capital letters are used in function names", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.starts_with?(
-              output,
-              """
-              \e[33mwarning:\e[0m capital letter found in function name (use snake_case for function names)
-              2 | capital_in_Function_name
-              """
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m capital letter found in function name (use snake_case for function names)
+      2 | capital_in_Function_name
+      """
+    )
   end
 
   @tag example: "naming/capital_in_variable_name"
   test "warns when capital letters are used in variable names", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.starts_with?(
-              output,
-              """
-              \e[33mwarning:\e[0m capital letter found in variable name (use snake_case for variable names)
-              3 | _myVariable
-              """
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m capital letter found in variable name (use snake_case for variable names)
+      3 | _myVariable
+      """
+    )
   end
 
   @tag example: "naming/capital_in_attribute_name"
   test "warns when capital letters are used in attribute names", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.starts_with?(
-              output,
-              """
-              \e[33mwarning:\e[0m capital letter found in attribute name (use snake_case for attribute names)
-              2 | @anAttribute
-              """
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m capital letter found in attribute name (use snake_case for attribute names)
+      2 | @anAttribute
+      """
+    )
   end
 
   @tag example: "naming/capital_in_module_struct"
@@ -399,68 +389,58 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     @describetag example: "naming/camelcase_modules"
 
     test "warns for lower camel-case module names", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
-
-      assert String.contains?(
-                output,
-                """
-                \e[33mwarning:\e[0m found badly formed module name (use UpperCamelCase for module names)
-                1 | defmodule :appStack do
-                """
-              )
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m found badly formed module name (use UpperCamelCase for module names)
+        1 | defmodule :appStack do
+        """
+      )
     end
 
     test "warns with underscores in module names", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
-
-      assert String.contains?(
-                output,
-                """
-                \e[33mwarning:\e[0m found badly formed module name (use UpperCamelCase for module names)
-                5 | defmodule App_Stack do
-                """
-              )
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m found badly formed module name (use UpperCamelCase for module names)
+        5 | defmodule App_Stack do
+        """
+      )
     end
   end
 
   @tag example: "naming/single_letter_variable"
   test "warns when there are single-letter variable names", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.starts_with?(
-              output,
-              """
-              \e[33mwarning:\e[0m one-letter variable name found
-              2 | i
-              """
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m one-letter variable name found
+      2 | i
+      """
+    )
   end
 
   describe "predicate functions" do
     @describetag example: "naming/predicate_funs_name"
 
     test "warns when predicate functions don't have ? suffix", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
-
-      assert String.contains?(
-                output,
-                """
-                \e[33mwarning:\e[0m predicate function should have `?` suffix
-                3 | def is_even(number) do
-                """
-              )
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m predicate function should have `?` suffix
+        3 | def is_even(number) do
+        """
+      )
     end
 
     test "warns when guard-style macros have ? suffix", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
-
-      assert String.contains?(
-                output,
-                """
-                \e[33mwarning:\e[0m guard-style macros should not have `?` suffix, use `is_` prefix instead
-                12 | defmacro valid?(value) do
-                """
-              )
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m guard-style macros should not have `?` suffix, use `is_` prefix instead
+        12 | defmacro valid?(value) do
+        """
+      )
     end
   end
 
@@ -487,38 +467,35 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
 
   @tag example: "exceptions/missing_error_suffix"
   test "warns when exceptions are defined without the `Error` suffix", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.starts_with?(
-              output,
-              """
-              \e[33mwarning:\e[0m exception MissingErrorSuffix should have a suffix of `Error`
-              1 | MissingErrorSuffix
-              """
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m exception MissingErrorSuffix should have a suffix of `Error`
+      1 | MissingErrorSuffix
+      """
+    )
   end
 
   @tag example: "exceptions/exception_message"
   test "warns when exception messages are capitalized", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.contains?(
-              output,
-              """
-              \e[33mwarning:\e[0m exception message should be lowercase
-              4 | raise RuntimeError, "Invalid input"
-              """
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m exception message should be lowercase
+      4 | raise RuntimeError, "Invalid input"
+      """
+    )
   end
 
   @tag example: "exceptions/exception_message"
   test "warns when exception messages have trailing punctuation", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
-
-    assert String.contains?(
-              output,
-              "\e[33mwarning:\e[0m exception message should not have trailing punctuation"
-            )
+    assert_warns(
+      example,
+      """
+      \e[33mwarning:\e[0m exception message should not have trailing punctuation
+      9 | raise ArgumentError, "invalid argument!"
+      """
+    )
   end
 
   @tag fixture_pair: "parentheses/use_parentheses_with_zero_arity_functions"
