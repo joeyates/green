@@ -591,15 +591,27 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
      end
   end
 
-  @tag example: "exceptions/missing_error_suffix"
-  test "warns when exceptions are defined without the `Error` suffix", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m exception MissingErrorSuffix should have a suffix of `Error`
-      1 | MissingErrorSuffix
-      """
-    )
+  describe "when exceptions are defined without the `Error` suffix" do
+    @describetag example: "exceptions/missing_error_suffix"
+
+    test "warns", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m exception MissingErrorSuffix should have a suffix of `Error`
+        1 | MissingErrorSuffix
+        """
+      )
+    end
+
+    test "supports configuration to disable use_error_suffix rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [use_error_suffix: [enabled: false]])
+        end)
+
+      assert output == ""
+     end
   end
 
   @tag example: "exceptions/exception_message"
