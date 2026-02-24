@@ -524,6 +524,15 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
         """
       )
     end
+
+    test "supports configuration to disable predicate_functions rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [predicate_functions: [enabled: false]])
+        end)
+
+      assert output == ""
+    end
   end
 
   @tag fixture_pair: "modules/module_layout"

@@ -1,7 +1,24 @@
 defmodule Green.Rules.Naming.PredicateFunctions do
-  @moduledoc false
+  @moduledoc """
+  This rule checks that predicate functions have `?` suffix and guard-style macros use `is_` prefix.
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      predicate_functions: [
+        enabled: *true | false
+      ]
+    ]
+  ```
+  """
 
   alias Green.Rule
+  alias Green.Options
 
   @behaviour Rule
 
@@ -10,6 +27,14 @@ defmodule Green.Rules.Naming.PredicateFunctions do
 
   @impl Rule
   def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:predicate_functions][:enabled]
+    do_apply({forms, comments}, enabled, opts)
+  end
+
+  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy, opts) do
     Macro.prewalk(
       forms,
       fn
@@ -47,6 +72,14 @@ defmodule Green.Rules.Naming.PredicateFunctions do
     )
 
     {forms, comments}
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:predicate_functions],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 
   defp guard_style?(name) do
