@@ -122,7 +122,7 @@ Create an automated testing system that checks out code from major Elixir projec
 
 # Add Per-Rule Configuration Support to All Green Rules
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
