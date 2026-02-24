@@ -119,3 +119,53 @@ Create an automated testing system that checks out code from major Elixir projec
   - Potential false positives that need investigation
   - Projects that are already compliant with lexmag's Elixir style guide
   - Per-project breakdown of results
+
+# Add Per-Rule Configuration Support to All Green Rules
+
+Status: [ ]
+
+## Description
+
+Enable selective enabling/disabling of individual formatter rules via configuration in `.formatter.exs`. Currently, only 3 out of 19 rules support configuration (PreferPipelines, AvoidCaps, UseParenthesesWithZeroArityFunctions). This capability is a prerequisite for validating Green against major Elixir projects, where we need to test each rule independently to identify which rules trigger on real-world code.
+
+## Technical Specifics
+
+- Add configuration support to the remaining 16 rules:
+  - Linting.AvoidNeedlessPipelines
+  - Linting.NoAnonymousFunctionsInPipelines
+  - Linting.NoUnlessWithElse
+  - Linting.NoNilElse
+  - Linting.TrueInCond
+  - Linting.BooleanOperators
+  - Linting.UseStringConcatenationWhenMatchingBinaries
+  - Naming.AvoidOneLetterVariables
+  - Naming.PredicateFunctions
+  - Naming.UpperCamelCaseForModules
+  - Modules.SortReferences
+  - Modules.UseModulePseudoVariable
+  - Structs.RemoveNilFromStructDefinition
+  - Exceptions.UseErrorSuffix
+  - Exceptions.LowercaseExceptionMessages
+  - Exceptions.NoTrailingPunctuationInExceptionMessages
+
+- Each rule should follow the pattern established by UseParenthesesWithZeroArityFunctions:
+  - Add a `prepare_opts/1` function that uses `Options.set_value/3` to set default `enabled: true`
+  - Check `opts[:green][rule_name][:enabled]` in the `apply/2` function
+  - Return unchanged code if `enabled` is false
+  - Rule name key should be snake_case version of the rule module name
+
+- Configuration format in `.formatter.exs`:
+  ```elixir
+  [
+    plugins: [Green.Lexmag.ElixirStyleGuideFormatter],
+    green: [
+      use_parentheses_with_zero_arity_functions: [enabled: false],
+      prefer_pipelines: [enabled: false],
+      avoid_caps: [enabled: false]
+      # etc.
+    ]
+  ]
+  ```
+
+- Add tests to verify each rule can be selectively enabled/disabled
+- Update each rule's module documentation to explain the configuration option
