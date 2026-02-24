@@ -65,10 +65,6 @@ defmodule Green.Rules.Exceptions.LowercaseExceptionMessages do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
-      [:lowercase_exception_messages],
-      &Keyword.put_new(&1 || [], :enabled, true)
-    )
+    Options.set_default(opts, [:lowercase_exception_messages, :enabled], true)
   end
 end

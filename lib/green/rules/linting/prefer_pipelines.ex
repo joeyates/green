@@ -5,13 +5,15 @@ defmodule Green.Rules.Linting.PreferPipelines do
 
   ## Configuration
 
-  Functions that should be ignored can be configured with the `ignore_functions` option.
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+  Also, functions that should be ignored can be configured with the `ignore_functions` option.
 
   In `.formatter.exs`:
 
   ```elixir
     green: [
       prefer_pipelines: [
+        enabled: *true | false,
         ignore_functions: ["My.Module.foo": 1]
       ]
     ]
@@ -26,7 +28,13 @@ defmodule Green.Rules.Linting.PreferPipelines do
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
+    enabled = opts[:green][:prefer_pipelines][:enabled]
+    do_apply({forms, comments}, enabled, opts)
+  end
 
+  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy, opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,
@@ -149,6 +157,12 @@ defmodule Green.Rules.Linting.PreferPipelines do
   end
 
   defp prepare_opts(opts) do
+    opts
+    |> Options.set_default([:prefer_pipelines, :enabled], true)
+    |> prepare_ignore_functions()
+  end
+
+  defp prepare_ignore_functions(opts) do
     Options.set_value(opts, [:prefer_pipelines, :ignore_functions], fn
       nil ->
         []

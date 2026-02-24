@@ -14,25 +14,25 @@ This plan creates an automated testing infrastructure that clones major Elixir p
 
 ## Tasks
 
-- [ ] Create directory structure under `test/projects/validation/` for cloned repositories and results
-- [ ] Implement repository cloning script that checks out the specified projects at their latest stable tags/releases
-- [ ] Capture and record commit SHA for each cloned project
-- [ ] Create elixir-lang monorepo detection logic to identify and list subprojects (lib/elixir, lib/ex_unit, lib/mix, lib/iex, lib/logger, etc.)
-- [ ] Implement baseline check: run `mix format --check-formatted` without Green to verify project is already formatted
-- [ ] Implement logic to temporarily install the latest published Green version as a dependency in each project's mix.exs
-- [ ] Create per-rule validation logic that iterates through each Green rule individually
-- [ ] For each rule, modify `.formatter.exs` to enable only that specific rule
-- [ ] Run `mix format --check-formatted` and parse output to extract affected files and line numbers
-- [ ] Implement diff parser to extract line numbers from `mix format` output
-- [ ] Create JSON result schema with metadata, baseline, and per-rule results
-- [ ] Implement result collection and JSON serialization for each project run
-- [ ] Create summary report generator that aggregates statistics across all projects
-- [ ] Generate per-project statistics: baseline status, rules triggered, files affected per rule
-- [ ] Generate aggregate statistics: most common rules across all projects, total compliance rate
-- [ ] Add .gitignore entries for cloned repositories and result files
-- [ ] Document how to run validation, interpret results, and update baselines
-- [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Create directory structure under `test/projects/validation/` for cloned repositories and results
+- [x] Implement repository cloning script that checks out the specified projects at their latest stable tags/releases
+- [x] Capture and record commit SHA for each cloned project
+- [x] Create elixir-lang monorepo detection logic to identify and list subprojects (lib/elixir, lib/ex_unit, lib/mix, lib/iex, lib/logger, etc.)
+- [x] Implement baseline check: run `mix format --check-formatted` without Green to verify project is already formatted
+- [x] Implement logic to temporarily install the latest published Green version as a dependency in each project's mix.exs
+- [x] Create per-rule validation logic that iterates through each Green rule individually
+- [x] For each rule, modify `.formatter.exs` to enable only that specific rule
+- [x] Run `mix format --check-formatted` and parse output to extract affected files and line numbers
+- [x] Implement diff parser to extract line numbers from `mix format` output
+- [x] Create JSON result schema with metadata, baseline, and per-rule results
+- [x] Implement result collection and JSON serialization for each project run
+- [x] Create summary report generator that aggregates statistics across all projects
+- [x] Generate per-project statistics: baseline status, rules triggered, files affected per rule
+- [x] Generate aggregate statistics: most common rules across all projects, total compliance rate
+- [x] Add .gitignore entries for cloned repositories and result files
+- [x] Document how to run validation, interpret results, and update baselines
+- [x] Address any additional implementation details that arise during development
+- [x] Mark the plan as "done"
 
 ## Principal Files
 

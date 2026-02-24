@@ -5,6 +5,16 @@ defmodule Green.Options do
     put_in_autovivify(opts, [:green | path], value)
   end
 
+  def set_default(opts, path, default) do
+    put_in_autovivify(opts, [:green | path], fn current ->
+      if current == nil do
+        default
+      else
+        current
+      end
+    end)
+  end
+
   defp put_in_autovivify(list, _keys, _value) when not is_list(list),
     do: raise(ArgumentError, "Expected a list, got: #{inspect(list)}")
 

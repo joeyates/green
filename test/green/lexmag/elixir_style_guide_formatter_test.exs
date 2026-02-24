@@ -10,32 +10,52 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     assert output =~ warning
   end
 
-  @tag fixture_pair: "linting/favor_pipeline_operator"
-  test "transforms nested function calls to pipelines", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "function calls nested 2 or more levels deep" do
+    @describetag fixture_pair: "linting/prefer_pipelines"
 
-    assert formatted == good
+    test "are transformed into pipelines", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
+    test "supports configuration to disable prefer_pipelines rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [prefer_pipelines: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
-  @tag fixture_pair: "linting/avoid_needless_pipelines"
-  test "removes needless pipelines", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "when the first element of a pipeline is a function call with parameters" do
+    @describetag fixture_pair: "linting/incomplete_pipeline"
 
-    assert formatted == good
+    test "transforms it into a pipeline", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
+    test "supports configuration to disable prefer_pipelines rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [prefer_pipelines: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
-  @tag fixture_pair: "linting/avoid_needless_pipelines"
-  test "supports configuration to disable avoid_needless_pipelines rule", %{bad: unchanged} do
-    formatted = format(unchanged, green: [avoid_needless_pipelines: [enabled: false]])
+  describe "when there are pipelines with only two parts" do
+    @describetag fixture_pair: "linting/avoid_needless_pipelines"
 
-    assert formatted == unchanged
-  end
+    test "they are removed", %{bad: bad, good: good} do
+      formatted = format(bad)
 
-  @tag fixture_pair: "linting/incomplete_pipeline"
-  test "transforms incomplete pipelines", %{bad: bad, good: good} do
-    formatted = format(bad)
+      assert formatted == good
+    end
 
-    assert formatted == good
+    test "supports configuration to disable avoid_needless_pipelines rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [avoid_needless_pipelines: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
   describe "unless with else" do
@@ -405,55 +425,63 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  @tag example: "naming/capital_in_atom"
-  test "warns when capital letters are used in atoms", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m capital letter found in atom (use snake_case for atoms)
-      3 | :someAtom
-      """
-    )
-  end
+  describe "when capital letters are used in names that should be snake_case" do
+    @describetag example: "naming/avoid_caps"
 
-  @tag example: "naming/capital_in_function_name"
-  test "warns when capital letters are used in function names", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m capital letter found in function name (use snake_case for function names)
-      2 | capital_in_Function_name
-      """
-    )
-  end
+    test "warns when capital letters are used in atoms", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m capital letter found in atom (use snake_case for atoms)
+        3 | :someAtom
+        """
+      )
+    end
 
-  @tag example: "naming/capital_in_variable_name"
-  test "warns when capital letters are used in variable names", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m capital letter found in variable name (use snake_case for variable names)
-      3 | _myVariable
-      """
-    )
-  end
+    test "warns when capital letters are used in function names", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m capital letter found in function name (use snake_case for function names)
+        12 | capital_in_Function_name
+        """
+      )
+    end
 
-  @tag example: "naming/capital_in_attribute_name"
-  test "warns when capital letters are used in attribute names", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m capital letter found in attribute name (use snake_case for attribute names)
-      2 | @anAttribute
-      """
-    )
-  end
+    test "warns when capital letters are used in variable names", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m capital letter found in variable name (use snake_case for variable names)
+        17 | myVariable
+        """
+      )
+    end
 
-  @tag example: "naming/capital_in_module_struct"
-  test "does not warn when the __MODULE__ struct is used", %{example: example} do
-    output = capture_io(:stderr, fn -> format(example) end)
+    test "warns when capital letters are used in attribute names", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m capital letter found in attribute name (use snake_case for attribute names)
+        6 | @anAttribute
+        """
+      )
+    end
 
-    assert output == ""
+    test "does not warn when the __MODULE__ struct is used", %{example: example} do
+      output = capture_io(:stderr, fn -> format(example) end)
+
+      refute output =~ "__MODULE__"
+    end
+
+    test "supports configuration to disable avoid_caps rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [avoid_caps: [enabled: false]])
+        end)
+
+      assert output == ""
+    end
   end
 
   describe "when module names don't use CamelCase" do
