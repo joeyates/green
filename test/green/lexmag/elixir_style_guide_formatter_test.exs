@@ -70,11 +70,20 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  @tag fixture_pair: "linting/true_in_cond"
-  test "replaces symbols with true in cond", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "when the match-all clause in cond is not `true`" do
+    @describetag fixture_pair: "linting/true_in_cond"
 
-    assert formatted == good
+    test "replaces symbols with true", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
+    test "supports configuration to disable true_in_cond rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [true_in_cond: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
   @tag fixture_pair: "linting/use_string_concatenation_when_pattern_matching_binaries"
