@@ -38,11 +38,20 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     assert formatted == good
   end
 
-  @tag fixture_pair: "linting/no_else_with_unless"
-  test "corrects unless/else to if/else", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "unless with else" do
+    @describetag fixture_pair: "linting/no_unless_with_else"
 
-    assert formatted == good
+    test "transforms unless with else into if with else", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
+    test "supports configuration to disable no_unless_with_else rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [no_unless_with_else: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
   @tag fixture_pair: "linting/no_nil_else"
