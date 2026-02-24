@@ -544,11 +544,19 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  @tag fixture_pair: "modules/module_layout"
-  test "corrects the order of module references", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "when the order of module references is wrong" do
+    @describetag fixture_pair: "modules/module_layout"
+    test "corrects the order of module references", %{bad: bad, good: good} do
+      formatted = format(bad)
 
-    assert formatted == good
+      assert formatted == good
+    end
+
+    test "supports configuration to disable sort_module_references rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [sort_module_references: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
   @tag fixture_pair: "modules/replace_current_module_reference"

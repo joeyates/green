@@ -1,12 +1,39 @@
 defmodule Green.Rules.Modules.SortReferences do
+  @moduledoc """
+  This rule sorts module references (use, import, alias, require).
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      sort_module_references: [
+        enabled: *true | false
+      ]
+    ]
+  ```
+  """
+
   alias Green.Quoted
+  alias Green.Options
 
   @module_reference_types [:use, :import, :alias, :require]
 
   @behaviour Green.Rule
 
   @impl true
-  def apply({forms, comments}, _opts) do
+  def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:sort_module_references][:enabled]
+    do_apply({forms, comments}, enabled)
+  end
+
+  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy) do
     {forms, {comments, _state}} =
       Macro.traverse(
         forms,
@@ -36,6 +63,14 @@ defmodule Green.Rules.Modules.SortReferences do
       )
 
     {forms, comments}
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:sort_module_references],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 
   defp sort_references({forms, comments}) do
