@@ -480,15 +480,26 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  @tag example: "naming/single_letter_variable"
-  test "warns when there are single-letter variable names", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m one-letter variable name found
-      2 | i
-      """
-    )
+  describe "warns when there are single-letter variable names" do
+    @describetag example: "naming/single_letter_variable"
+    test "warns", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m one-letter variable name found
+        2 | i
+        """
+      )
+    end
+
+    test "supports configuration to disable avoid_one_letter_variables rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [avoid_one_letter_variables: [enabled: false]])
+        end)
+
+      assert output == ""
+    end
   end
 
   describe "predicate functions" do
