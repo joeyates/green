@@ -64,6 +64,48 @@ This library aims to avoid configuration as far as possible. However, there
 will be cases where you will want to tweak behaviour due to the specifics
 of your project.
 
+### Disabling Individual Rules
+
+All Green rules can be individually enabled or disabled in `.formatter.exs`.
+Each rule is enabled by default, but can be disabled like this:
+
+```elixir
+[
+  plugins: [Green.Lexmag.ElixirStyleGuideFormatter],
+  green: [
+    # Disable specific rules
+    avoid_needless_pipelines: [enabled: false],
+    no_unless_with_else: [enabled: false],
+    use_parentheses_with_zero_arity_functions: [enabled: false]
+  ]
+]
+```
+
+Available rules for configuration:
+- `avoid_needless_pipelines`
+- `no_anonymous_functions_in_pipelines`
+- `no_unless_with_else`
+- `no_nil_else`
+- `true_in_cond`
+- `boolean_operators`
+- `use_string_concatenation_when_matching_binaries`
+- `avoid_one_letter_variables`
+- `predicate_functions`
+- `upper_camel_case_for_modules`
+- `sort_references`
+- `use_module_pseudo_variable`
+- `remove_nil_from_struct_definition`
+- `use_error_suffix`
+- `lowercase_exception_messages`
+- `no_trailing_punctuation_in_exception_messages`
+- `prefer_pipelines`
+- `avoid_caps`
+- `use_parentheses_with_zero_arity_functions`
+
+### Rule-Specific Configuration
+
+Some rules have additional configuration options beyond just enabling/disabling.
+
 For example, the `PreferPipelines` rule may be applied in some unwanted cases.
 
 ExUnit's `assert` and `refute` are not, by default, in `locals_without_parens` -
