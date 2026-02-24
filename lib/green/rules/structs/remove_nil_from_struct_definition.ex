@@ -1,14 +1,37 @@
 defmodule Green.Rules.Structs.RemoveNilFromStructDefinition do
   @moduledoc """
   This module removes `nil` defaults from struct definitions.
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      remove_nil_from_struct_definition: [
+        enabled: *true | false
+      ]
+    ]
+  ```
   """
 
   alias Green.Quoted.{Comments, FormsAndComments}
+  alias Green.Options
 
   @behaviour Green.Rule
 
   @impl true
-  def apply({forms, comments}, _opts) do
+  def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:remove_nil_from_struct_definition][:enabled]
+    do_apply({forms, comments}, enabled)
+  end
+
+  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy) do
     Macro.prewalk(forms, comments, fn
       {:defstruct, ctx1, [{:__block__, ctx2, [items]}]} = node, comments when is_list(items) ->
         if nils?(items) do
@@ -29,6 +52,14 @@ defmodule Green.Rules.Structs.RemoveNilFromStructDefinition do
       other, comments ->
         {other, comments}
     end)
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:remove_nil_from_struct_definition],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 
   defp nils?(items) do

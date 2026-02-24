@@ -574,11 +574,21 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  @tag fixture_pair: "structs/skip_nil_in_struct_definition/key_value"
-  test "removes `nil` defaults from struct definitions", %{bad: bad, good: good} do
-    formatted = format(bad)
 
-    assert formatted == good
+  describe "when `nil` defaults are used in struct definitions" do
+    @describetag fixture_pair: "structs/skip_nil_in_struct_definition/key_value"
+
+    test "removes the `nil`", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
+    test "supports configuration to disable remove_nil_from_struct_definition rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [remove_nil_from_struct_definition: [enabled: false]])
+
+      assert formatted == unchanged
+     end
   end
 
   @tag example: "exceptions/missing_error_suffix"

@@ -26,7 +26,7 @@ Rules fall into two categories:
 - [x] Add configuration support to `Naming.UpperCamelCaseForModules` (warning-emitting)
 - [x] Add configuration support to `Modules.SortReferences` (AST-modifying)
 - [x] Add configuration support to `Modules.UseModulePseudoVariable` (AST-modifying)
-- [ ] Add configuration support to `Structs.RemoveNilFromStructDefinition` (AST-modifying)
+- [x] Add configuration support to `Structs.RemoveNilFromStructDefinition` (AST-modifying)
 - [ ] Add configuration support to `Exceptions.UseErrorSuffix` (warning-emitting)
 - [ ] Add configuration support to `Exceptions.LowercaseExceptionMessages` (warning-emitting)
 - [ ] Add configuration support to `Exceptions.NoTrailingPunctuationInExceptionMessages` (warning-emitting)
