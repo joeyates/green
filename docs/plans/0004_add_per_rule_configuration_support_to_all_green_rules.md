@@ -14,7 +14,7 @@ Rules fall into two categories:
 
 ## Tasks
 
-- [ ] Add configuration support to `Linting.AvoidNeedlessPipelines` (AST-modifying)
+- [x] Add configuration support to `Linting.AvoidNeedlessPipelines` (AST-modifying)
 - [ ] Add configuration support to `Linting.NoAnonymousFunctionsInPipelines` (warning-emitting)
 - [ ] Add configuration support to `Linting.NoUnlessWithElse` (AST-modifying)
 - [ ] Add configuration support to `Linting.NoNilElse` (AST-modifying)

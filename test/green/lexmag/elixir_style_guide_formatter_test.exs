@@ -24,6 +24,13 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     assert formatted == good
   end
 
+  @tag fixture_pair: "linting/avoid_needless_pipelines"
+  test "supports configuration to disable avoid_needless_pipelines rule", %{bad: unchanged} do
+    formatted = format(unchanged, green: [avoid_needless_pipelines: [enabled: false]])
+
+    assert formatted == unchanged
+  end
+
   @tag fixture_pair: "linting/incomplete_pipeline"
   test "transforms incomplete pipelines", %{bad: bad, good: good} do
     formatted = format(bad)
