@@ -19,7 +19,7 @@ Rules fall into two categories:
 - [x] Add configuration support to `Linting.NoUnlessWithElse` (AST-modifying)
 - [x] Add configuration support to `Linting.NoNilElse` (AST-modifying)
 - [x] Add configuration support to `Linting.TrueInCond` (AST-modifying)
-- [ ] Add configuration support to `Linting.BooleanOperators` (warning-emitting)
+- [x] Add configuration support to `Linting.BooleanOperators` (warning-emitting)
 - [ ] Add configuration support to `Linting.UseStringConcatenationWhenMatchingBinaries` (AST-modifying)
 - [ ] Add configuration support to `Naming.AvoidOneLetterVariables` (warning-emitting)
 - [ ] Add configuration support to `Naming.PredicateFunctions` (warning-emitting)

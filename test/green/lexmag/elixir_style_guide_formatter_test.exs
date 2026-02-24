@@ -116,7 +116,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  describe "warns when &&/||/! is used for strictly boolean checks" do
+  describe "when &&/||/! is used for strictly boolean checks" do
     @describetag example: "linting/boolean_operators"
 
     test "warns for boolean value &&/|| boolean value", %{example: example} do
@@ -127,6 +127,15 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
         4 | true && false
         """
       )
+    end
+
+    test "supports configuration to disable boolean_operators rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [boolean_operators: [enabled: false]])
+        end)
+
+      assert output == ""
     end
 
     test "doesn't warn for boolean value and/or boolean value", %{example: example} do

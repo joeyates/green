@@ -1,14 +1,37 @@
 defmodule Green.Rules.Linting.BooleanOperators do
   @moduledoc """
   This rule checks for the use of `&&` and `||` in strictly boolean contexts and suggests using `and` and `or` instead.
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      boolean_operators: [
+        enabled: *true | false
+      ]
+    ]
+  ```
   """
 
   alias Green.Rule
+  alias Green.Options
 
   @behaviour Rule
 
   @impl Rule
-  def apply(parsed, _opts) do
+  def apply(parsed, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:boolean_operators][:enabled]
+    do_apply(parsed, enabled)
+  end
+
+  defp do_apply(parsed, falsey) when not falsey, do: parsed
+
+  defp do_apply(parsed, _truthy) do
     Macro.prewalk(parsed, fn
       {operator, context, [left, right]} = node when operator in [:&&, :||] ->
         if boolean?(left) and boolean?(right) do
@@ -43,6 +66,14 @@ defmodule Green.Rules.Linting.BooleanOperators do
     end)
 
     parsed
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:boolean_operators],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 
   @boolean_comparisons ~w(== != === !== < <= > >=)a
