@@ -54,11 +54,20 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  @tag fixture_pair: "linting/no_nil_else"
-  test "removes nil else clauses", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "nil else clauses" do
+    @describetag fixture_pair: "linting/no_nil_else"
 
-    assert formatted == good
+    test "are removed", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
+    test "supports configuration to disable no_nil_else rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [no_nil_else: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
   @tag fixture_pair: "linting/true_in_cond"
