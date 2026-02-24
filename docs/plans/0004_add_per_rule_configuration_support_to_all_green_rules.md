@@ -29,7 +29,7 @@ Rules fall into two categories:
 - [x] Add configuration support to `Structs.RemoveNilFromStructDefinition` (AST-modifying)
 - [x] Add configuration support to `Exceptions.UseErrorSuffix` (warning-emitting)
 - [x] Add configuration support to `Exceptions.LowercaseExceptionMessages` (warning-emitting)
-- [ ] Add configuration support to `Exceptions.NoTrailingPunctuationInExceptionMessages` (warning-emitting)
+- [x] Add configuration support to `Exceptions.NoTrailingPunctuationInExceptionMessages` (warning-emitting)
 - [ ] Update documentation for README or guides explaining per-rule configuration
 - [ ] Address any additional implementation details that arise during development
 - [ ] Mark the plan as "done"

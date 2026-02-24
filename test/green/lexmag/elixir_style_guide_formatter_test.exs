@@ -637,15 +637,31 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
      end
   end
 
-  @tag example: "exceptions/exception_message"
-  test "warns when exception messages have trailing punctuation", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m exception message should not have trailing punctuation
-      9 | raise ArgumentError, "invalid argument!"
-      """
-    )
+  describe "when exception messages have trailing punctuation" do
+    @describetag example: "exceptions/exception_message"
+
+    test "warns when exception messages have trailing punctuation", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m exception message should not have trailing punctuation
+        9 | raise ArgumentError, "invalid argument!"
+        """
+      )
+    end
+
+    test "supports configuration to disable no_trailing_punctuation_in_exception_messages rule", %{
+      example: example
+    } do
+      output =
+        capture_io(:stderr, fn ->
+          format(example,
+            green: [no_trailing_punctuation_in_exception_messages: [enabled: false]]
+          )
+        end)
+
+      refute output =~ "exception message should not have trailing punctuation"
+     end
   end
 
   @tag fixture_pair: "parentheses/use_parentheses_with_zero_arity_functions"
