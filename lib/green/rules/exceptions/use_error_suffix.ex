@@ -2,6 +2,20 @@ defmodule Green.Rules.Exceptions.UseErrorSuffix do
   @moduledoc """
   This rule warns if exceptions are defined with a suffix of `Error`.
 
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      use_error_suffix: [
+        enabled: *true | false
+      ]
+    ]
+  ```
+
   ## Examples
 
       defmodule MyBad do
@@ -13,8 +27,18 @@ defmodule Green.Rules.Exceptions.UseErrorSuffix do
 
   @behaviour Green.Rule
 
+  alias Green.Options
+
   @impl true
   def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:use_error_suffix][:enabled]
+    do_apply({forms, comments}, enabled, opts)
+  end
+
+  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy, opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,
@@ -49,5 +73,13 @@ defmodule Green.Rules.Exceptions.UseErrorSuffix do
       )
 
     {forms, comments}
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:use_error_suffix],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 end

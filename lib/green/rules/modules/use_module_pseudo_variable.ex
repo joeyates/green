@@ -2,12 +2,36 @@ defmodule Green.Rules.Modules.UseModulePseudoVariable do
   @moduledoc """
   This rule replaces references to the current module by name with the pseudo-variable
   `__MODULE__`.
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      use_module_pseudo_variable: [
+        enabled: *true | false
+      ]
+    ]
+  ```
   """
 
   @behaviour Green.Rule
 
+  alias Green.Options
+
   @impl true
-  def apply({forms, comments}, _opts) do
+  def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:use_module_pseudo_variable][:enabled]
+    do_apply({forms, comments}, enabled)
+  end
+
+  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy) do
     {forms, _acc} =
       Macro.traverse(
         forms,
@@ -67,5 +91,13 @@ defmodule Green.Rules.Modules.UseModulePseudoVariable do
       )
 
     {forms, comments}
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:use_module_pseudo_variable],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 end

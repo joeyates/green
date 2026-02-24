@@ -1,12 +1,36 @@
 defmodule Green.Rules.Naming.AvoidOneLetterVariables do
   @moduledoc """
   This module prints a warning if there are one-letter variable names.
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      avoid_one_letter_variables: [
+        enabled: *true | false
+      ]
+    ]
+  ```
   """
 
   @behaviour Green.Rule
 
+  alias Green.Options
+
   @impl true
   def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:avoid_one_letter_variables][:enabled]
+    do_apply({forms, comments}, enabled, opts)
+  end
+
+  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy, opts) do
     Macro.traverse(
       forms,
       %{in_type: false},
@@ -46,6 +70,14 @@ defmodule Green.Rules.Naming.AvoidOneLetterVariables do
     )
 
     {forms, comments}
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:avoid_one_letter_variables],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 
   defp one_letter?(name) do

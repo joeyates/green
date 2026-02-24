@@ -1,14 +1,37 @@
 defmodule Green.Rules.Exceptions.LowercaseExceptionMessages do
   @moduledoc """
   Warns when exception messages are capitalized.
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      lowercase_exception_messages: [
+        enabled: *true | false
+      ]
+    ]
+  ```
   """
 
   alias Green.Rule
+  alias Green.Options
 
   @behaviour Rule
 
   @impl Rule
   def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:lowercase_exception_messages][:enabled]
+    do_apply({forms, comments}, enabled, opts)
+  end
+
+  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy, opts) do
     Macro.prewalk(
       forms,
       fn
@@ -31,11 +54,21 @@ defmodule Green.Rules.Exceptions.LowercaseExceptionMessages do
             )
           end
 
+          node
+
         other ->
           other
       end
     )
 
     {forms, comments}
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:lowercase_exception_messages],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 end
