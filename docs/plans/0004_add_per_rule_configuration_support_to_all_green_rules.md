@@ -23,7 +23,7 @@ Rules fall into two categories:
 - [x] Add configuration support to `Linting.UseStringConcatenationWhenMatchingBinaries` (AST-modifying)
 - [x] Add configuration support to `Naming.AvoidOneLetterVariables` (warning-emitting)
 - [x] Add configuration support to `Naming.PredicateFunctions` (warning-emitting)
-- [ ] Add configuration support to `Naming.UpperCamelCaseForModules` (warning-emitting)
+- [x] Add configuration support to `Naming.UpperCamelCaseForModules` (warning-emitting)
 - [ ] Add configuration support to `Modules.SortReferences` (AST-modifying)
 - [ ] Add configuration support to `Modules.UseModulePseudoVariable` (AST-modifying)
 - [ ] Add configuration support to `Structs.RemoveNilFromStructDefinition` (AST-modifying)

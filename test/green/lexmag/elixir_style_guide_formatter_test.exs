@@ -478,6 +478,15 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
         """
       )
     end
+
+    test "supports configuration to disable upper_camel_case_for_modules rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [upper_camel_case_for_modules: [enabled: false]])
+        end)
+
+      refute output =~ "found badly formed module name (use UpperCamelCase for module names)"
+    end
   end
 
   describe "warns when there are single-letter variable names" do
