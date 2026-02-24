@@ -614,15 +614,27 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
      end
   end
 
-  @tag example: "exceptions/exception_message"
-  test "warns when exception messages are capitalized", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m exception message should be lowercase
-      4 | raise RuntimeError, "Invalid input"
-      """
-    )
+  describe "when exception messages are capitalized" do
+    @describetag example: "exceptions/exception_message"
+
+    test "warns", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m exception message should be lowercase
+        4 | raise RuntimeError, "Invalid input"
+        """
+      )
+    end
+
+    test "supports configuration to disable lowercase_exception_messages rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [lowercase_exception_messages: [enabled: false]])
+        end)
+
+      refute output =~ "exception message should be lowercase"
+     end
   end
 
   @tag example: "exceptions/exception_message"
