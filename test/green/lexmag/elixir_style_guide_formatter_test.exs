@@ -664,11 +664,23 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
      end
   end
 
-  @tag fixture_pair: "parentheses/use_parentheses_with_zero_arity_functions"
-  test "adds parentheses to function definitions", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "when zero-arity functions do not have parentheses" do
+    @describetag fixture_pair: "parentheses/use_parentheses_with_zero_arity_functions"
 
-    assert formatted == good
+    test "adds parentheses", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
+    test "supports configuration to disable use_parentheses_with_zero_arity_functions rule", %{
+      bad: unchanged
+    } do
+      formatted =
+        format(unchanged, green: [use_parentheses_with_zero_arity_functions: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
   describe "format_file/2" do
