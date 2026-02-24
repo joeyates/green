@@ -559,11 +559,19 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  @tag fixture_pair: "modules/replace_current_module_reference"
-  test "replaces references to the current module with __MODULE__", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "when there are references to the current module" do
+    @describetag fixture_pair: "modules/replace_current_module_reference"
+    test "replaces references to the current module with __MODULE__", %{bad: bad, good: good} do
+      formatted = format(bad)
 
-    assert formatted == good
+      assert formatted == good
+    end
+
+    test "supports configuration to disable use_module_pseudo_variable rule", %{bad: unchanged} do
+      formatted = format(unchanged, green: [use_module_pseudo_variable: [enabled: false]])
+
+      assert formatted == unchanged
+    end
   end
 
   @tag fixture_pair: "structs/skip_nil_in_struct_definition/key_value"
