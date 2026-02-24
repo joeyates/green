@@ -86,11 +86,25 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-  @tag fixture_pair: "linting/use_string_concatenation_when_pattern_matching_binaries"
-  test "extracts a final 'bytes' entry when pattern_matching binaries", %{bad: bad, good: good} do
-    formatted = format(bad)
+  describe "when pattern_matching binaries" do
+    @describetag fixture_pair: "linting/use_string_concatenation_when_matching_binaries"
 
-    assert formatted == good
+    test "extracts a final 'bytes' entry", %{bad: bad, good: good} do
+      formatted = format(bad)
+
+      assert formatted == good
+    end
+
+    test "supports configuration to disable use_string_concatenation_when_matching_binaries rule", %{
+      bad: unchanged
+    } do
+      formatted =
+        format(unchanged,
+          green: [use_string_concatenation_when_matching_binaries: [enabled: false]]
+        )
+
+      assert formatted == unchanged
+    end
   end
 
   describe "when anonymous functions are used in pipelines" do

@@ -1,12 +1,36 @@
 defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinaries do
   @moduledoc """
   This rule replaces use of bitstrings with the `<>` operator when matching binaries.
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+    green: [
+      use_string_concatenation_when_matching_binaries: [
+        enabled: *true | false
+      ]
+    ]
+  ```
   """
 
   @behaviour Green.Rule
 
+  alias Green.Options
+
   @impl true
-  def apply({forms, comments}, _opts) do
+  def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    enabled = opts[:green][:use_string_concatenation_when_matching_binaries][:enabled]
+    do_apply({forms, comments}, enabled)
+  end
+
+  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy) do
     forms =
       Macro.prewalk(forms, fn
         # Pattern matching in parameters
@@ -29,6 +53,14 @@ defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinaries do
       end)
 
     {forms, comments}
+  end
+
+  defp prepare_opts(opts) do
+    Options.set_value(
+      opts,
+      [:use_string_concatenation_when_matching_binaries],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
   end
 
   defp extract_concatenation({:<<>>, context, []}), do: {:__block__, context, [""]}
