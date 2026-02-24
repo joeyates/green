@@ -66,15 +66,27 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     assert formatted == good
   end
 
-  @tag example: "linting/anonymous_pipeline"
-  test "warns when anonymous functions are used in pipelines", %{example: example} do
-    assert_warns(
-      example,
-      """
-      \e[33mwarning:\e[0m anonymous function found in pipeline (consider defining a named function instead)
-      7 | (fn words -> [@sentence_start | words] end).()
-      """
-    )
+  describe "when anonymous functions are used in pipelines" do
+    @describetag example: "linting/anonymous_pipeline"
+
+    test "warns", %{example: example} do
+      assert_warns(
+        example,
+        """
+        \e[33mwarning:\e[0m anonymous function found in pipeline (consider defining a named function instead)
+        7 | (fn words -> [@sentence_start | words] end).()
+        """
+      )
+    end
+
+    test "supports configuration to disable no_anonymous_functions_in_pipelines rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [no_anonymous_functions_in_pipelines: [enabled: false]])
+        end)
+
+      assert output == ""
+    end
   end
 
   describe "warns when &&/||/! is used for strictly boolean checks" do
