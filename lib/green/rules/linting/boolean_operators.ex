@@ -86,15 +86,17 @@ defmodule Green.Rules.Linting.BooleanOperators do
   defp boolean?({comparison, _context, _args}) when comparison in @boolean_comparisons, do: true
 
   # Module-scoped function call, e.g. `String.upcase(name)`
-  defp boolean?({
-         {
-           :.,
-           _ctx1,
-           [{:__aliases__, _ctx2, _namespace}, fun]
-         },
-         _ctx3,
-         _args
-       }) do
+  defp boolean?(
+    {
+      {
+        :.,
+        _ctx1,
+        [_module_or_aliases, fun]
+      },
+      _ctx3,
+      _args
+    }
+  ) do
     name = Atom.to_string(fun)
     guard_style?(name) or predicate?(name)
   end

@@ -39,7 +39,7 @@ defmodule Green.Rules.Naming.PredicateFunctions do
       forms,
       fn
         {keyword, context, [{name, _, _} = left | _]} = node
-        when keyword in @function_definition_keywords ->
+        when keyword in @function_definition_keywords and is_atom(name) ->
           if guard_style?(name) do
             IO.warn(
               """
