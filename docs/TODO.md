@@ -169,3 +169,29 @@ Enable selective enabling/disabling of individual formatter rules via configurat
 
 - Add tests to verify each rule can be selectively enabled/disabled
 - Update each rule's module documentation to explain the configuration option
+
+# Add Optional Report Export to Check Subcommands
+
+Status: [ ]
+
+## Description
+
+Add optional output format parameter to the `check` and `check <project>` subcommands in the validation system. Currently, validation results are only printed to stdout as they are generated. This enhancement would enable saving complete results as JSON or formatted text files after all checks complete. This also involves removing the dead `SummaryReporter` module which expects to load pre-existing JSON files from disk.
+
+## Technical Specifics
+
+- Remove `lib/green_validation/summary_reporter.ex` (dead code that loads JSON from disk)
+- Create `lib/green_validation/report_writer.ex` to generate reports from `GreenValidation.Result` structs:
+  - `write_json(result, output_path)` - Serialize result to JSON
+  - `write_text(result, output_path)` - Format result as human-readable text
+  - Text format should match current stdout output structure
+- Modify `bin/validate` to accept `--output` switch:
+  - `bin/validate check --output json` or `bin/validate check --output txt`
+  - `bin/validate check phoenix --output json:[path]` or `bin/validate check phoenix --output txt:[path]`
+  - When no `--output` flag provided, maintain current stdout behavior
+  - Collect the `Result` struct after validation completes
+  - Pass result to appropriate `ReportWriter` function based on format
+- Update `HelpfulOptions` command definitions to support the `--output` switch
+- Consider default output filenames with timestamps when no path specified (e.g., `validation_phoenix_20260301T120000.json`)
+- Update `test/projects/validation/README.md` with new command examples
+- Remove references to `SummaryReporter` from documentation
