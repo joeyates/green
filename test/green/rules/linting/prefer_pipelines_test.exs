@@ -4,8 +4,8 @@ defmodule Green.Rules.Linting.PreferPipelinesTest do
 
   alias Green.Rules.Linting.PreferPipelines
 
-  @tag example: "linting/favor_pipeline_operator_bad"
-  @tag fixture_pair: "linting/favor_pipeline_operator"
+  @tag example: "linting/prefer_pipelines_bad"
+  @tag fixture_pair: "linting/prefer_pipelines"
   test "transforms triply-nested function calls into pipelines", %{
     forms: forms,
     comments: comments,
@@ -16,8 +16,8 @@ defmodule Green.Rules.Linting.PreferPipelinesTest do
     assert output == good
   end
 
-  @tag example: "linting/favor_pipeline_operator_bad"
-  @tag fixture_pair: "linting/favor_pipeline_operator"
+  @tag example: "linting/prefer_pipelines_bad"
+  @tag fixture_pair: "linting/prefer_pipelines"
   test "supports configuration of functions to ignore", %{
     forms: forms,
     comments: comments,

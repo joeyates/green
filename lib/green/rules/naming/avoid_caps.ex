@@ -5,7 +5,19 @@ defmodule Green.Rules.Naming.AvoidCaps do
 
   ## Configuration
 
-  Acceptable capitalized atoms can be configured with the `accept_atoms` option.
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  In `.formatter.exs`:
+
+  ```elixir
+  green: [
+    avoid_caps: [
+      enabled: *true | false
+    ]
+  ]
+  ```
+
+  Also, acceptable capitalized atoms can be configured with the `accept_atoms` option.
   This can be set globally in the configuration file or per-file using a comment.
 
   In `.formatter.exs`:
@@ -35,7 +47,13 @@ defmodule Green.Rules.Naming.AvoidCaps do
   def apply({forms, comments}, opts) do
     file_opts = extract_config(comments)
     opts = prepare_opts(opts, file_opts)
+    enabled = opts[:green][:avoid_caps][:enabled]
+    do_apply({forms, comments}, enabled, opts)
+  end
 
+  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
+
+  defp do_apply({forms, comments}, _truthy, opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,
@@ -111,6 +129,12 @@ defmodule Green.Rules.Naming.AvoidCaps do
   end
 
   defp prepare_opts(opts, file_opts) do
+    opts
+    |> Options.set_default([:avoid_caps, :enabled], true)
+    |> prepare_accept_atoms(file_opts)
+  end
+
+  defp prepare_accept_atoms(opts, file_opts) do
     file_accept_atoms = get_in(file_opts, [:file_accept_atoms]) || []
     Options.set_value(opts, [:avoid_caps, :accept_atoms], &((&1 || []) ++ file_accept_atoms))
   end

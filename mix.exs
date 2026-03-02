@@ -16,7 +16,7 @@ defmodule Green.MixProject do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "test/support", "test/projects/validation/lib"]
   defp elixirc_paths(_), do: ["lib"]
 
   defp deps() do
