@@ -172,7 +172,7 @@ Enable selective enabling/disabling of individual formatter rules via configurat
 
 # Add Optional Report Export to Check Subcommands
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
