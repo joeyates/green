@@ -10,22 +10,22 @@ Add comprehensive type annotations to all modules in the GreenValidation library
 
 ## Tasks
 
-- [ ] Add `@spec` annotations and explicit struct matching to [baseline_formatter.ex](test/projects/validation/lib/green_validation/baseline_formatter.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [green_installer.ex](test/projects/validation/lib/green_validation/green_installer.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [installer/mix_exs.ex](test/projects/validation/lib/green_validation/installer/mix_exs.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [output_parser.ex](test/projects/validation/lib/green_validation/output_parser.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [project.ex](test/projects/validation/lib/green_validation/project.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [projects.ex](test/projects/validation/lib/green_validation/projects.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [repo.ex](test/projects/validation/lib/green_validation/repo.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [repos.ex](test/projects/validation/lib/green_validation/repos.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [report_writer.ex](test/projects/validation/lib/green_validation/report_writer.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [result.ex](test/projects/validation/lib/green_validation/result.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [rule_result.ex](test/projects/validation/lib/green_validation/rule_result.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [rule_validator.ex](test/projects/validation/lib/green_validation/rule_validator.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [test_run.ex](test/projects/validation/lib/green_validation/test_run.ex)
-- [ ] Verify all struct modules have `@type t ::` declarations where appropriate
-- [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Add `@spec` annotations and explicit struct matching to [baseline_formatter.ex](test/projects/validation/lib/green_validation/baseline_formatter.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [green_installer.ex](test/projects/validation/lib/green_validation/green_installer.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [installer/mix_exs.ex](test/projects/validation/lib/green_validation/installer/mix_exs.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [output_parser.ex](test/projects/validation/lib/green_validation/output_parser.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [project.ex](test/projects/validation/lib/green_validation/project.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [projects.ex](test/projects/validation/lib/green_validation/projects.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [repo.ex](test/projects/validation/lib/green_validation/repo.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [repos.ex](test/projects/validation/lib/green_validation/repos.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [report_writer.ex](test/projects/validation/lib/green_validation/report_writer.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [result.ex](test/projects/validation/lib/green_validation/result.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [rule_result.ex](test/projects/validation/lib/green_validation/rule_result.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [rule_validator.ex](test/projects/validation/lib/green_validation/rule_validator.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [test_run.ex](test/projects/validation/lib/green_validation/test_run.ex)
+- [x] Verify all struct modules have `@type t ::` declarations where appropriate
+- [x] Address any additional implementation details that arise during development
+- [x] Mark the plan as "done"
 
 ## Principal Files
 
