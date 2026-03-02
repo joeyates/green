@@ -195,3 +195,44 @@ Add optional output format parameter to the `check` and `check <project>` subcom
 - Consider default output filenames with timestamps when no path specified (e.g., `validation_phoenix_20260301T120000.json`)
 - Update `test/projects/validation/README.md` with new command examples
 - Remove references to `SummaryReporter` from documentation
+
+# Improve Type Annotations Across GreenValidation Codebase
+
+Status: [ ]
+
+## Description
+
+Add comprehensive type annotations to all modules in the GreenValidation library to improve type safety and code clarity. This includes adding @spec declarations to all public functions and using explicit struct matching in function parameters.
+
+## Technical Specifics
+
+- Directory: `test/projects/validation/lib/green_validation/`
+- Modules to update:
+  - `baseline_formatter.ex`
+  - `green_installer.ex`
+  - `installer/mix_exs.ex`
+  - `output_parser.ex`
+  - `project.ex`
+  - `projects.ex`
+  - `repo.ex`
+  - `repos.ex`
+  - `report_writer.ex`
+  - `result.ex`
+  - `rule_result.ex`
+  - `rule_validator.ex`
+  - `test_run.ex`
+
+- Changes needed for each module:
+  1. Add `@spec` annotations to all public functions
+  2. Use explicit struct matching in function parameters:
+     - Example: `def foo(%Project{} = project, ...)` instead of `def foo(project, ...)`
+  3. Ensure struct type definitions include `@type t ::` declarations where appropriate
+  4. Consider adding specs to significant private functions for internal documentation
+
+- Pattern example:
+  ```elixir
+  @spec parse_output(Project.t(), atom(), String.t()) :: {:ok, RuleResult.t()}
+  def parse_output(%Project{} = _project, rule, output) do
+    # implementation
+  end
+  ```
