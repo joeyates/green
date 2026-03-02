@@ -19,7 +19,7 @@ Add comprehensive type annotations to all modules in the GreenValidation library
 - [x] Add `@spec` annotations and explicit struct matching to [repo.ex](test/projects/validation/lib/green_validation/repo.ex)
 - [x] Add `@spec` annotations and explicit struct matching to [repos.ex](test/projects/validation/lib/green_validation/repos.ex)
 - [x] Add `@spec` annotations and explicit struct matching to [report_writer.ex](test/projects/validation/lib/green_validation/report_writer.ex)
-- [ ] Add `@spec` annotations and explicit struct matching to [result.ex](test/projects/validation/lib/green_validation/result.ex)
+- [x] Add `@spec` annotations and explicit struct matching to [result.ex](test/projects/validation/lib/green_validation/result.ex)
 - [ ] Add `@spec` annotations and explicit struct matching to [rule_result.ex](test/projects/validation/lib/green_validation/rule_result.ex)
 - [ ] Add `@spec` annotations and explicit struct matching to [rule_validator.ex](test/projects/validation/lib/green_validation/rule_validator.ex)
 - [ ] Add `@spec` annotations and explicit struct matching to [test_run.ex](test/projects/validation/lib/green_validation/test_run.ex)
