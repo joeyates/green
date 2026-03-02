@@ -198,7 +198,7 @@ Add optional output format parameter to the `check` and `check <project>` subcom
 
 # Improve Type Annotations Across GreenValidation Codebase
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
