@@ -26,14 +26,14 @@ Apply the same switch definition to both the `["check"]` and `["check", :project
 
 ## Tasks
 
-- [ ] Remove dead `SummaryReporter` module and its references
-- [ ] Create `ReportWriter` module with JSON and text export functions
-- [ ] Add `--format` switch to "check" command definitions using HelpfulOptions format
-- [ ] Refactor `check_project/1` to build and return `Result` struct instead of only printing
-- [ ] Update CLI `run/1` functions to handle `--format` switch and call `ReportWriter`  
-- [ ] Generate default timestamped output filenames when format is specified
-- [ ] Add tests for `ReportWriter` module
-- [ ] Update validation system README with new command examples
+- [x] Remove dead `SummaryReporter` module and its references
+- [x] Create `ReportWriter` module with JSON and text export functions
+- [x] Add `--format` switch to "check" command definitions using HelpfulOptions format
+- [x] Refactor `check_project/1` to build and return `Result` struct instead of only printing
+- [x] Update CLI `run/1` functions to handle `--format` switch and call `ReportWriter`
+- [x] Generate default timestamped output filenames when format is specified
+- [x] Add tests for `ReportWriter` module
+- [x] Update validation system README with new command examples
 - [ ] Address any additional implementation details that arise during development
 - [ ] Mark the plan as "done"
 
