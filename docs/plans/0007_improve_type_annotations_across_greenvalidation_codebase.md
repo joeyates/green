@@ -23,7 +23,7 @@ Add comprehensive type annotations to all modules in the GreenValidation library
 - [x] Add `@spec` annotations and explicit struct matching to [rule_result.ex](test/projects/validation/lib/green_validation/rule_result.ex)
 - [x] Add `@spec` annotations and explicit struct matching to [rule_validator.ex](test/projects/validation/lib/green_validation/rule_validator.ex)
 - [x] Add `@spec` annotations and explicit struct matching to [test_run.ex](test/projects/validation/lib/green_validation/test_run.ex)
-- [ ] Verify all struct modules have `@type t ::` declarations where appropriate
+- [x] Verify all struct modules have `@type t ::` declarations where appropriate
 - [ ] Address any additional implementation details that arise during development
 - [ ] Mark the plan as "done"
 
