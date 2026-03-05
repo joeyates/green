@@ -19,7 +19,7 @@ Add dedicated tests for rules that are currently only tested indirectly via `Gre
 - [x] Verify all rules have >90% test coverage
 - [x] Update CI configuration to run coverage checks
 - [x] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Mark the plan as "done"
 
 ## Principal Files
 
