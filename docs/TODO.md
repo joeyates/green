@@ -236,3 +236,103 @@ Add comprehensive type annotations to all modules in the GreenValidation library
     # implementation
   end
   ```
+
+# Add Per-File/Per-Line Exception Support to All Green Rules
+
+Status: [ ]
+
+## Description
+
+Extend the `except: []` configuration pattern (already implemented in `AvoidNeedlessPipelines` and `TrueInCond`) to all remaining Green rules. This allows users to selectively disable rules for specific files or specific lines within files, providing fine-grained control when certain code patterns are intentionally used.
+
+The `except` configuration supports three formats:
+- Disable for entire file: `"path/to/file.exs"`
+- Disable for single line: `{"path/to/file.exs", 42}`
+- Disable for multiple lines: `{"path/to/file.exs", [10, 20, 30]}`
+
+## Technical Specifics
+
+- Apply the `except` pattern to the remaining 17 rules:
+  - `Linting.NoAnonymousFunctionsInPipelines`
+  - `Linting.NoUnlessWithElse`
+  - `Linting.NoNilElse`
+  - `Linting.BooleanOperators`
+  - `Linting.UseStringConcatenationWhenMatchingBinaries`
+  - `Linting.PreferPipelines`
+  - `Naming.AvoidOneLetterVariables`
+  - `Naming.PredicateFunctions`
+  - `Naming.UpperCamelCaseForModules`
+  - `Naming.AvoidCaps`
+  - `Modules.SortReferences`
+  - `Modules.UseModulePseudoVariable`
+  - `Parentheses.UseParenthesesWithZeroArityFunctions`
+  - `Structs.RemoveNilFromStructDefinition`
+  - `Exceptions.UseErrorSuffix`
+  - `Exceptions.LowercaseExceptionMessages`
+  - `Exceptions.NoTrailingPunctuationInExceptionMessages`
+
+- Each rule should:
+  - Add `@rule_name` module attribute (if not present)
+  - Update `prepare_opts/1` to call `Options.prepare_except(@rule_name)`
+  - Update `apply/2` to use `get_in(opts, [:green, @rule_name])` pattern instead of direct access
+  - Update `do_apply` to accept and use `rule_opts[:except_lines]`
+  - Check `context[:line] in except_lines` before applying transformations
+  - Update module documentation with `except` configuration examples
+
+- Implementation pattern (follow `avoid_needless_pipelines.ex` and `true_in_cond.ex`):
+  ```elixir
+  @rule_name :my_rule_name
+
+  def apply({forms, comments}, opts) do
+    opts = prepare_opts(opts)
+    rule_opts = get_in(opts, [:green, @rule_name]) || []
+    if rule_opts[:enabled] do
+      do_apply({forms, comments}, rule_opts)
+    else
+      {forms, comments}
+    end
+  end
+
+  defp do_apply({forms, comments}, rule_opts) do
+    except_lines = rule_opts[:except_lines] || []
+    # In transformation logic: if context[:line] in except_lines, skip
+  end
+
+  defp prepare_opts(opts) do
+    opts
+    |> Options.set_value(
+      [@rule_name],
+      &Keyword.put_new(&1 || [], :enabled, true)
+    )
+    |> Options.prepare_except(@rule_name)
+  end
+  ```
+
+- Add `except` documentation to each rule's moduledoc, similar to:
+  ```elixir
+  @moduledoc \"\"\"
+  This rule [description].
+
+  ## Configuration
+
+  This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
+  In `.formatter.exs`:
+
+  \`\`\`elixir
+    green: [
+      my_rule_name: [
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
+      ]
+    ]
+  \`\`\`
+  \"\"\"
+  ```
