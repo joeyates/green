@@ -37,14 +37,17 @@ defmodule Green.Rules.Naming.PredicateFunctions do
   @impl Rule
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    enabled = opts[:green][:predicate_functions][:enabled]
-    do_apply({forms, comments}, enabled, opts)
+    enabled = get_in(opts, [:green, @rule_name, :enabled])
+
+    if enabled do
+      do_apply({forms, comments}, opts)
+    end
+
+    {forms, comments}
   end
 
-  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
-
-  defp do_apply({forms, comments}, _truthy, opts) do
-    except_lines = opts[:green][:predicate_functions][:except_lines] || []
+  defp do_apply({forms, _comments}, opts) do
+    except_lines = get_in(opts, [:green, @rule_name, :except_lines]) || []
 
     Macro.prewalk(
       forms,
@@ -81,8 +84,6 @@ defmodule Green.Rules.Naming.PredicateFunctions do
           other
       end
     )
-
-    {forms, comments}
   end
 
   defp prepare_opts(opts) do
