@@ -75,5 +75,27 @@ defmodule Green.Rules.Exceptions.NoTrailingPunctuationInExceptionMessagesTest do
 
       assert output =~ "exception message should not have trailing punctuation"
     end
+
+    test "includes filename in warning" do
+      code = """
+      defmodule Example do
+        def foo do
+          raise ArgumentError, "something went wrong."
+        end
+      end
+      """
+
+      {forms, comments} = parse_code(code)
+
+      output =
+        capture_io(:stderr, fn ->
+          NoTrailingPunctuationInExceptionMessages.apply({forms, comments},
+            file: Path.expand("test/example.exs")
+          )
+        end)
+
+      assert output =~ "test/example.exs"
+      assert output =~ "exception message should not have trailing punctuation"
+    end
   end
 end

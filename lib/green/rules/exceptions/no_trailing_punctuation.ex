@@ -34,17 +34,17 @@ defmodule Green.Rules.Exceptions.NoTrailingPunctuationInExceptionMessages do
   @impl Rule
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    rule_opts = get_in(opts, [:green, @rule_name]) || []
+    enabled = get_in(opts, [:green, @rule_name, :enabled])
 
-    if rule_opts[:enabled] do
-      do_apply({forms, comments}, rule_opts, opts)
-    else
-      {forms, comments}
+    if enabled do
+      do_apply({forms, comments}, opts)
     end
+
+    {forms, comments}
   end
 
-  defp do_apply({forms, comments}, rule_opts, opts) do
-    except_lines = rule_opts[:except_lines] || []
+  defp do_apply({forms, _comments}, opts) do
+    except_lines = get_in(opts, [:green, @rule_name, :except_lines]) || []
 
     Macro.prewalk(
       forms,
@@ -74,8 +74,6 @@ defmodule Green.Rules.Exceptions.NoTrailingPunctuationInExceptionMessages do
           other
       end
     )
-
-    {forms, comments}
   end
 
   defp prepare_opts(opts) do
