@@ -12,7 +12,7 @@ Currently, the `true_in_cond` rule automatically replaces non-`true` final claus
 
 - [x] Update [lib/green/rules/linting/true_in_cond.ex](lib/green/rules/linting/true_in_cond.ex) to emit warnings using `IO.warn` instead of modifying the AST
 - [x] Remove the "good" fixture file [test/fixtures/linting/true_in_cond.ex](test/fixtures/linting/true_in_cond.ex) (no longer needed since code won't be transformed)
-- [ ] Rename [test/fixtures/linting/true_in_cond_bad.ex](test/fixtures/linting/true_in_cond_bad.ex) to `true_in_cond.ex` (convention for warning-based tests)
+- [x] Rename [test/fixtures/linting/true_in_cond_bad.ex](test/fixtures/linting/true_in_cond_bad.ex) to `true_in_cond.ex` (convention for warning-based tests)
 - [x] Update tests in [test/green/lexmag/elixir_style_guide_formatter_test.exs](test/green/lexmag/elixir_style_guide_formatter_test.exs) to check for warnings instead of code transformations
 - [x] Create dedicated test file [test/green/rules/linting/true_in_cond_test.exs](test/green/rules/linting/true_in_cond_test.exs) following the pattern of [test/green/rules/exceptions/use_error_suffix_test.exs](test/green/rules/exceptions/use_error_suffix_test.exs)
 - [ ] Address any additional implementation details that arise during development

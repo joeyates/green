@@ -91,7 +91,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when the match-all clause in cond is not `true`" do
-    @describetag example: "linting/true_in_cond_bad"
+    @describetag example: "linting/true_in_cond"
 
     test "warns about non-true final clauses", %{example: example} do
       assert_warns(
