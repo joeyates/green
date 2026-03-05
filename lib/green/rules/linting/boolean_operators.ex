@@ -37,13 +37,13 @@ defmodule Green.Rules.Linting.BooleanOperators do
     rule_opts = get_in(opts, [:green, @rule_name]) || []
 
     if rule_opts[:enabled] do
-      do_apply(parsed, rule_opts)
+      do_apply(parsed, rule_opts, opts)
     else
       parsed
     end
   end
 
-  defp do_apply(parsed, rule_opts) do
+  defp do_apply(parsed, rule_opts, opts) do
     except_lines = rule_opts[:except_lines] || []
 
     Macro.prewalk(parsed, fn
@@ -56,7 +56,7 @@ defmodule Green.Rules.Linting.BooleanOperators do
             use `#{suggested_operator}` instead of `#{operator}` for boolean checks
             #{context[:line]} | #{Macro.to_string(node)}
             """,
-            []
+            opts
           )
         end
 
@@ -69,7 +69,7 @@ defmodule Green.Rules.Linting.BooleanOperators do
             use `not` instead of `!` for boolean checks
             #{context[:line]} | #{Macro.to_string(node)}
             """,
-            []
+            opts
           )
         end
 
