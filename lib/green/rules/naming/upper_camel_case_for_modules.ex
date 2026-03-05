@@ -50,7 +50,7 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
       forms,
       fn
         {:defmodule, _ctx1, [{:__aliases__, context, modules} = first | _rest]} = node ->
-          if !Enum.all?(modules, &upper_camel_case?/1) and context[:line] not in except_lines do
+          if not Enum.all?(modules, &upper_camel_case?/1) and context[:line] not in except_lines do
             IO.warn(
               """
               found badly formed module name (use UpperCamelCase for module names)
@@ -64,7 +64,7 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
 
         # Handle the case where the module name is an atom (e.g., `defmodule :appStack`)
         {:defmodule, _ctx1, [{:__block__, context, [module]} = first | _rest]} = node ->
-          if !upper_camel_case?(module) and context[:line] not in except_lines do
+          if not upper_camel_case?(module) and context[:line] not in except_lines do
             IO.warn(
               """
               found badly formed module name (use UpperCamelCase for module names)

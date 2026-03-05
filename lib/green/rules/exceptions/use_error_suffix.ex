@@ -69,7 +69,7 @@ defmodule Green.Rules.Exceptions.UseErrorSuffix do
           %{exception: true} = acc ->
             name = modules |> Enum.at(-1) |> Atom.to_string()
 
-            if !String.ends_with?(name, "Error") and context[:line] not in except_lines do
+            if not String.ends_with?(name, "Error") and context[:line] not in except_lines do
               IO.warn(
                 """
                 exception #{name} should have a suffix of `Error`
