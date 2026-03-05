@@ -15,7 +15,7 @@ The `except` configuration supports three formats:
 
 ## Tasks
 
-- [ ] Add except support to linting rules (5 rules):
+- [x] Add except support to linting rules (5 rules):
   - `NoAnonymousFunctionsInPipelines`
   - `NoUnlessWithElse`
   - `NoNilElse`
