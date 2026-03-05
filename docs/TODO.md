@@ -358,7 +358,7 @@ print a warning.
 
 # Add Test Coverage for Single Rules
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
