@@ -27,7 +27,7 @@ The `except` configuration supports three formats:
   - `PredicateFunctions`
   - `UpperCamelCaseForModules`
 - [x] Add except support to `AvoidCaps` rule
-- [ ] Add except support to modules rules (2 rules):
+- [x] Add except support to modules rules (2 rules):
   - `SortReferences`
   - `UseModulePseudoVariable`
 - [ ] Add except support to `UseParenthesesWithZeroArityFunctions` rule
