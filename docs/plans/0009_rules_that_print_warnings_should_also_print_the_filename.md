@@ -15,10 +15,10 @@ Currently, some rules pass `[]` to `IO.warn/2` instead of `opts`. Since `opts` c
 - [x] Update `Green.Rules.Exceptions.NoTrailingPunctuation` to pass `opts` through `do_apply` and to `IO.warn`
 - [x] Update `Green.Rules.Naming.PredicateFunctions` to pass `opts` through `do_apply` and to `IO.warn`
 - [x] Update `Green.Rules.Naming.UpperCamelCaseForModules` to pass `opts` through `do_apply` and to `IO.warn`
-- [ ] Update `Green.Rules.Exceptions.UseErrorSuffix` to pass `opts` through `do_apply` and to `IO.warn`
-- [ ] Verify all existing tests still pass
+- [x] Update `Green.Rules.Exceptions.UseErrorSuffix` to pass `opts` through `do_apply` and to `IO.warn`
+- [x] Verify all existing tests still pass
 - [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Mark the plan as "done"
 
 ## Principal Files
 
