@@ -239,7 +239,7 @@ Add comprehensive type annotations to all modules in the GreenValidation library
 
 # Add Per-File/Per-Line Exception Support to All Green Rules
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
