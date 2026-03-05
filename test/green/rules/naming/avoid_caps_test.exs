@@ -1,5 +1,5 @@
 defmodule Green.Rules.Naming.AvoidCapsTest do
-  use Green.TestCase, async: true
+  use Green.TestCase, async: false
 
   import ExUnit.CaptureIO
 

@@ -1,5 +1,5 @@
 defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
-  use Green.TestCase, async: true
+  use Green.TestCase, async: false
 
   import Green.Lexmag.ElixirStyleGuideFormatter
   import ExUnit.CaptureIO
