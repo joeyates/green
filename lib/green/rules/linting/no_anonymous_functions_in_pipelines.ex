@@ -34,6 +34,7 @@ defmodule Green.Rules.Linting.NoAnonymousFunctionsInPipelines do
   def apply(parsed, opts) do
     opts = prepare_opts(opts)
     rule_opts = get_in(opts, [:green, @rule_name]) || []
+
     if rule_opts[:enabled] do
       do_apply(parsed, rule_opts, opts)
     else
@@ -43,6 +44,7 @@ defmodule Green.Rules.Linting.NoAnonymousFunctionsInPipelines do
 
   defp do_apply({forms, _comments} = parsed, rule_opts, opts) do
     except_lines = rule_opts[:except_lines] || []
+
     Macro.prewalk(
       forms,
       fn
@@ -66,7 +68,7 @@ defmodule Green.Rules.Linting.NoAnonymousFunctionsInPipelines do
                   _ctx3,
                   _args
                 } = fun
-]
+              ]
           ]
         } = node ->
           if context[:line] in except_lines do

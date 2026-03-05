@@ -52,6 +52,7 @@ defmodule Green.Options do
         fn
           {except_file, lines}, {acc_file, acc_lines} when is_list(lines) ->
             absolute = Path.expand(except_file)
+
             if absolute == file_to_format do
               {acc_file, lines ++ acc_lines}
             else
@@ -60,6 +61,7 @@ defmodule Green.Options do
 
           {except_file, line}, {acc_file, acc_lines} when is_integer(line) ->
             absolute = Path.expand(except_file)
+
             if absolute == file_to_format do
               {acc_file, [line | acc_lines]}
             else
@@ -68,6 +70,7 @@ defmodule Green.Options do
 
           except_file, {acc_file, acc_lines} ->
             absolute = Path.expand(except_file)
+
             if absolute == file_to_format do
               {true, acc_lines}
             else

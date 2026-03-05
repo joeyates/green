@@ -34,6 +34,7 @@ defmodule Green.Rules.Linting.NoNilElse do
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
     rule_opts = get_in(opts, [:green, @rule_name]) || []
+
     if rule_opts[:enabled] do
       do_apply({forms, comments}, rule_opts)
     else
@@ -43,6 +44,7 @@ defmodule Green.Rules.Linting.NoNilElse do
 
   defp do_apply({forms, comments}, rule_opts) do
     except_lines = rule_opts[:except_lines] || []
+
     forms =
       Macro.prewalk(forms, fn
         {:if, context,

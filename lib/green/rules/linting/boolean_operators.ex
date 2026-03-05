@@ -35,6 +35,7 @@ defmodule Green.Rules.Linting.BooleanOperators do
   def apply(parsed, opts) do
     opts = prepare_opts(opts)
     rule_opts = get_in(opts, [:green, @rule_name]) || []
+
     if rule_opts[:enabled] do
       do_apply(parsed, rule_opts)
     else
@@ -44,6 +45,7 @@ defmodule Green.Rules.Linting.BooleanOperators do
 
   defp do_apply(parsed, rule_opts) do
     except_lines = rule_opts[:except_lines] || []
+
     Macro.prewalk(parsed, fn
       {operator, context, [left, right]} = node when operator in [:&&, :||] ->
         if context[:line] not in except_lines and boolean?(left) and boolean?(right) do
@@ -99,17 +101,15 @@ defmodule Green.Rules.Linting.BooleanOperators do
   defp boolean?({comparison, _context, _args}) when comparison in @boolean_comparisons, do: true
 
   # Module-scoped function call, e.g. `String.upcase(name)`
-  defp boolean?(
-    {
-      {
-        :.,
-        _ctx1,
-        [_module_or_aliases, fun]
-      },
-      _ctx3,
-      _args
-    }
-  ) do
+  defp boolean?({
+         {
+           :.,
+           _ctx1,
+           [_module_or_aliases, fun]
+         },
+         _ctx3,
+         _args
+       }) do
     name = Atom.to_string(fun)
     guard_style?(name) or predicate?(name)
   end

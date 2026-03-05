@@ -5,4 +5,3 @@ defmodule ElixirFormatterTest do
     assert true
   end
 end
-
