@@ -50,7 +50,8 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
       forms,
       fn
         {:defmodule, _ctx1, [{:__aliases__, context, modules} = first | _rest]} = node ->
-          if not Enum.all?(modules, &upper_camel_case?/1) and context[:line] not in except_lines do
+          atoms = Enum.filter(modules, &is_atom/1)
+          if not Enum.all?(atoms, &upper_camel_case?/1) and context[:line] not in except_lines do
             IO.warn(
               """
               found badly formed module name (use UpperCamelCase for module names)
