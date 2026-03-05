@@ -26,13 +26,14 @@ defmodule Green.Rules.Linting.AvoidNeedlessPipelines do
   """
 
   @behaviour Green.Rule
+  @rule_name :avoid_needless_pipelines
 
   alias Green.Options
 
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    rule_opts = get_in(opts, [:green, :avoid_needless_pipelines]) || []
+    rule_opts = get_in(opts, [:green, @rule_name]) || []
     if rule_opts[:enabled] do
       do_apply({forms, comments}, rule_opts)
     else
@@ -76,9 +77,9 @@ defmodule Green.Rules.Linting.AvoidNeedlessPipelines do
   defp prepare_opts(opts) do
     opts
     |> Options.set_value(
-      [:avoid_needless_pipelines],
+      [@rule_name],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
-    |> Options.prepare_except(:avoid_needless_pipelines)
+    |> Options.prepare_except(@rule_name)
   end
 end
