@@ -1,20 +1,40 @@
 defmodule Green.Rules.Linting.TrueInCond do
   @moduledoc """
-  This rule ensures final, always-matching clauses in `cond` use `true`.
+  This rule warns when final, always-matching clauses in `cond` do not use `true`.
 
   ## Configuration
 
   This rule is enabled by default, but can be disabled globally in the configuration file.
+
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
 
   In `.formatter.exs`:
 
   ```elixir
     green: [
       true_in_cond: [
-        enabled: *true | false
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
+
+  ## Examples
+
+      cond do
+        is_list(param) ->
+          :list
+
+        :other ->
+          :other
+      end
+
+  In the example above, the final clause should use `true` instead of `:other`.
   """
   import Access
 
@@ -26,39 +46,39 @@ defmodule Green.Rules.Linting.TrueInCond do
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    rule_opts = get_in(opts, [:green, @rule_name]) || []
+    enabled = get_in(opts, [:green, @rule_name, :enabled])
 
-    if rule_opts[:enabled] do
-      do_apply({forms, comments}, rule_opts)
-    else
-      {forms, comments}
+    if enabled do
+      do_apply({forms, comments}, opts)
     end
-  end
-
-  defp do_apply({forms, comments}, rule_opts) do
-    except_lines = rule_opts[:except_lines] || []
-
-    forms =
-      Macro.prewalk(forms, fn
-        {:cond, cond_context, [[{{:__block__, do_context, [:do]}, clauses}]]} = node ->
-          if cond_context[:line] in except_lines do
-            node
-          else
-            last_match = get_in(clauses, last_match_path())
-
-            if is_atom(last_match) do
-              clauses = update_in(clauses, last_match_path(), fn _ -> true end)
-              {:cond, cond_context, [[{{:__block__, do_context, [:do]}, clauses}]]}
-            else
-              node
-            end
-          end
-
-        other ->
-          other
-      end)
 
     {forms, comments}
+  end
+
+  defp do_apply({forms, _comments}, opts) do
+    except_lines = get_in(opts, [:green, @rule_name, :except_lines]) || []
+
+    Macro.prewalk(forms, fn
+      {:cond, cond_context, [[{{:__block__, _do_context, [:do]}, clauses}]]} = node ->
+        if cond_context[:line] not in except_lines do
+          last_match = get_in(clauses, last_match_path())
+
+          if last_match != true and is_atom(last_match) do
+            IO.warn(
+              """
+              cond final clause should use `true` instead of `#{inspect(last_match)}`
+              #{cond_context[:line]} | cond do ... #{inspect(last_match)} -> ...
+              """,
+              opts
+            )
+          end
+        end
+
+        node
+
+      other ->
+        other
+    end)
   end
 
   defp prepare_opts(opts) do
