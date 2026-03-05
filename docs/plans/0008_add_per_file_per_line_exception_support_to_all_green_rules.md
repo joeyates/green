@@ -21,7 +21,7 @@ The `except` configuration supports three formats:
   - `NoNilElse`
   - `BooleanOperators`
   - `UseStringConcatenationWhenMatchingBinaries`
-- [ ] Add except support to `PreferPipelines` rule
+- [x] Add except support to `PreferPipelines` rule
 - [ ] Add except support to naming rules (3 rules):
   - `AvoidOneLetterVariables`
   - `PredicateFunctions`

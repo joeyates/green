@@ -107,4 +107,104 @@ defmodule Green.Rules.Linting.PreferPipelinesTest do
     output = default_format({forms, comments})
     assert output == good
   end
+
+  describe "except configuration" do
+    test "skips transformation when entire file is in except list" do
+      code = """
+      String.reverse(String.upcase(String.downcase("hello")))
+      """
+
+      {forms, comments} = parse_code(code)
+
+      {forms, comments} =
+        PreferPipelines.apply({forms, comments},
+          green: [prefer_pipelines: [except: ["test/example.exs"]]],
+          file: Path.expand("test/example.exs")
+        )
+
+      output = default_format({forms, comments})
+
+      # Should not transform when file is in except list
+      assert output == code
+    end
+
+    test "skips transformation for specific line when in except list" do
+      code = """
+      String.reverse(String.upcase(String.downcase("hello")))
+      """
+
+      {forms, comments} = parse_code(code)
+
+      {forms, comments} =
+        PreferPipelines.apply({forms, comments},
+          green: [prefer_pipelines: [except: [{"test/example.exs", 1}]]],
+          file: Path.expand("test/example.exs")
+        )
+
+      output = default_format({forms, comments})
+
+      # Should not transform when line is in except list
+      assert output == code
+    end
+
+    test "skips transformation for multiple lines when in except list" do
+      code = """
+      String.reverse(String.upcase(String.downcase("hello")))
+
+      String.reverse(String.upcase(String.downcase("world")))
+      """
+
+      {forms, comments} = parse_code(code)
+
+      {forms, comments} =
+        PreferPipelines.apply({forms, comments},
+          green: [prefer_pipelines: [except: [{"test/example.exs", [1, 3]}]]],
+          file: Path.expand("test/example.exs")
+        )
+
+      output = default_format({forms, comments})
+
+      # Should not transform when lines are in except list
+      assert output == code
+    end
+
+    test "transforms lines not in except list" do
+      code = """
+      String.reverse(String.upcase(String.downcase("hello")))
+
+      String.reverse(String.upcase(String.downcase("world")))
+      """
+
+      expected = """
+      String.reverse(String.upcase(String.downcase("hello")))
+
+      "world" |> String.downcase() |> String.upcase() |> String.reverse()
+      """
+
+      {forms, comments} = parse_code(code)
+
+      {forms, comments} =
+        PreferPipelines.apply({forms, comments},
+          green: [prefer_pipelines: [except: [{"test/example.exs", 1}]]],
+          file: Path.expand("test/example.exs")
+        )
+
+      output = default_format({forms, comments})
+
+      # Should only transform line 3, not line 1
+      assert output == expected
+    end
+  end
+
+  defp parse_code(code) do
+    to_quoted_opts = [
+      unescape: false,
+      literal_encoder: &{:ok, {:__block__, &2, [&1]}},
+      token_metadata: true,
+      emit_warnings: false
+    ]
+
+    {forms, comments} = Code.string_to_quoted_with_comments!(code, to_quoted_opts)
+    {forms, comments}
+  end
 end
