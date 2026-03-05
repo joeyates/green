@@ -127,6 +127,8 @@ defmodule Green.Rules.Linting.BooleanOperators do
     guard_style?(name) or predicate?(name)
   end
 
+  defp boolean?({{:., _ctx1, [{_name, _ctx2, nil}]}, _ctx3, _args}), do: false
+
   # Local function call
   defp boolean?({fun, _context, _args}) do
     name = Atom.to_string(fun)

@@ -39,6 +39,23 @@ defmodule Green.Rules.Linting.BooleanOperatorsTest do
     assert output == ""
   end
 
+  test "ignores ! with anonymous functions" do
+    code = """
+    foo = !fun.(3)
+    """
+
+    {forms, comments} = parse_code(code)
+
+    output =
+      capture_io(:stderr, fn ->
+        BooleanOperators.apply({forms, comments},
+          file: Path.expand("test/example.exs")
+        )
+      end)
+
+    assert output == ""
+  end
+
   describe "warnings include filename" do
     test "includes filename in warning for && operator" do
       code = """
