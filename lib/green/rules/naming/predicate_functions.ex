@@ -67,7 +67,7 @@ defmodule Green.Rules.Naming.PredicateFunctions do
           node
 
         {keyword, context, [{name, _, _} = left | _]} = node
-        when keyword in @macro_definition_keywords ->
+        when keyword in @macro_definition_keywords and is_atom(name) ->
           if final_question_mark?(name) and context[:line] not in except_lines do
             IO.warn(
               """
