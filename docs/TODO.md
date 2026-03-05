@@ -339,7 +339,7 @@ The `except` configuration supports three formats:
 
 # Rules that print warnings should also print the filename
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
