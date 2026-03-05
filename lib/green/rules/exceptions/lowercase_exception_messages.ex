@@ -34,17 +34,17 @@ defmodule Green.Rules.Exceptions.LowercaseExceptionMessages do
   @impl Rule
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    rule_opts = get_in(opts, [:green, @rule_name]) || []
+    enabled = get_in(opts, [:green, @rule_name, :enabled])
 
-    if rule_opts[:enabled] do
-      do_apply({forms, comments}, rule_opts, opts)
+    if enabled do
+      do_apply({forms, comments}, opts)
     else
       {forms, comments}
     end
   end
 
-  defp do_apply({forms, comments}, rule_opts, opts) do
-    except_lines = rule_opts[:except_lines] || []
+  defp do_apply({forms, comments}, opts) do
+    except_lines = get_in(opts, [:green, @rule_name, :except_lines]) || []
 
     Macro.prewalk(
       forms,
