@@ -11,7 +11,7 @@ Add dedicated tests for rules that are currently only tested indirectly via `Gre
 ## Tasks
 
 - [x] Add ex_coveralls dependency to project
-- [ ] Configure ex_coveralls with appropriate settings
+- [x] Configure ex_coveralls with appropriate settings
 - [ ] Identify rules missing dedicated tests
 - [ ] Create test for `Green.Rules.Linting.NoNilElse`
 - [ ] Create test for `Green.Rules.Linting.AvoidNeedlessPipelines`
