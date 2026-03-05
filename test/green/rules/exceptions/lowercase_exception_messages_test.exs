@@ -5,17 +5,43 @@ defmodule Green.Rules.Exceptions.LowercaseExceptionMessagesTest do
 
   alias Green.Rules.Exceptions.LowercaseExceptionMessages
 
+  @bad """
+  defmodule Example do
+    def foo do
+      raise ArgumentError, "Something went wrong"
+    end
+  end
+  """
+
+  test "warns when exception message is capitalized" do
+    {forms, comments} = parse_code(@bad)
+
+    output =
+      capture_io(:stderr, fn ->
+        LowercaseExceptionMessages.apply({forms, comments},
+          file: Path.expand("test/example.exs")
+        )
+      end)
+
+    assert output =~ "exception message should be lowercase"
+  end
+
+  test "indicates the file name" do
+    {forms, comments} = parse_code(@bad)
+
+    output =
+      capture_io(:stderr, fn ->
+        LowercaseExceptionMessages.apply({forms, comments},
+          file: Path.expand("test/example.exs")
+        )
+      end)
+
+    assert output =~ "test/example.exs"
+  end
+
   describe "except configuration" do
     test "skips warnings when entire file is in except list" do
-      code = """
-      defmodule Example do
-        def foo do
-          raise ArgumentError, "Something went wrong"
-        end
-      end
-      """
-
-      {forms, comments} = parse_code(code)
+      {forms, comments} = parse_code(@bad)
 
       output =
         capture_io(:stderr, fn ->
@@ -29,15 +55,7 @@ defmodule Green.Rules.Exceptions.LowercaseExceptionMessagesTest do
     end
 
     test "skips warning for specific line when in except list" do
-      code = """
-      defmodule Example do
-        def foo do
-          raise ArgumentError, "Something went wrong"
-        end
-      end
-      """
-
-      {forms, comments} = parse_code(code)
+      {forms, comments} = parse_code(@bad)
 
       output =
         capture_io(:stderr, fn ->
@@ -51,15 +69,7 @@ defmodule Green.Rules.Exceptions.LowercaseExceptionMessagesTest do
     end
 
     test "warns for lines not in except list" do
-      code = """
-      defmodule Example do
-        def foo do
-          raise ArgumentError, "Something went wrong"
-        end
-      end
-      """
-
-      {forms, comments} = parse_code(code)
+      {forms, comments} = parse_code(@bad)
 
       output =
         capture_io(:stderr, fn ->
