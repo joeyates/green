@@ -12,7 +12,14 @@ defmodule Green.MixProject do
       description: "Format Elixir code according to a consistent style",
       docs: docs(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      package: package()
+      package: package(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -21,7 +28,8 @@ defmodule Green.MixProject do
 
   defp deps() do
     [
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 
