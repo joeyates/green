@@ -336,3 +336,22 @@ The `except` configuration supports three formats:
   \`\`\`
   \"\"\"
   ```
+
+# Rules that print warnings should also print the filename
+
+Status: [ ]
+
+## Description
+
+Currently, rules that print warnings only print the problematic code and the
+line where it appears. Change this to print the filename too, when available.
+
+# Transform rule `true_in_cond` from code-modifying to warning
+
+Status: [ ]
+
+## Description
+
+When the last clause of a `cond` does not have `true` as its condition, there are
+many possible forms that the code can take. Instead of trying to correct the problem,
+print a warning.
