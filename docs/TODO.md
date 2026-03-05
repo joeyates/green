@@ -348,7 +348,7 @@ line where it appears. Change this to print the filename too, when available.
 
 # Transform rule `true_in_cond` from code-modifying to warning
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
