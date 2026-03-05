@@ -31,7 +31,7 @@ The `except` configuration supports three formats:
   - `SortReferences`
   - `UseModulePseudoVariable`
 - [x] Add except support to `UseParenthesesWithZeroArityFunctions` rule
-- [ ] Add except support to `RemoveNilFromStructDefinition` rule
+- [x] Add except support to `RemoveNilFromStructDefinition` rule
 - [ ] Add except support to exceptions rules (3 rules):
   - `UseErrorSuffix`
   - `LowercaseExceptionMessages`

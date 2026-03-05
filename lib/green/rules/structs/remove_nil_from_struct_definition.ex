@@ -6,12 +6,20 @@ defmodule Green.Rules.Structs.RemoveNilFromStructDefinition do
 
   This rule is enabled by default, but can be disabled globally in the configuration file.
 
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
   In `.formatter.exs`:
 
   ```elixir
     green: [
       remove_nil_from_struct_definition: [
-        enabled: *true | false
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
@@ -21,20 +29,26 @@ defmodule Green.Rules.Structs.RemoveNilFromStructDefinition do
   alias Green.Options
 
   @behaviour Green.Rule
+  @rule_name :remove_nil_from_struct_definition
 
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    enabled = opts[:green][:remove_nil_from_struct_definition][:enabled]
-    do_apply({forms, comments}, enabled)
+    rule_opts = get_in(opts, [:green, @rule_name]) || []
+
+    if rule_opts[:enabled] do
+      do_apply({forms, comments}, rule_opts)
+    else
+      {forms, comments}
+    end
   end
 
-  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+  defp do_apply({forms, comments}, rule_opts) do
+    except_lines = rule_opts[:except_lines] || []
 
-  defp do_apply({forms, comments}, _truthy) do
     Macro.prewalk(forms, comments, fn
       {:defstruct, ctx1, [{:__block__, ctx2, [items]}]} = node, comments when is_list(items) ->
-        if nils?(items) do
+        if nils?(items) and ctx1[:line] not in except_lines do
           {items, comments} = to_mixed_list(items, comments)
           {{:defstruct, ctx1, [{:__block__, ctx2, [items]}]}, comments}
         else
@@ -42,7 +56,7 @@ defmodule Green.Rules.Structs.RemoveNilFromStructDefinition do
         end
 
       {:defstruct, context, [items]} = node, comments when is_list(items) ->
-        if nils?(items) do
+        if nils?(items) and context[:line] not in except_lines do
           {items, comments} = to_mixed_list(items, comments)
           {{:defstruct, context, [{:__block__, context, [items]}]}, comments}
         else
@@ -55,11 +69,12 @@ defmodule Green.Rules.Structs.RemoveNilFromStructDefinition do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
-      [:remove_nil_from_struct_definition],
+    opts
+    |> Options.set_value(
+      [@rule_name],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
+    |> Options.prepare_except(@rule_name)
   end
 
   defp nils?(items) do
