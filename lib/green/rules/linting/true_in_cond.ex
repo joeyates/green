@@ -19,32 +19,39 @@ defmodule Green.Rules.Linting.TrueInCond do
   import Access
 
   @behaviour Green.Rule
+  @rule_name :true_in_cond
 
   alias Green.Options
 
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    enabled = opts[:green][:true_in_cond][:enabled]
-    do_apply({forms, comments}, enabled)
+    rule_opts = get_in(opts, [:green, @rule_name]) || []
+    if rule_opts[:enabled] do
+      do_apply({forms, comments}, rule_opts)
+    else
+      {forms, comments}
+    end
   end
 
-  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+  defp do_apply({forms, comments}, rule_opts) do
+    except_lines = rule_opts[:except_lines] || []
 
-  defp do_apply({forms, comments}, _truthy) do
     forms =
       Macro.prewalk(forms, fn
-        {:cond, cond_context, [[{{:__block__, do_context, [:do]}, clauses}]]} ->
-          last_match = get_in(clauses, last_match_path())
+        {:cond, cond_context, [[{{:__block__, do_context, [:do]}, clauses}]]} = node ->
+          if cond_context[:line] in except_lines do
+            node
+          else
+            last_match = get_in(clauses, last_match_path())
 
-          clauses =
             if is_atom(last_match) do
-              update_in(clauses, last_match_path(), fn _ -> true end)
+              clauses = update_in(clauses, last_match_path(), fn _ -> true end)
+              {:cond, cond_context, [[{{:__block__, do_context, [:do]}, clauses}]]}
             else
-              clauses
+              node
             end
-
-          {:cond, cond_context, [[{{:__block__, do_context, [:do]}, clauses}]]}
+          end
 
         other ->
           other
@@ -54,11 +61,12 @@ defmodule Green.Rules.Linting.TrueInCond do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
-      [:true_in_cond],
+    opts
+    |>Options.set_value(
+      [@rule_name],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
+    |> Options.prepare_except(@rule_name)
   end
 
   defp last_match_path(), do: [at(-1), elem(2), at(0), at(0), elem(2), at(0)]
