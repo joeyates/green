@@ -36,8 +36,8 @@ The `except` configuration supports three formats:
   - `UseErrorSuffix`
   - `LowercaseExceptionMessages`
   - `NoTrailingPunctuation`
-- [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Address any additional implementation details that arise during development
+- [x] Mark the plan as "done"
 
 ## Principal Files
 
