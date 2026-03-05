@@ -46,38 +46,53 @@ defmodule Green.Rules.Linting.BooleanOperators do
   defp do_apply({forms, _comments}, opts) do
     except_lines = get_in(opts, [:green, @rule_name, :except_lines]) || []
 
-    Macro.prewalk(forms, fn
-      {operator, context, [left, right]} = node when operator in [:&&, :||] ->
-        if context[:line] not in except_lines and boolean?(left) and boolean?(right) do
-          suggested_operator = if operator == :&&, do: :and, else: :or
+    Macro.traverse(
+      forms,
+      %{double_bang: false},
+      fn
+        {operator, context, [left, right]} = node, acc when operator in [:&&, :||] ->
+          if context[:line] not in except_lines and boolean?(left) and boolean?(right) do
+            suggested_operator = if operator == :&&, do: :and, else: :or
 
-          IO.warn(
-            """
-            use `#{suggested_operator}` instead of `#{operator}` for boolean checks
-            #{context[:line]} | #{Macro.to_string(node)}
-            """,
-            opts
-          )
-        end
+            IO.warn(
+              """
+              use `#{suggested_operator}` instead of `#{operator}` for boolean checks
+              #{context[:line]} | #{Macro.to_string(node)}
+              """,
+              opts
+            )
+          end
 
-        node
+          {node, acc}
 
-      {:!, context, [arg]} = node ->
-        if context[:line] not in except_lines and boolean?(arg) do
-          IO.warn(
-            """
-            use `not` instead of `!` for boolean checks
-            #{context[:line]} | #{Macro.to_string(node)}
-            """,
-            opts
-          )
-        end
+        # Skip double negation, e.g. `!!foo`
+        {:!, _ctx1, [{:!, _ctx2, [_arg]}]} = node, acc ->
+          {node, Map.put(acc, :double_bang, true)}
 
-        node
+        {:!, context, [arg]} = node, %{double_bang: false} = acc ->
+          if context[:line] not in except_lines and boolean?(arg) do
+            IO.warn(
+              """
+              use `not` instead of `!` for boolean checks
+              #{context[:line]} | #{Macro.to_string(node)}
+              """,
+              opts
+            )
+          end
 
-      other ->
-        other
-    end)
+          {node, acc}
+
+        node, acc ->
+          {node, acc}
+      end,
+      fn
+        {:!, _ctx1, [{:!, _ctx2, [_arg]}]} = node, acc ->
+          {node, Map.put(acc, :double_bang, false)}
+
+        node, acc ->
+          {node, acc}
+      end
+    )
   end
 
   defp prepare_opts(opts) do
