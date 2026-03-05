@@ -4,7 +4,7 @@ defmodule TrueInCond do
       is_list(param) ->
         :list
 
-      true ->
+      :other ->
         :other
     end
   end

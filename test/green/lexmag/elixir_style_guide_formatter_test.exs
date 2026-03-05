@@ -91,18 +91,25 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when the match-all clause in cond is not `true`" do
-    @describetag fixture_pair: "linting/true_in_cond"
+    @describetag example: "linting/true_in_cond"
 
-    test "replaces symbols with true", %{bad: bad, good: good} do
-      formatted = format(bad)
-
-      assert formatted == good
+    test "warns about non-true final clauses", %{example: example} do
+      assert_warns(
+        example,
+        """
+        cond final clause should use `true` instead of `:other`
+        3 | cond do ... :other -> ...
+        """
+      )
     end
 
-    test "supports configuration to disable true_in_cond rule", %{bad: unchanged} do
-      formatted = format(unchanged, green: [true_in_cond: [enabled: false]])
+    test "supports configuration to disable true_in_cond rule", %{example: example} do
+      output =
+        capture_io(:stderr, fn ->
+          format(example, green: [true_in_cond: [enabled: false]])
+        end)
 
-      assert formatted == unchanged
+      assert output == ""
     end
   end
 
