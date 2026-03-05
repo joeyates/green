@@ -15,7 +15,7 @@ Add dedicated tests for rules that are currently only tested indirectly via `Gre
 - [x] Identify rules missing dedicated tests
 - [x] Create test for `Green.Rules.Linting.NoNilElse`
 - [x] Create test for `Green.Rules.Linting.AvoidNeedlessPipelines`
-- [ ] Run coverage analysis to identify any remaining gaps
+- [x] Run coverage analysis to identify any remaining gaps
 - [ ] Verify all rules have >90% test coverage
 - [ ] Update CI configuration to run coverage checks
 - [ ] Address any additional implementation details that arise during development
