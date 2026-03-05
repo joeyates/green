@@ -6,12 +6,20 @@ defmodule Green.Rules.Modules.SortReferences do
 
   This rule is enabled by default, but can be disabled globally in the configuration file.
 
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
   In `.formatter.exs`:
 
   ```elixir
     green: [
       sort_module_references: [
-        enabled: *true | false
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
@@ -23,21 +31,24 @@ defmodule Green.Rules.Modules.SortReferences do
   @module_reference_types [:use, :import, :alias, :require]
 
   @behaviour Green.Rule
+  @rule_name :sort_module_references
 
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
     enabled = opts[:green][:sort_module_references][:enabled]
-    do_apply({forms, comments}, enabled)
+    do_apply({forms, comments}, enabled, opts)
   end
 
-  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
 
-  defp do_apply({forms, comments}, _truthy) do
+  defp do_apply({forms, comments}, _truthy, opts) do
+    except_lines = opts[:green][:sort_module_references][:except_lines] || []
+
     {forms, {comments, _state}} =
       Macro.traverse(
         forms,
-        {comments, %{}},
+        {comments, %{except_lines: except_lines}},
         fn
           {:defmacro, _context, _right} = node, {comments, state} ->
             {node, {comments, Map.put(state, :in_macro, true)}}
@@ -45,9 +56,16 @@ defmodule Green.Rules.Modules.SortReferences do
           node, {_comments, %{in_macro: true}} = acc ->
             {node, acc}
 
-          {:defmodule, _context, _right} = node, acc ->
+          {:defmodule, context, _right} = node, acc ->
             {comments, state} = acc
-            {node, comments} = sort_references({node, comments})
+
+            {node, comments} =
+              if context[:line] in state[:except_lines] do
+                {node, comments}
+              else
+                sort_references({node, comments})
+              end
+
             {node, {comments, state}}
 
           node, acc ->
@@ -66,11 +84,12 @@ defmodule Green.Rules.Modules.SortReferences do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
+    opts
+    |> Options.set_value(
       [:sort_module_references],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
+    |> Options.prepare_except(@rule_name)
   end
 
   defp sort_references({forms, comments}) do

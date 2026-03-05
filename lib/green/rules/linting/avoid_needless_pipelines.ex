@@ -34,6 +34,7 @@ defmodule Green.Rules.Linting.AvoidNeedlessPipelines do
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
     rule_opts = get_in(opts, [:green, @rule_name]) || []
+
     if rule_opts[:enabled] do
       do_apply({forms, comments}, rule_opts)
     else

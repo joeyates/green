@@ -8,13 +8,21 @@ defmodule Green.Rules.Linting.PreferPipelines do
   This rule is enabled by default, but can be disabled globally in the configuration file.
   Also, functions that should be ignored can be configured with the `ignore_functions` option.
 
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
   In `.formatter.exs`:
 
   ```elixir
     green: [
       prefer_pipelines: [
         enabled: *true | false,
-        ignore_functions: ["My.Module.foo": 1]
+        ignore_functions: ["My.Module.foo": 1],
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
@@ -24,6 +32,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
   alias Green.Options
 
   @behaviour Green.Rule
+  @rule_name :prefer_pipelines
 
   @impl true
   def apply({forms, comments}, opts) do
@@ -35,10 +44,12 @@ defmodule Green.Rules.Linting.PreferPipelines do
   defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
 
   defp do_apply({forms, comments}, _truthy, opts) do
+    except_lines = opts[:green][:prefer_pipelines][:except_lines] || []
+
     {forms, _acc} =
       Macro.traverse(
         forms,
-        %{records: []},
+        %{records: [], except_lines: except_lines},
         fn
           {:@, _ctx1, [{:spec, _ctx2, _right}]} = node, acc ->
             {node, Map.put(acc, :in_spec, true)}
@@ -106,6 +117,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
             with nil <- context[:attribute],
                  nil <- context[:function],
                  nil <- context[:pipeline_parameter],
+                 false <- context[:line] in acc[:except_lines],
                  true <- pipelinable?(node, opts, acc),
                  {:ok, first} <- first_argument(node),
                  true <- pipelinable?(first, opts, acc) do
@@ -160,6 +172,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
     opts
     |> Options.set_default([:prefer_pipelines, :enabled], true)
     |> prepare_ignore_functions()
+    |> Options.prepare_except(@rule_name)
   end
 
   defp prepare_ignore_functions(opts) do

@@ -15,29 +15,29 @@ The `except` configuration supports three formats:
 
 ## Tasks
 
-- [ ] Add except support to linting rules (5 rules):
+- [x] Add except support to linting rules (5 rules):
   - `NoAnonymousFunctionsInPipelines`
   - `NoUnlessWithElse`
   - `NoNilElse`
   - `BooleanOperators`
   - `UseStringConcatenationWhenMatchingBinaries`
-- [ ] Add except support to `PreferPipelines` rule
-- [ ] Add except support to naming rules (3 rules):
+- [x] Add except support to `PreferPipelines` rule
+- [x] Add except support to naming rules (3 rules):
   - `AvoidOneLetterVariables`
   - `PredicateFunctions`
   - `UpperCamelCaseForModules`
-- [ ] Add except support to `AvoidCaps` rule
-- [ ] Add except support to modules rules (2 rules):
+- [x] Add except support to `AvoidCaps` rule
+- [x] Add except support to modules rules (2 rules):
   - `SortReferences`
   - `UseModulePseudoVariable`
-- [ ] Add except support to `UseParenthesesWithZeroArityFunctions` rule
-- [ ] Add except support to `RemoveNilFromStructDefinition` rule
-- [ ] Add except support to exceptions rules (3 rules):
+- [x] Add except support to `UseParenthesesWithZeroArityFunctions` rule
+- [x] Add except support to `RemoveNilFromStructDefinition` rule
+- [x] Add except support to exceptions rules (3 rules):
   - `UseErrorSuffix`
   - `LowercaseExceptionMessages`
   - `NoTrailingPunctuation`
-- [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Address any additional implementation details that arise during development
+- [x] Mark the plan as "done"
 
 ## Principal Files
 

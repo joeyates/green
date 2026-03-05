@@ -6,12 +6,20 @@ defmodule Green.Rules.Naming.PredicateFunctions do
 
   This rule is enabled by default, but can be disabled globally in the configuration file.
 
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
   In `.formatter.exs`:
 
   ```elixir
     green: [
       predicate_functions: [
-        enabled: *true | false
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
@@ -21,6 +29,7 @@ defmodule Green.Rules.Naming.PredicateFunctions do
   alias Green.Options
 
   @behaviour Rule
+  @rule_name :predicate_functions
 
   @function_definition_keywords [:def, :defp]
   @macro_definition_keywords [:defmacro, :defmacrop]
@@ -35,12 +44,14 @@ defmodule Green.Rules.Naming.PredicateFunctions do
   defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
 
   defp do_apply({forms, comments}, _truthy, opts) do
+    except_lines = opts[:green][:predicate_functions][:except_lines] || []
+
     Macro.prewalk(
       forms,
       fn
         {keyword, context, [{name, _, _} = left | _]} = node
         when keyword in @function_definition_keywords and is_atom(name) ->
-          if guard_style?(name) do
+          if guard_style?(name) and context[:line] not in except_lines do
             IO.warn(
               """
               predicate function should have `?` suffix
@@ -54,7 +65,7 @@ defmodule Green.Rules.Naming.PredicateFunctions do
 
         {keyword, context, [{name, _, _} = left | _]} = node
         when keyword in @macro_definition_keywords ->
-          if final_question_mark?(name) do
+          if final_question_mark?(name) and context[:line] not in except_lines do
             IO.warn(
               """
               guard-style macros should not have `?` suffix, use `is_` prefix instead
@@ -75,11 +86,12 @@ defmodule Green.Rules.Naming.PredicateFunctions do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
+    opts
+    |> Options.set_value(
       [:predicate_functions],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
+    |> Options.prepare_except(@rule_name)
   end
 
   defp guard_style?(name) do

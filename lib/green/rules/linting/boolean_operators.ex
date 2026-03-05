@@ -6,12 +6,20 @@ defmodule Green.Rules.Linting.BooleanOperators do
 
   This rule is enabled by default, but can be disabled globally in the configuration file.
 
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
   In `.formatter.exs`:
 
   ```elixir
     green: [
       boolean_operators: [
-        enabled: *true | false
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
@@ -21,20 +29,26 @@ defmodule Green.Rules.Linting.BooleanOperators do
   alias Green.Options
 
   @behaviour Rule
+  @rule_name :boolean_operators
 
   @impl Rule
   def apply(parsed, opts) do
     opts = prepare_opts(opts)
-    enabled = opts[:green][:boolean_operators][:enabled]
-    do_apply(parsed, enabled)
+    rule_opts = get_in(opts, [:green, @rule_name]) || []
+
+    if rule_opts[:enabled] do
+      do_apply(parsed, rule_opts)
+    else
+      parsed
+    end
   end
 
-  defp do_apply(parsed, falsey) when not falsey, do: parsed
+  defp do_apply(parsed, rule_opts) do
+    except_lines = rule_opts[:except_lines] || []
 
-  defp do_apply(parsed, _truthy) do
     Macro.prewalk(parsed, fn
       {operator, context, [left, right]} = node when operator in [:&&, :||] ->
-        if boolean?(left) and boolean?(right) do
+        if context[:line] not in except_lines and boolean?(left) and boolean?(right) do
           suggested_operator = if operator == :&&, do: :and, else: :or
 
           IO.warn(
@@ -49,7 +63,7 @@ defmodule Green.Rules.Linting.BooleanOperators do
         node
 
       {:!, context, [arg]} = node ->
-        if boolean?(arg) do
+        if context[:line] not in except_lines and boolean?(arg) do
           IO.warn(
             """
             use `not` instead of `!` for boolean checks
@@ -69,11 +83,12 @@ defmodule Green.Rules.Linting.BooleanOperators do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
-      [:boolean_operators],
+    opts
+    |> Options.set_value(
+      [@rule_name],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
+    |> Options.prepare_except(@rule_name)
   end
 
   @boolean_comparisons ~w(== != === !== < <= > >=)a
@@ -86,17 +101,15 @@ defmodule Green.Rules.Linting.BooleanOperators do
   defp boolean?({comparison, _context, _args}) when comparison in @boolean_comparisons, do: true
 
   # Module-scoped function call, e.g. `String.upcase(name)`
-  defp boolean?(
-    {
-      {
-        :.,
-        _ctx1,
-        [_module_or_aliases, fun]
-      },
-      _ctx3,
-      _args
-    }
-  ) do
+  defp boolean?({
+         {
+           :.,
+           _ctx1,
+           [_module_or_aliases, fun]
+         },
+         _ctx3,
+         _args
+       }) do
     name = Atom.to_string(fun)
     guard_style?(name) or predicate?(name)
   end

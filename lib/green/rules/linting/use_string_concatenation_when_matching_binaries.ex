@@ -6,47 +6,73 @@ defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinaries do
 
   This rule is enabled by default, but can be disabled globally in the configuration file.
 
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
   In `.formatter.exs`:
 
   ```elixir
     green: [
       use_string_concatenation_when_matching_binaries: [
-        enabled: *true | false
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
   """
 
   @behaviour Green.Rule
+  @rule_name :use_string_concatenation_when_matching_binaries
 
   alias Green.Options
 
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    enabled = opts[:green][:use_string_concatenation_when_matching_binaries][:enabled]
-    do_apply({forms, comments}, enabled)
+    rule_opts = get_in(opts, [:green, @rule_name]) || []
+
+    if rule_opts[:enabled] do
+      do_apply({forms, comments}, rule_opts)
+    else
+      {forms, comments}
+    end
   end
 
-  defp do_apply({forms, comments}, falsey) when not falsey, do: {forms, comments}
+  defp do_apply({forms, comments}, rule_opts) do
+    except_lines = rule_opts[:except_lines] || []
 
-  defp do_apply({forms, comments}, _truthy) do
     forms =
       Macro.prewalk(forms, fn
         # Pattern matching in parameters
-        {keyword, ctx1, [{:when, ctx2, [{name, ctx3, parameters} | guards]}, body]}
+        {keyword, ctx1, [{:when, ctx2, [{name, ctx3, parameters} | guards]}, body]} = node
         when keyword in [:def, :defp] and is_list(parameters) ->
-          parameters = Enum.map(parameters, &extract_concatenation/1)
-          {keyword, ctx1, [{:when, ctx2, [{name, ctx3, parameters} | guards]}, body]}
+          if ctx3[:line] in except_lines do
+            node
+          else
+            parameters = Enum.map(parameters, &extract_concatenation/1)
+            {keyword, ctx1, [{:when, ctx2, [{name, ctx3, parameters} | guards]}, body]}
+          end
 
-        {keyword, ctx1, [{name, ctx2, parameters}, body]}
+        {keyword, ctx1, [{name, ctx2, parameters}, body]} = node
         when keyword in [:def, :defp] and is_list(parameters) ->
-          parameters = Enum.map(parameters, &extract_concatenation/1)
-          {keyword, ctx1, [{name, ctx2, parameters}, body]}
+          if ctx2[:line] in except_lines do
+            node
+          else
+            parameters = Enum.map(parameters, &extract_concatenation/1)
+            {keyword, ctx1, [{name, ctx2, parameters}, body]}
+          end
 
         # Pattern matching in assignment
-        {:=, ctx1, [{:<<>>, _ctx2, _parts} = lhs, rhs]} ->
-          {:=, ctx1, [extract_concatenation(lhs), rhs]}
+        {:=, ctx1, [{:<<>>, _ctx2, _parts} = lhs, rhs]} = node ->
+          if ctx1[:line] in except_lines do
+            node
+          else
+            {:=, ctx1, [extract_concatenation(lhs), rhs]}
+          end
 
         other ->
           other
@@ -56,11 +82,12 @@ defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinaries do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
-      [:use_string_concatenation_when_matching_binaries],
+    opts
+    |> Options.set_value(
+      [@rule_name],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
+    |> Options.prepare_except(@rule_name)
   end
 
   defp extract_concatenation({:<<>>, context, []}), do: {:__block__, context, [""]}

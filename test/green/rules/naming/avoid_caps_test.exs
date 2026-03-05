@@ -41,4 +41,69 @@ defmodule Green.Rules.Naming.AvoidCapsTest do
 
     assert output =~ "BadAtom"
   end
+
+  describe "except configuration" do
+    test "skips warnings when entire file is in except list" do
+      code = """
+      defmodule Example do
+        def fooBar, do: :ok
+      end
+      """
+
+      {forms, comments} = parse_code(code)
+
+      output =
+        capture_io(:stderr, fn ->
+          AvoidCaps.apply({forms, comments},
+            green: [avoid_caps: [except: ["test/example.exs"]]],
+            file: Path.expand("test/example.exs")
+          )
+        end)
+
+      assert output == ""
+    end
+
+    test "skips warning for specific line when in except list" do
+      code = """
+      defmodule Example do
+        def fooBar, do: :ok
+      end
+      """
+
+      {forms, comments} = parse_code(code)
+
+      output =
+        capture_io(:stderr, fn ->
+          AvoidCaps.apply({forms, comments},
+            green: [avoid_caps: [except: [{"test/example.exs", 2}]]],
+            file: Path.expand("test/example.exs")
+          )
+        end)
+
+      assert output == ""
+    end
+
+    test "warns for lines not in except list" do
+      code = """
+      defmodule Example do
+        def fooBar, do: :ok
+        def bazQux, do: :ok
+      end
+      """
+
+      {forms, comments} = parse_code(code)
+
+      output =
+        capture_io(:stderr, fn ->
+          AvoidCaps.apply({forms, comments},
+            green: [avoid_caps: [except: [{"test/example.exs", 2}]]],
+            file: Path.expand("test/example.exs")
+          )
+        end)
+
+      assert output =~ "capital letter found in function name"
+      assert output =~ "3 |"
+      refute output =~ "2 |"
+    end
+  end
 end

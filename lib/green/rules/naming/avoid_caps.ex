@@ -35,9 +35,24 @@ defmodule Green.Rules.Naming.AvoidCaps do
   ```elixir
   # green:configure-for-this-file Naming.AvoidCaps, accept_atoms: [:Record]
   ```
+
+  The rule can also be configured to ignore specific files, or specific lines in specific files:
+
+  ```elixir
+  green: [
+    avoid_caps: [
+      except: [
+        "path/to/file.exs",
+        {"path/to/other_file.exs", 42},
+        {"path/to/yet_another_file.exs", [10, 20, 30]}
+      ]
+    ]
+  ]
+  ```
   """
 
   @behaviour Green.Rule
+  @rule_name :avoid_caps
 
   alias Green.Options
 
@@ -54,15 +69,17 @@ defmodule Green.Rules.Naming.AvoidCaps do
   defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
 
   defp do_apply({forms, comments}, _truthy, opts) do
+    except_lines = opts[:green][:avoid_caps][:except_lines] || []
+
     {forms, _acc} =
       Macro.traverse(
         forms,
         # `:is_attribute` is used to avoid double warnings -
         # without it, attributes with caps would raise a 'variable with caps' warning
-        %{is_attribute: false},
+        %{is_attribute: false, except_lines: except_lines},
         fn
           {:__block__, context, [atom]} = node, acc when is_atom(atom) ->
-            if contains_caps?(atom, opts) do
+            if contains_caps?(atom, opts) and context[:line] not in acc[:except_lines] do
               IO.warn(
                 """
                 capital letter found in atom (use snake_case for atoms)
@@ -75,7 +92,7 @@ defmodule Green.Rules.Naming.AvoidCaps do
             {node, acc}
 
           {:def, context, [{name, _context2, _params}, _body]} = node, acc when is_atom(name) ->
-            if contains_caps?(name, opts) do
+            if contains_caps?(name, opts) and context[:line] not in acc[:except_lines] do
               IO.warn(
                 """
                 capital letter found in function name (use snake_case for function names)
@@ -88,7 +105,7 @@ defmodule Green.Rules.Naming.AvoidCaps do
             {node, acc}
 
           {name, context, nil} = node, %{is_attribute: false} = acc when is_atom(name) ->
-            if contains_caps?(name, opts) do
+            if contains_caps?(name, opts) and context[:line] not in acc[:except_lines] do
               IO.warn(
                 """
                 capital letter found in variable name (use snake_case for variable names)
@@ -101,7 +118,7 @@ defmodule Green.Rules.Naming.AvoidCaps do
             {node, acc}
 
           {:@, context, [{name, _context2, _expression}]} = node, acc ->
-            if contains_caps?(name, opts) do
+            if contains_caps?(name, opts) and context[:line] not in acc[:except_lines] do
               IO.warn(
                 """
                 capital letter found in attribute name (use snake_case for attribute names)
@@ -132,6 +149,7 @@ defmodule Green.Rules.Naming.AvoidCaps do
     opts
     |> Options.set_default([:avoid_caps, :enabled], true)
     |> prepare_accept_atoms(file_opts)
+    |> Options.prepare_except(@rule_name)
   end
 
   defp prepare_accept_atoms(opts, file_opts) do

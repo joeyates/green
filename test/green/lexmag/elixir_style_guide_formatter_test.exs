@@ -115,9 +115,10 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       assert formatted == good
     end
 
-    test "supports configuration to disable use_string_concatenation_when_matching_binaries rule", %{
-      bad: unchanged
-    } do
+    test "supports configuration to disable use_string_concatenation_when_matching_binaries rule",
+         %{
+           bad: unchanged
+         } do
       formatted =
         format(unchanged,
           green: [use_string_concatenation_when_matching_binaries: [enabled: false]]
@@ -140,7 +141,9 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       )
     end
 
-    test "supports configuration to disable no_anonymous_functions_in_pipelines rule", %{example: example} do
+    test "supports configuration to disable no_anonymous_functions_in_pipelines rule", %{
+      example: example
+    } do
       output =
         capture_io(:stderr, fn ->
           format(example, green: [no_anonymous_functions_in_pipelines: [enabled: false]])
@@ -507,7 +510,9 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       )
     end
 
-    test "supports configuration to disable upper_camel_case_for_modules rule", %{example: example} do
+    test "supports configuration to disable upper_camel_case_for_modules rule", %{
+      example: example
+    } do
       output =
         capture_io(:stderr, fn ->
           format(example, green: [upper_camel_case_for_modules: [enabled: false]])
@@ -602,7 +607,6 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
-
   describe "when `nil` defaults are used in struct definitions" do
     @describetag fixture_pair: "structs/skip_nil_in_struct_definition/key_value"
 
@@ -612,11 +616,13 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       assert formatted == good
     end
 
-    test "supports configuration to disable remove_nil_from_struct_definition rule", %{bad: unchanged} do
+    test "supports configuration to disable remove_nil_from_struct_definition rule", %{
+      bad: unchanged
+    } do
       formatted = format(unchanged, green: [remove_nil_from_struct_definition: [enabled: false]])
 
       assert formatted == unchanged
-     end
+    end
   end
 
   describe "when exceptions are defined without the `Error` suffix" do
@@ -639,7 +645,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
         end)
 
       assert output == ""
-     end
+    end
   end
 
   describe "when exception messages are capitalized" do
@@ -655,14 +661,16 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       )
     end
 
-    test "supports configuration to disable lowercase_exception_messages rule", %{example: example} do
+    test "supports configuration to disable lowercase_exception_messages rule", %{
+      example: example
+    } do
       output =
         capture_io(:stderr, fn ->
           format(example, green: [lowercase_exception_messages: [enabled: false]])
         end)
 
       refute output =~ "exception message should be lowercase"
-     end
+    end
   end
 
   describe "when exception messages have trailing punctuation" do
@@ -678,9 +686,10 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       )
     end
 
-    test "supports configuration to disable no_trailing_punctuation_in_exception_messages rule", %{
-      example: example
-    } do
+    test "supports configuration to disable no_trailing_punctuation_in_exception_messages rule",
+         %{
+           example: example
+         } do
       output =
         capture_io(:stderr, fn ->
           format(example,
@@ -689,7 +698,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
         end)
 
       refute output =~ "exception message should not have trailing punctuation"
-     end
+    end
   end
 
   describe "when zero-arity functions do not have parentheses" do

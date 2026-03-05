@@ -18,15 +18,16 @@ defmodule Green.Rules.Linting.TrueInCond do
   """
   import Access
 
+  alias Green.Options
+
   @behaviour Green.Rule
   @rule_name :true_in_cond
-
-  alias Green.Options
 
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
     rule_opts = get_in(opts, [:green, @rule_name]) || []
+
     if rule_opts[:enabled] do
       do_apply({forms, comments}, rule_opts)
     else
@@ -62,7 +63,7 @@ defmodule Green.Rules.Linting.TrueInCond do
 
   defp prepare_opts(opts) do
     opts
-    |>Options.set_value(
+    |> Options.set_value(
       [@rule_name],
       &Keyword.put_new(&1 || [], :enabled, true)
     )

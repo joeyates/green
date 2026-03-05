@@ -6,12 +6,20 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
 
   This rule is enabled by default, but can be disabled globally in the configuration file.
 
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
   In `.formatter.exs`:
 
   ```elixir
     green: [
       upper_camel_case_for_modules: [
-        enabled: *true | false
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
@@ -21,6 +29,7 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
   alias Green.Options
 
   @behaviour Rule
+  @rule_name :upper_camel_case_for_modules
 
   @impl Rule
   def apply({forms, comments}, opts) do
@@ -32,11 +41,13 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
   defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
 
   defp do_apply({forms, comments}, _truthy, opts) do
+    except_lines = opts[:green][:upper_camel_case_for_modules][:except_lines] || []
+
     Macro.prewalk(
       forms,
       fn
         {:defmodule, _ctx1, [{:__aliases__, context, modules} = first | _rest]} = node ->
-          if !Enum.all?(modules, &upper_camel_case?/1) do
+          if !Enum.all?(modules, &upper_camel_case?/1) and context[:line] not in except_lines do
             IO.warn(
               """
               found badly formed module name (use UpperCamelCase for module names)
@@ -50,7 +61,7 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
 
         # Handle the case where the module name is an atom (e.g., `defmodule :appStack`)
         {:defmodule, _ctx1, [{:__block__, context, [module]} = first | _rest]} = node ->
-          if !upper_camel_case?(module) do
+          if !upper_camel_case?(module) and context[:line] not in except_lines do
             IO.warn(
               """
               found badly formed module name (use UpperCamelCase for module names)
@@ -71,11 +82,12 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
+    opts
+    |> Options.set_value(
       [:upper_camel_case_for_modules],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
+    |> Options.prepare_except(@rule_name)
   end
 
   defp upper_camel_case?(atom) do
