@@ -355,3 +355,11 @@ Status: [ ]
 When the last clause of a `cond` does not have `true` as its condition, there are
 many possible forms that the code can take. Instead of trying to correct the problem,
 print a warning.
+
+# Add Test Coverage for Single Rules
+
+Status: [ ]
+
+## Description
+
+Currently, some rules are only tested via their use in `Green.Lexmag.ElixirStyleGuideFormatter`. Add specific tests for these under `tests/green/rules`.
