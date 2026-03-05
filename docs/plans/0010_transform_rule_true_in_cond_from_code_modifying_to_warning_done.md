@@ -15,8 +15,8 @@ Currently, the `true_in_cond` rule automatically replaces non-`true` final claus
 - [x] Rename [test/fixtures/linting/true_in_cond_bad.ex](test/fixtures/linting/true_in_cond_bad.ex) to `true_in_cond.ex` (convention for warning-based tests)
 - [x] Update tests in [test/green/lexmag/elixir_style_guide_formatter_test.exs](test/green/lexmag/elixir_style_guide_formatter_test.exs) to check for warnings instead of code transformations
 - [x] Create dedicated test file [test/green/rules/linting/true_in_cond_test.exs](test/green/rules/linting/true_in_cond_test.exs) following the pattern of [test/green/rules/exceptions/use_error_suffix_test.exs](test/green/rules/exceptions/use_error_suffix_test.exs)
-- [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Address any additional implementation details that arise during development
+- [x] Mark the plan as "done"
 
 ## Principal Files
 
