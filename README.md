@@ -137,3 +137,35 @@ Implement the other well-known Elixir style guides:
 
 * [Credo's Style Guide](https://github.com/rrrene/elixir-style-guide#readme)
 * [Christopher Adams' Elixir Style Guide](https://github.com/christopheradams/elixir_style_guide)
+
+## Development
+
+### Running Tests
+
+To run the test suite:
+
+```bash
+mix test
+```
+
+### Code Coverage
+
+To generate a coverage report:
+
+```bash
+# Terminal output
+mix coveralls
+
+# HTML report (saved to cover/index.html)
+mix coveralls.html
+```
+
+The project maintains >90% overall test coverage.
+
+### Code Formatting
+
+To check code formatting:
+
+```bash
+mix format --check-formatted
+```
