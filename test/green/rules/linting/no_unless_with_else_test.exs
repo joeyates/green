@@ -148,16 +148,4 @@ defmodule Green.Rules.Linting.NoUnlessWithElseTest do
       assert output == expected
     end
   end
-
-  defp parse_code(code) do
-    to_quoted_opts = [
-      unescape: false,
-      literal_encoder: &{:ok, {:__block__, &2, [&1]}},
-      token_metadata: true,
-      emit_warnings: false
-    ]
-
-    {forms, comments} = Code.string_to_quoted_with_comments!(code, to_quoted_opts)
-    {forms, comments}
-  end
 end

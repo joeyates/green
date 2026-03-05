@@ -22,7 +22,7 @@ The `except` configuration supports three formats:
   - `BooleanOperators`
   - `UseStringConcatenationWhenMatchingBinaries`
 - [x] Add except support to `PreferPipelines` rule
-- [ ] Add except support to naming rules (3 rules):
+- [x] Add except support to naming rules (3 rules):
   - `AvoidOneLetterVariables`
   - `PredicateFunctions`
   - `UpperCamelCaseForModules`

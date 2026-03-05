@@ -19,6 +19,17 @@ defmodule Green.TestCase do
         formatted = Inspect.Algebra.format(doc, 98)
         [formatted, ?\n] |> IO.iodata_to_binary()
       end
+
+      def parse_code(code) do
+        to_quoted_opts = [
+          unescape: false,
+          literal_encoder: &{:ok, {:__block__, &2, [&1]}},
+          token_metadata: true,
+          emit_warnings: false
+        ]
+
+        Code.string_to_quoted_with_comments!(code, to_quoted_opts)
+      end
     end
   end
 
