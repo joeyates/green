@@ -32,7 +32,7 @@ The `except` configuration supports three formats:
   - `UseModulePseudoVariable`
 - [x] Add except support to `UseParenthesesWithZeroArityFunctions` rule
 - [x] Add except support to `RemoveNilFromStructDefinition` rule
-- [ ] Add except support to exceptions rules (3 rules):
+- [x] Add except support to exceptions rules (3 rules):
   - `UseErrorSuffix`
   - `LowercaseExceptionMessages`
   - `NoTrailingPunctuation`

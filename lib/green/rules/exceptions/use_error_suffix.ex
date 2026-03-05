@@ -6,12 +6,20 @@ defmodule Green.Rules.Exceptions.UseErrorSuffix do
 
   This rule is enabled by default, but can be disabled globally in the configuration file.
 
+  The rule can also be configured to ignore specific files, or specific lines in specific files.
+  This is useful for cases where applying the rule would be problematic.
+
   In `.formatter.exs`:
 
   ```elixir
     green: [
       use_error_suffix: [
-        enabled: *true | false
+        enabled: *true | false,
+        except: [
+          "path/to/file.exs",
+          {"path/to/other_file.exs", 42},
+          {"path/to/yet_another_file.exs", [10, 20, 30]}
+        ]
       ]
     ]
   ```
@@ -26,19 +34,25 @@ defmodule Green.Rules.Exceptions.UseErrorSuffix do
   """
 
   @behaviour Green.Rule
+  @rule_name :use_error_suffix
 
   alias Green.Options
 
   @impl true
   def apply({forms, comments}, opts) do
     opts = prepare_opts(opts)
-    enabled = opts[:green][:use_error_suffix][:enabled]
-    do_apply({forms, comments}, enabled, opts)
+    rule_opts = get_in(opts, [:green, @rule_name]) || []
+
+    if rule_opts[:enabled] do
+      do_apply({forms, comments}, rule_opts, opts)
+    else
+      {forms, comments}
+    end
   end
 
-  defp do_apply({forms, comments}, falsey, _opts) when not falsey, do: {forms, comments}
+  defp do_apply({forms, comments}, rule_opts, opts) do
+    except_lines = rule_opts[:except_lines] || []
 
-  defp do_apply({forms, comments}, _truthy, opts) do
     {forms, _acc} =
       Macro.traverse(
         forms,
@@ -55,7 +69,7 @@ defmodule Green.Rules.Exceptions.UseErrorSuffix do
           %{exception: true} = acc ->
             name = modules |> Enum.at(-1) |> Atom.to_string()
 
-            if !String.ends_with?(name, "Error") do
+            if !String.ends_with?(name, "Error") and context[:line] not in except_lines do
               IO.warn(
                 """
                 exception #{name} should have a suffix of `Error`
@@ -76,10 +90,11 @@ defmodule Green.Rules.Exceptions.UseErrorSuffix do
   end
 
   defp prepare_opts(opts) do
-    Options.set_value(
-      opts,
-      [:use_error_suffix],
+    opts
+    |> Options.set_value(
+      [@rule_name],
       &Keyword.put_new(&1 || [], :enabled, true)
     )
+    |> Options.prepare_except(@rule_name)
   end
 end
