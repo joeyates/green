@@ -5,6 +5,48 @@ defmodule Green.Rules.Exceptions.NoTrailingPunctuationInExceptionMessagesTest do
 
   alias Green.Rules.Exceptions.NoTrailingPunctuationInExceptionMessages
 
+  test "warns when exception message has trailing punctuation" do
+    code = """
+    defmodule Example do
+      def foo do
+        raise ArgumentError, "something went wrong."
+      end
+    end
+    """
+
+    {forms, comments} = parse_code(code)
+
+    output =
+      capture_io(:stderr, fn ->
+        NoTrailingPunctuationInExceptionMessages.apply({forms, comments},
+          file: Path.expand("test/example.exs")
+        )
+      end)
+
+    assert output =~ "exception message should not have trailing punctuation"
+  end
+
+  test "does not warn on trailing quotes" do
+    code = """
+    defmodule Example do
+      def foo do
+        raise ArgumentError, "this is a quote: \\""
+      end
+    end
+    """
+
+    {forms, comments} = parse_code(code)
+
+    output =
+      capture_io(:stderr, fn ->
+        NoTrailingPunctuationInExceptionMessages.apply({forms, comments},
+          file: Path.expand("test/example.exs")
+        )
+      end)
+
+    assert output == ""
+  end
+
   describe "except configuration" do
     test "skips warnings when entire file is in except list" do
       code = """

@@ -58,7 +58,7 @@ defmodule Green.Rules.Exceptions.NoTrailingPunctuationInExceptionMessages do
           ]
         } = node
         when is_binary(message) ->
-          if String.match?(message, ~r/[[:punct:]]$/) and context[:line] not in except_lines do
+          if String.match?(message, ~r/[\.\!\?]$/) and context[:line] not in except_lines do
             IO.warn(
               """
               exception message should not have trailing punctuation
