@@ -56,7 +56,7 @@ defmodule Green.Rules.Modules.SortReferences do
           node, {_comments, %{in_macro: true}} = acc ->
             {node, acc}
 
-          {:defmodule, context, _right} = node, acc ->
+          {:defmodule, context, [_aliases, [{{:__block__, _ctx2, [:do]}, _do_block}]]} = node, acc ->
             {comments, state} = acc
 
             {node, comments} =
