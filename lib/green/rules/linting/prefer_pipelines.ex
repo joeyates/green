@@ -49,7 +49,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
     {forms, _acc} =
       Macro.traverse(
         forms,
-        %{records: [], except_lines: except_lines},
+        %{records: []},
         fn
           {:@, _ctx1, [{:spec, _ctx2, _right}]} = node, acc ->
             {node, Map.put(acc, :in_spec, true)}
@@ -117,7 +117,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
             with nil <- context[:attribute],
                  nil <- context[:function],
                  nil <- context[:pipeline_parameter],
-                 false <- context[:line] in acc[:except_lines],
+                 false <- context[:line] in except_lines,
                  true <- pipelinable?(node, opts, acc),
                  {:ok, first} <- first_argument(node),
                  true <- pipelinable?(first, opts, acc) do
