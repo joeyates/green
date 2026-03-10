@@ -187,7 +187,7 @@ defmodule Green.Rules.Naming.AvoidCaps do
 
   defp extract_atom_names(string) do
     case Regex.scan(~r/:([\w_\.]+)/, string, capture: :all_but_first) do
-      nil -> []
+      [] -> []
       matches -> List.flatten(matches)
     end
   end
