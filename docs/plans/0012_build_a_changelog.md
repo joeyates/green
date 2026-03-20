@@ -33,7 +33,7 @@ Versions and their bump dates:
 - [x] Create the `Changelog` file with the header and `[Unreleased]` section
 - [x] Add entry for 0.1.11 (1ae2678..65eb2b9)
 - [x] Add entry for 0.1.10 (e25757f..1ae2678)
-- [ ] Add entry for 0.1.9 (4aff85f..e25757f)
+- [x] Add entry for 0.1.9 (4aff85f..e25757f)
 - [ ] Add entry for 0.1.8 (2928019..4aff85f)
 - [ ] Add entry for 0.1.7 (55456d1..2928019)
 - [ ] Add entry for 0.1.6 (88b5b64..55456d1)
