@@ -7,7 +7,7 @@ defmodule Green.MixProject do
     [
       app: :green,
       version: @version,
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       deps: deps(),
       description: "Format Elixir code according to a consistent style",
       docs: docs(),
