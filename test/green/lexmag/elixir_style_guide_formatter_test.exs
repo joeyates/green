@@ -141,10 +141,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m anonymous function found in pipeline (consider defining a named function instead)
-        7 | (fn words -> [@sentence_start | words] end).()
-        """
+        ~r[warning:.*anonymous function found in pipeline.*\n\d+ \| \(fn words -> \[@sentence_start \| words\] end\)\.\(\)]
       )
     end
 
@@ -166,10 +163,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for boolean value &&/|| boolean value", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `and` instead of `&&` for boolean checks
-        4 | true && false
-        """
+        ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| true && false]
       )
     end
 
@@ -191,10 +185,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for boolean value &&/|| guard style", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `or` instead of `||` for boolean checks
-        12 | false || is_atom(name)
-        """
+        ~r[warning:.*use `or` instead of `\|\|` for boolean checks\n\d+ \| false \|\| is_atom\(name\)]
       )
     end
 
@@ -207,10 +198,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for boolean value &&/|| predicate", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `and` instead of `&&` for boolean checks
-        20 | false && really?(name)
-        """
+        ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| false && really\?\(name\)]
       )
     end
 
@@ -223,10 +211,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for boolean value &&/|| comparison", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `or` instead of `||` for boolean checks
-        28 | false || name == :foo
-        """
+        ~r[warning:.*use `or` instead of `\|\|` for boolean checks\n\d+ \| false \|\| name == :foo]
       )
     end
 
@@ -239,10 +224,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for guard style &&/|| boolean value", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `and` instead of `&&` for boolean checks
-        36 | is_atom(name) && true
-        """
+        ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| is_atom\(name\) && true]
       )
     end
 
@@ -255,10 +237,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for guard style &&/|| predicate", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `or` instead of `||` for boolean checks
-        44 | is_atom(name) || really?(name)
-        """
+        ~r[warning:.*use `or` instead of `\|\|` for boolean checks\n\d+ \| is_atom\(name\) \|\| really\?\(name\)]
       )
     end
 
@@ -271,10 +250,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for guard style &&/|| comparison", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `and` instead of `&&` for boolean checks
-        52 | is_atom(name) && name != nil
-        """
+        ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| is_atom\(name\) && name != nil]
       )
     end
 
@@ -287,10 +263,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for predicate &&/|| boolean value", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `or` instead of `||` for boolean checks
-        60 | really?(name) || true
-        """
+        ~r[warning:.*use `or` instead of `||` for boolean checks\n\d+ \| really\?\(name\) || true]
       )
     end
 
@@ -303,10 +276,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for predicate &&/|| guard style", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `and` instead of `&&` for boolean checks
-        68 | really?(name) && is_atom(name)
-        """
+        ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| really\?\(name\) && is_atom\(name\)]
       )
     end
 
@@ -319,10 +289,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for predicate &&/|| comparison", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `or` instead of `||` for boolean checks
-        76 | really?(name) || name != nil
-        """
+        ~r[warning:.*use `or` instead of `\|\|` for boolean checks\n\d+ \| really\?\(name\) \|\| name != nil]
       )
     end
 
@@ -373,10 +340,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for ! boolean value", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `not` instead of `!` for boolean checks
-        114 | !true
-        """
+        ~r[warning:.*use `not` instead of `!` for boolean checks\n\d+ \| !true]
       )
     end
 
@@ -389,10 +353,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for ! guard style", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `not` instead of `!` for boolean checks
-        122 | !is_atom(name)
-        """
+        ~r[warning:.*use `not` instead of `!` for boolean checks\n\d+ \| !is_atom\(name\)]
       )
     end
 
@@ -405,10 +366,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for ! predicate", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `not` instead of `!` for boolean checks
-        130 | !really?(name)
-        """
+        ~r[warning:.*use `not` instead of `!` for boolean checks\n\d+ \| !really\?\(name\)]
       )
     end
 
@@ -421,10 +379,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for ! comparison", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m use `not` instead of `!` for boolean checks
-        138 | !(name == :foo)
-        """
+        ~r[warning:.*use `not` instead of `!` for boolean checks\n\d+ \| !\(name == :foo\)]
       )
     end
 
@@ -441,40 +396,28 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns when capital letters are used in atoms", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m capital letter found in atom (use snake_case for atoms)
-        3 | :someAtom
-        """
+        ~r[warning:.*capital letter found in atom \(use snake_case for atoms\)\n\d+ \| :someAtom]
       )
     end
 
     test "warns when capital letters are used in function names", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m capital letter found in function name (use snake_case for function names)
-        12 | capital_in_Function_name
-        """
+        ~r[warning:.*capital letter found in function name.*\n12 \| capital_in_Function_name]
       )
     end
 
     test "warns when capital letters are used in variable names", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m capital letter found in variable name (use snake_case for variable names)
-        17 | myVariable
-        """
+        ~r[warning:.*capital letter found in variable name \(use snake_case for variable names\)\n\d+ \| myVariable]
       )
     end
 
     test "warns when capital letters are used in attribute names", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m capital letter found in attribute name (use snake_case for attribute names)
-        6 | @anAttribute
-        """
+        ~r[warning:.*capital letter found in attribute name \(use snake_case for attribute names\)\n\d+ \| @anAttribute]
       )
     end
 
@@ -500,20 +443,14 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns for lower camel-case module names", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m found badly formed module name (use UpperCamelCase for module names)
-        1 | defmodule :appStack do
-        """
+        ~r[warning:.*found badly formed module name.*\n\d+ \| defmodule :appStack do]
       )
     end
 
     test "warns with underscores in module names", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m found badly formed module name (use UpperCamelCase for module names)
-        5 | defmodule App_Stack do
-        """
+        ~r[warning:.*found badly formed module name \(use UpperCamelCase for module names\)\n\d+ \| defmodule App_Stack do]
       )
     end
 
@@ -534,10 +471,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m one-letter variable name found
-        2 | i
-        """
+        ~r[warning:.*one-letter variable name found\n\d+ \| i]
       )
     end
 
@@ -557,20 +491,14 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns when predicate functions don't have ? suffix", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m predicate function should have `?` suffix
-        3 | def is_even(number) do
-        """
+        ~r[warning:.*predicate function should have `\?` suffix\n\d+ \| def is_even]
       )
     end
 
     test "warns when guard-style macros have ? suffix", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m guard-style macros should not have `?` suffix, use `is_` prefix instead
-        12 | defmacro valid?(value) do
-        """
+        ~r[warning:.*guard-style macros should not have `\?` suffix, use `is_` prefix instead\n\d+ \| defmacro valid\?\(value\) do]
       )
     end
 
@@ -638,10 +566,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m exception MissingErrorSuffix should have a suffix of `Error`
-        1 | MissingErrorSuffix
-        """
+        ~r[warning:.*exception MissingErrorSuffix should have a suffix of `Error`\n\d+ \| MissingErrorSuffix]
       )
     end
 
@@ -661,10 +586,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m exception message should be lowercase
-        4 | raise RuntimeError, "Invalid input"
-        """
+        ~r[warning:.*exception message should be lowercase\n\d+ \| raise RuntimeError, "Invalid input"]
       )
     end
 
@@ -686,10 +608,7 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     test "warns when exception messages have trailing punctuation", %{example: example} do
       assert_warns(
         example,
-        """
-        \e[33mwarning:\e[0m exception message should not have trailing punctuation
-        9 | raise ArgumentError, "invalid argument!"
-        """
+        ~r[warning:.*exception message should not have trailing punctuation\n\d+ \| raise ArgumentError, "invalid argument!"]
       )
     end
 

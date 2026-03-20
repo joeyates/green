@@ -388,3 +388,21 @@ Check test changes between commits to catch information about changes that are n
 - Version releases are identified by commits that change `@version` in `mix.exs`.
 - Commit `ee9f0b80` represents the first release (0.1.1) — use "First release" as its entry.
 - Include an `[Unreleased]` section at the top.
+
+# Validate Tests Against Elixir/Erlang Version Matrix
+
+Status: [x]
+
+## Description
+
+Verify that Green's test suite passes across all supported Elixir/Erlang version combinations. Use `asdf` to install and switch between versions, running `mix compile` and `mix test` for each pairing. Record results in `matrix.txt` (not committed).
+
+## Technical Specifics
+
+- Include Elixir major versions from 1.16 onwards, plus `1.20.0-rc.3` (pre-release).
+- For each Elixir major version, use the latest minor release.
+- Use versions with `-otp-<version>` suffixes from `asdf list all elixir` to determine compatible OTP/Erlang releases.
+- For each required Erlang release, use the latest minor from `asdf list all erlang`.
+- For each pairing: `asdf set elixir <version>`, `asdf set erlang <version>`, then `asdf install` (note: Erlang installation can be very long-running), then run `mix compile` and `mix test`.
+- Compile results (pass/fail per combination) into `matrix.txt` at the project root.
+- Do not commit `matrix.txt` or any version-pinning changes.
