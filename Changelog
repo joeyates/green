@@ -76,3 +76,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.3] - 2025-02-12
 
 No notable changes.
+
+## [0.1.2] - 2025-02-12
+
+### Fixed
+
+- PreferPipelines: fix function name type check (atom, not binary)
