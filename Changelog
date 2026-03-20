@@ -6,3 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1.11] - 2026-03-20
+
+### Added
+
+- Per-rule configuration support for all rules
+- Per-file and per-line exception support for all rules
+- Filename included in warning messages from all warning-emitting rules
+
+### Changed
+
+- TrueInCond rule now emits warnings instead of modifying AST
+
+### Fixed
+
+- PreferPipelines: ignore bitwise operators
+- BooleanOperators: skip `!!` (double negation)
+- BooleanOperators: ignore `!` with anonymous function calls
+- PredicateFunctions: skip `unquote` in macro naming checks
+- PredicateFunctions: improve recognition of functions
+- UpperCamelCaseForModules: skip `__MODULE__` and other edge cases
+- SortReferences: check that there is a do block
+- NoTrailingPunctuationInExceptionMessages: ignore trailing quotes
+- AvoidCaps: correct match pattern
