@@ -83,5 +83,4 @@ All 36 tests pass, confirming the empirical findings are accurate.
 
 - Test Suite: `test/elixir_formatter_test.exs`
 - Test Project: `test/projects/elixir_formatter/`
-- Style Guide Comparison: `docs/elixir-style-guide-comparison.md`
 - Elixir Version: 1.19.5
