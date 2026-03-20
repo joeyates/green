@@ -10,7 +10,7 @@ Use `asdf` to install and test Green against every supported Elixir/Erlang versi
 
 ## Tasks
 
-- [ ] Determine the full version matrix: query `asdf list all elixir` for latest minor releases of 1.16, 1.17, 1.18, 1.19, and `1.20.0-rc.3`; query `asdf list all erlang` for compatible OTP versions and their latest minors. Write the matrix of version pairs to `matrix.json` with each entry having `elixir`, `erlang`, and a null `result` field
+- [x] Determine the full version matrix: query `asdf list all elixir` for latest minor releases of 1.16, 1.17, 1.18, 1.19, and `1.20.0-rc.3`; query `asdf list all erlang` for compatible OTP versions and their latest minors. Write the matrix of version pairs to `matrix.json` with each entry having `elixir`, `erlang`, and a null `result` field
 - [ ] For each pairing in `matrix.json`, install the versions via `asdf install`, set them active via `asdf set`, run `mix deps.get`, `mix compile`, and `mix test`, and update the entry's `result` field with pass/fail
 - [ ] Address any additional implementation details that arise during development
 - [ ] Mark the plan as "done"
