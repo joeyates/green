@@ -96,6 +96,13 @@ defmodule Green.Rules.Linting.PreferPipelinesTest do
     assert output == example
   end
 
+  @tag example: "linting/prefer_pipelines/skip_operators"
+  test "ignores operators", %{forms: forms, comments: comments, example: example} do
+    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    output = default_format({forms, comments})
+    assert output == example
+  end
+
   @tag example: "linting/prefer_pipelines/__module___bad"
   @tag fixture_pair: "linting/prefer_pipelines/__module__"
   test "handles __MODULE__.function", %{

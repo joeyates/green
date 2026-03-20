@@ -220,7 +220,7 @@ defmodule Green.Rules.Linting.PreferPipelines do
     __block__
     __aliases__
     :: \\\\ / ! & @ || &&
-    <- -> <> | |> <<>> |||
+    <- -> <> | |> <<>> &&& |||
     = == != === !== =~ > < >= <=
     {} %{} %
     + ++ - -- * ^ <<< >>> .. ..//
