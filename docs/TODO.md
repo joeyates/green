@@ -391,7 +391,7 @@ Check test changes between commits to catch information about changes that are n
 
 # Validate Tests Against Elixir/Erlang Version Matrix
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
