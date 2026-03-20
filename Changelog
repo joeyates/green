@@ -82,3 +82,7 @@ No notable changes.
 ### Fixed
 
 - PreferPipelines: fix function name type check (atom, not binary)
+
+## [0.1.1] - 2025-02-12
+
+First release.

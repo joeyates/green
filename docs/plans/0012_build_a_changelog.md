@@ -41,7 +41,7 @@ Versions and their bump dates:
 - [x] Add entry for 0.1.4 (0c59fdc..b90be05)
 - [x] Add entry for 0.1.3 (d23ae01..0c59fdc)
 - [x] Add entry for 0.1.2 (ee9f0b80..d23ae01)
-- [ ] Add entry for 0.1.1 ("First release")
+- [x] Add entry for 0.1.1 ("First release")
 - [ ] Address any additional implementation details that arise during development
 - [ ] Mark the plan as "done"
 
