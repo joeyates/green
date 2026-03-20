@@ -366,7 +366,7 @@ Currently, some rules are only tested via their use in `Green.Lexmag.ElixirStyle
 
 # Build a Changelog
 
-Status: [ ]
+Status: [x]
 
 ## Description
 
