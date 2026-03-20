@@ -13,7 +13,8 @@ defmodule Green.MixProject do
       docs: docs(),
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
-      test_coverage: [tool: ExCoveralls]
+      test_coverage: [tool: ExCoveralls],
+      test_ignore_filters: [~r(test/fixtures), ~r(test/projects)]
     ]
   end
 
