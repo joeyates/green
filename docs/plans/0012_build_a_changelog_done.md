@@ -30,20 +30,20 @@ Versions and their bump dates:
 
 ## Tasks
 
-- [ ] Create the `Changelog` file with the header and `[Unreleased]` section
-- [ ] Add entry for 0.1.11 (1ae2678..65eb2b9)
-- [ ] Add entry for 0.1.10 (e25757f..1ae2678)
-- [ ] Add entry for 0.1.9 (4aff85f..e25757f)
-- [ ] Add entry for 0.1.8 (2928019..4aff85f)
-- [ ] Add entry for 0.1.7 (55456d1..2928019)
-- [ ] Add entry for 0.1.6 (88b5b64..55456d1)
-- [ ] Add entry for 0.1.5 (b90be05..88b5b64)
-- [ ] Add entry for 0.1.4 (0c59fdc..b90be05)
-- [ ] Add entry for 0.1.3 (d23ae01..0c59fdc)
-- [ ] Add entry for 0.1.2 (ee9f0b80..d23ae01)
-- [ ] Add entry for 0.1.1 ("First release")
-- [ ] Address any additional implementation details that arise during development
-- [ ] Mark the plan as "done"
+- [x] Create the `Changelog` file with the header and `[Unreleased]` section
+- [x] Add entry for 0.1.11 (1ae2678..65eb2b9)
+- [x] Add entry for 0.1.10 (e25757f..1ae2678)
+- [x] Add entry for 0.1.9 (4aff85f..e25757f)
+- [x] Add entry for 0.1.8 (2928019..4aff85f)
+- [x] Add entry for 0.1.7 (55456d1..2928019)
+- [x] Add entry for 0.1.6 (88b5b64..55456d1)
+- [x] Add entry for 0.1.5 (b90be05..88b5b64)
+- [x] Add entry for 0.1.4 (0c59fdc..b90be05)
+- [x] Add entry for 0.1.3 (d23ae01..0c59fdc)
+- [x] Add entry for 0.1.2 (ee9f0b80..d23ae01)
+- [x] Add entry for 0.1.1 ("First release")
+- [x] Address any additional implementation details that arise during development
+- [x] Mark the plan as "done"
 
 ## Principal Files
 
