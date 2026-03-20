@@ -42,3 +42,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix configuration parsing for rules with more than 2 configuration items
+
+## [0.1.8] - 2026-01-29
+
+### Added
+
+- AvoidCaps: allow skipping warnings for specific atoms
+
+## [0.1.7] - 2026-01-28
+
+### Added
+
+- UseParenthesesWithZeroArityFunctions rule: add parentheses to zero-arity function and macro definitions
+
+## [0.1.6] - 2025-09-17
+
+### Fixed
+
+- PreferPipelines: improve naked keyword recognition
+
+## [0.1.5] - 2025-08-05
+
+### Fixed
+
+- UseModulePseudoVariable: don't replace module name with `__MODULE__` inside macros
+
+## [0.1.4] - 2025-02-13
+
+### Fixed
+
+- AvoidOneLetterVariables: don't warn about one-letter variables in types
+
+## [0.1.3] - 2025-02-12
+
+No notable changes.
