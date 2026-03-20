@@ -30,9 +30,9 @@ that are not already implemented by `mix format`.
 Add the following to your `mix.exs`:
 
 ```elixir
-defp deps do
+defp deps() do
   [
-    {:green, "~> (See the badge above)"}
+    {:green, "~> (See the badge above)", only: :dev}
   ]
 end
 ```
