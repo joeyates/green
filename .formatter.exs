@@ -1,7 +1,7 @@
 test_files =
   "test/**/*.{ex,exs}"
   |> Path.wildcard()
-  |> Enum.filter(&(!String.starts_with?(&1, "test/fixtures")))
+  |> Enum.filter(&(not String.starts_with?(&1, "test/fixtures")))
 
 [
   inputs: ["{mix,.formatter}.exs", "lib/**/*.ex"] ++ test_files,

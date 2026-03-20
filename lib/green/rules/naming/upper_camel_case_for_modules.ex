@@ -51,6 +51,7 @@ defmodule Green.Rules.Naming.UpperCamelCaseForModules do
       fn
         {:defmodule, _ctx1, [{:__aliases__, context, modules} = first | _rest]} = node ->
           atoms = Enum.filter(modules, &is_atom/1)
+
           if not Enum.all?(atoms, &upper_camel_case?/1) and context[:line] not in except_lines do
             IO.warn(
               """
