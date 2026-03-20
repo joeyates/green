@@ -363,3 +363,28 @@ Status: [x]
 ## Description
 
 Currently, some rules are only tested via their use in `Green.Lexmag.ElixirStyleGuideFormatter`. Add specific tests for these under `tests/green/rules`.
+
+# Build a Changelog
+
+Status: [ ]
+
+## Description
+
+Create a `Changelog` file in the project root following the
+[Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) format.
+Use git history to identify version releases by tracking `@version` changes
+in `mix.exs`. Treat commit `ee9f0b80` as the first release (0.1.1) with a
+simple "First release" entry. Categorise commits between version bumps
+using Keep a Changelog types (Added, Changed, Fixed, etc.).
+
+Skip commits that do not change the library's behaviour.
+
+Check test changes between commits to catch information about changes that are not described in commit messages.
+
+## Technical Specifics
+
+- File name: `Changelog` (in the project root).
+- Format: [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/).
+- Version releases are identified by commits that change `@version` in `mix.exs`.
+- Commit `ee9f0b80` represents the first release (0.1.1) — use "First release" as its entry.
+- Include an `[Unreleased]` section at the top.
