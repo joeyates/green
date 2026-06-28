@@ -27,14 +27,16 @@ defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinariesTest do
     assert output == good
   end
 
-  @tag example: "linting/use_string_concatenation_when_matching_binaries/single_string_entry_bad"
-  @tag fixture_pair: "linting/use_string_concatenation_when_matching_binaries/single_string_entry"
+  @tag bad: "linting/use_string_concatenation_when_matching_binaries/single_string_entry_bad"
+  @tag good: "linting/use_string_concatenation_when_matching_binaries/single_string_entry"
   test "extracts string from bitstrings with a single entry", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     good: good
   } do
-    {forms, comments} = UseStringConcatenationWhenMatchingBinaries.apply({forms, comments}, [])
+    {forms, comments} =
+      UseStringConcatenationWhenMatchingBinaries.apply({bad_forms, bad_comments}, [])
+
     output = default_format({forms, comments})
     assert output == good
   end

@@ -164,7 +164,7 @@ defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinaries do
     {name, ctx1, nil}
   end
 
-  defp variable_or_string({:__block__, _ctx, [string]}) when is_binary(string), do: string
+  defp variable_or_string({:__block__, _ctx, [string]} = node) when is_binary(string), do: node
 
   defp variable_or_string(_), do: nil
 end
