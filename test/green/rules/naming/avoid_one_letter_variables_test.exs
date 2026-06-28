@@ -5,21 +5,21 @@ defmodule Green.Rules.Naming.AvoidOneLetterVariablesTest do
 
   alias Green.Rules.Naming.AvoidOneLetterVariables
 
-  @tag example: "naming/avoid_one_letter_variables/underscore_variable"
-  test "ignores underscore variables", %{forms: forms, comments: comments} do
+  @tag good: "naming/avoid_one_letter_variables/underscore_variable"
+  test "ignores underscore variables", %{good_forms: good_forms, good_comments: good_comments} do
     output =
       capture_io(:stderr, fn ->
-        AvoidOneLetterVariables.apply({forms, comments}, [])
+        AvoidOneLetterVariables.apply({good_forms, good_comments}, [])
       end)
 
     assert output == ""
   end
 
-  @tag example: "naming/avoid_one_letter_variables/types"
-  test "ignores variables in types", %{forms: forms, comments: comments} do
+  @tag good: "naming/avoid_one_letter_variables/types"
+  test "ignores variables in types", %{good_forms: good_forms, good_comments: good_comments} do
     output =
       capture_io(:stderr, fn ->
-        AvoidOneLetterVariables.apply({forms, comments}, [])
+        AvoidOneLetterVariables.apply({good_forms, good_comments}, [])
       end)
 
     assert output == ""

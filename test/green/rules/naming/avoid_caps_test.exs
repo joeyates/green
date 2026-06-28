@@ -5,38 +5,38 @@ defmodule Green.Rules.Naming.AvoidCapsTest do
 
   alias Green.Rules.Naming.AvoidCaps
 
-  @tag example: "naming/avoid_caps/elixir_special_forms"
-  test "ignores Elixir special forms", %{forms: forms, comments: comments} do
+  @tag good: "naming/avoid_caps/elixir_special_forms"
+  test "ignores Elixir special forms", %{good_forms: good_forms, good_comments: good_comments} do
     output =
       capture_io(:stderr, fn ->
-        AvoidCaps.apply({forms, comments}, [])
+        AvoidCaps.apply({good_forms, good_comments}, [])
       end)
 
     assert output == ""
   end
 
-  @tag example: "naming/avoid_caps/file_level_config"
+  @tag bad: "naming/avoid_caps/file_level_config"
   test "supports file-level configuration of atoms to accept", %{
-    forms: forms,
-    comments: comments
+    bad_forms: bad_forms,
+    bad_comments: bad_comments
   } do
     output =
       capture_io(:stderr, fn ->
-        AvoidCaps.apply({forms, comments}, [])
+        AvoidCaps.apply({bad_forms, bad_comments}, [])
       end)
 
     refute output =~ ~r/\bMyAtom\b/
     refute output =~ ~r/\bOtherAtom\b/
   end
 
-  @tag example: "naming/avoid_caps/file_level_config"
+  @tag bad: "naming/avoid_caps/file_level_config"
   test "warns about other atoms when there is file-level configuration of atoms to accept", %{
-    forms: forms,
-    comments: comments
+    bad_forms: bad_forms,
+    bad_comments: bad_comments
   } do
     output =
       capture_io(:stderr, fn ->
-        AvoidCaps.apply({forms, comments}, [])
+        AvoidCaps.apply({bad_forms, bad_comments}, [])
       end)
 
     assert output =~ "BadAtom"

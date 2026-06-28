@@ -5,11 +5,15 @@ defmodule Green.Rules.Exceptions.UseErrorSuffixTest do
 
   alias Green.Rules.Exceptions.UseErrorSuffix
 
-  @tag example: "exceptions/use_error_suffix/namespaced_error"
-  test "handles namespaced error modules", %{forms: forms, comments: comments, example: example} do
-    {forms, comments} = UseErrorSuffix.apply({forms, comments}, [])
+  @tag good: "exceptions/use_error_suffix/namespaced_error"
+  test "handles namespaced error modules", %{
+    good_forms: good_forms,
+    good_comments: good_comments,
+    good: good
+  } do
+    {forms, comments} = UseErrorSuffix.apply({good_forms, good_comments}, [])
     output = default_format({forms, comments})
-    assert output == example
+    assert output == good
   end
 
   describe "except configuration" do

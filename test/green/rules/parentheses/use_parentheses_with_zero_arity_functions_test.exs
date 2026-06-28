@@ -3,27 +3,26 @@ defmodule Green.Rules.Parentheses.UseParenthesesWithZeroArityFunctionsTest do
 
   alias Green.Rules.Parentheses.UseParenthesesWithZeroArityFunctions
 
-  @tag example: "parentheses/use_parentheses_with_zero_arity_functions_bad"
-  @tag fixture_pair: "parentheses/use_parentheses_with_zero_arity_functions"
+  @tag bad: "parentheses/use_parentheses_with_zero_arity_functions_bad"
+  @tag good: "parentheses/use_parentheses_with_zero_arity_functions"
   test "adds parentheses to zero-arity function definitions", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     good: good
   } do
-    {forms, comments} = UseParenthesesWithZeroArityFunctions.apply({forms, comments}, [])
+    {forms, comments} = UseParenthesesWithZeroArityFunctions.apply({bad_forms, bad_comments}, [])
     output = default_format({forms, comments})
     assert output == good
   end
 
-  @tag example: "parentheses/use_parentheses_with_zero_arity_functions_bad"
-  @tag fixture_pair: "parentheses/use_parentheses_with_zero_arity_functions"
+  @tag bad: "parentheses/use_parentheses_with_zero_arity_functions_bad"
   test "supports configuration to disable the rule", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     bad: unchanged
   } do
     {forms, comments} =
-      UseParenthesesWithZeroArityFunctions.apply({forms, comments},
+      UseParenthesesWithZeroArityFunctions.apply({bad_forms, bad_comments},
         green: [use_parentheses_with_zero_arity_functions: [enabled: false]]
       )
 

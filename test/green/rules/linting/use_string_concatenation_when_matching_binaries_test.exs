@@ -3,26 +3,30 @@ defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinariesTest do
 
   alias Green.Rules.Linting.UseStringConcatenationWhenMatchingBinaries
 
-  @tag example: "linting/use_string_concatenation_when_matching_binaries/single_bytes_entry_bad"
-  @tag fixture_pair: "linting/use_string_concatenation_when_matching_binaries/single_bytes_entry"
+  @tag bad: "linting/use_string_concatenation_when_matching_binaries/single_bytes_entry_bad"
+  @tag good: "linting/use_string_concatenation_when_matching_binaries/single_bytes_entry"
   test "extracts bytes match from bitstrings with a single entry", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     good: good
   } do
-    {forms, comments} = UseStringConcatenationWhenMatchingBinaries.apply({forms, comments}, [])
+    {forms, comments} =
+      UseStringConcatenationWhenMatchingBinaries.apply({bad_forms, bad_comments}, [])
+
     output = default_format({forms, comments})
     assert output == good
   end
 
-  @tag example: "linting/use_string_concatenation_when_matching_binaries/single_binary_entry_bad"
-  @tag fixture_pair: "linting/use_string_concatenation_when_matching_binaries/single_binary_entry"
+  @tag bad: "linting/use_string_concatenation_when_matching_binaries/single_binary_entry_bad"
+  @tag good: "linting/use_string_concatenation_when_matching_binaries/single_binary_entry"
   test "extracts binary match from bitstrings with a single entry", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     good: good
   } do
-    {forms, comments} = UseStringConcatenationWhenMatchingBinaries.apply({forms, comments}, [])
+    {forms, comments} =
+      UseStringConcatenationWhenMatchingBinaries.apply({bad_forms, bad_comments}, [])
+
     output = default_format({forms, comments})
     assert output == good
   end
@@ -41,14 +45,16 @@ defmodule Green.Rules.Linting.UseStringConcatenationWhenMatchingBinariesTest do
     assert output == good
   end
 
-  @tag example: "linting/use_string_concatenation_when_matching_binaries/mixed_entries_bad"
-  @tag fixture_pair: "linting/use_string_concatenation_when_matching_binaries/mixed_entries"
+  @tag bad: "linting/use_string_concatenation_when_matching_binaries/mixed_entries_bad"
+  @tag good: "linting/use_string_concatenation_when_matching_binaries/mixed_entries"
   test "extracts strings and binaries, grouping remaining entries", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     good: good
   } do
-    {forms, comments} = UseStringConcatenationWhenMatchingBinaries.apply({forms, comments}, [])
+    {forms, comments} =
+      UseStringConcatenationWhenMatchingBinaries.apply({bad_forms, bad_comments}, [])
+
     output = default_format({forms, comments})
     assert output == good
   end

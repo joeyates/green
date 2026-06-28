@@ -4,27 +4,26 @@ defmodule Green.Rules.Linting.PreferPipelinesTest do
 
   alias Green.Rules.Linting.PreferPipelines
 
-  @tag example: "linting/prefer_pipelines_bad"
-  @tag fixture_pair: "linting/prefer_pipelines"
+  @tag bad: "linting/prefer_pipelines_bad"
+  @tag good: "linting/prefer_pipelines"
   test "transforms triply-nested function calls into pipelines", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     good: good
   } do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    {forms, comments} = PreferPipelines.apply({bad_forms, bad_comments}, [])
     output = default_format({forms, comments})
     assert output == good
   end
 
-  @tag example: "linting/prefer_pipelines_bad"
-  @tag fixture_pair: "linting/prefer_pipelines"
+  @tag bad: "linting/prefer_pipelines_bad"
   test "supports configuration of functions to ignore", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     bad: bad
   } do
     {forms, comments} =
-      PreferPipelines.apply({forms, comments},
+      PreferPipelines.apply({bad_forms, bad_comments},
         green: [prefer_pipelines: [ignore_functions: ["String.downcase": 1]]]
       )
 
@@ -32,85 +31,85 @@ defmodule Green.Rules.Linting.PreferPipelinesTest do
     assert output == bad
   end
 
-  @tag example: "linting/prefer_pipelines/ignore_map_access"
+  @tag good: "linting/prefer_pipelines/ignore_map_access"
   test "does not consider Map access as a function call", %{
-    forms: forms,
-    comments: comments,
-    example: example
+    good_forms: good_forms,
+    good_comments: good_comments,
+    good: good
   } do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    {forms, comments} = PreferPipelines.apply({good_forms, good_comments}, [])
     output = default_format({forms, comments})
-    assert output == example
+    assert output == good
   end
 
-  @tag example: "linting/prefer_pipelines/try_rescue"
+  @tag good: "linting/prefer_pipelines/try_rescue"
   test "does not consider try as a function call", %{
-    forms: forms,
-    comments: comments,
-    example: example
+    good_forms: good_forms,
+    good_comments: good_comments,
+    good: good
   } do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    {forms, comments} = PreferPipelines.apply({good_forms, good_comments}, [])
     output = default_format({forms, comments})
-    assert output == example
+    assert output == good
   end
 
-  @tag example: "linting/prefer_pipelines/nested_second_parameter_bad"
-  @tag fixture_pair: "linting/prefer_pipelines/nested_second_parameter"
+  @tag bad: "linting/prefer_pipelines/nested_second_parameter_bad"
+  @tag good: "linting/prefer_pipelines/nested_second_parameter"
   test "only transforms the first parameter of a nested function call", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     good: good
   } do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    {forms, comments} = PreferPipelines.apply({bad_forms, bad_comments}, [])
     output = default_format({forms, comments})
     assert output == good
   end
 
-  @tag example: "linting/prefer_pipelines/keyword_arguments_bad"
-  @tag fixture_pair: "linting/prefer_pipelines/keyword_arguments"
+  @tag bad: "linting/prefer_pipelines/keyword_arguments_bad"
+  @tag good: "linting/prefer_pipelines/keyword_arguments"
   test "wraps keyword aguments in square brackets", %{
-    forms: forms,
-    comments: comments,
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
     good: good
   } do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    {forms, comments} = PreferPipelines.apply({bad_forms, bad_comments}, [])
     output = default_format({forms, comments})
     assert output == good
   end
 
-  @tag example: "linting/prefer_pipelines/record_usage"
+  @tag good: "linting/prefer_pipelines/record_usage"
   test "does not consider record use as a function call", %{
-    forms: forms,
-    comments: comments,
-    example: example
-  } do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
-    output = default_format({forms, comments})
-    assert output == example
-  end
-
-  @tag example: "linting/prefer_pipelines/skip_quotes"
-  test "ignores quote blocks", %{forms: forms, comments: comments, example: example} do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
-    output = default_format({forms, comments})
-    assert output == example
-  end
-
-  @tag example: "linting/prefer_pipelines/skip_operators"
-  test "ignores operators", %{forms: forms, comments: comments, example: example} do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
-    output = default_format({forms, comments})
-    assert output == example
-  end
-
-  @tag example: "linting/prefer_pipelines/__module___bad"
-  @tag fixture_pair: "linting/prefer_pipelines/__module__"
-  test "handles __MODULE__.function", %{
-    forms: forms,
-    comments: comments,
+    good_forms: good_forms,
+    good_comments: good_comments,
     good: good
   } do
-    {forms, comments} = PreferPipelines.apply({forms, comments}, [])
+    {forms, comments} = PreferPipelines.apply({good_forms, good_comments}, [])
+    output = default_format({forms, comments})
+    assert output == good
+  end
+
+  @tag good: "linting/prefer_pipelines/skip_quotes"
+  test "ignores quote blocks", %{good_forms: good_forms, good_comments: good_comments, good: good} do
+    {forms, comments} = PreferPipelines.apply({good_forms, good_comments}, [])
+    output = default_format({forms, comments})
+    assert output == good
+  end
+
+  @tag good: "linting/prefer_pipelines/skip_operators"
+  test "ignores operators", %{good_forms: good_forms, good_comments: good_comments, good: good} do
+    {forms, comments} = PreferPipelines.apply({good_forms, good_comments}, [])
+    output = default_format({forms, comments})
+    assert output == good
+  end
+
+  @tag bad: "linting/prefer_pipelines/__module___bad"
+  @tag good: "linting/prefer_pipelines/__module__"
+  test "handles __MODULE__.function", %{
+    bad_forms: bad_forms,
+    bad_comments: bad_comments,
+    good: good
+  } do
+    {forms, comments} = PreferPipelines.apply({bad_forms, bad_comments}, [])
     output = default_format({forms, comments})
     assert output == good
   end

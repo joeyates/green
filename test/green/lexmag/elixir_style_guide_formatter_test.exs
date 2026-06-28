@@ -11,7 +11,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "function calls nested 2 or more levels deep" do
-    @describetag fixture_pair: "linting/prefer_pipelines"
+    @describetag bad: "linting/prefer_pipelines_bad"
+    @describetag good: "linting/prefer_pipelines"
 
     test "are transformed into pipelines", %{bad: bad, good: good} do
       formatted = format(bad)
@@ -27,7 +28,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when the first element of a pipeline is a function call with parameters" do
-    @describetag fixture_pair: "linting/incomplete_pipeline"
+    @describetag bad: "linting/incomplete_pipeline_bad"
+    @describetag good: "linting/incomplete_pipeline"
 
     test "transforms it into a pipeline", %{bad: bad, good: good} do
       formatted = format(bad)
@@ -43,7 +45,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when there are pipelines with only two parts" do
-    @describetag fixture_pair: "linting/avoid_needless_pipelines"
+    @describetag bad: "linting/avoid_needless_pipelines_bad"
+    @describetag good: "linting/avoid_needless_pipelines"
 
     test "they are removed", %{bad: bad, good: good} do
       formatted = format(bad)
@@ -59,7 +62,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "unless with else" do
-    @describetag fixture_pair: "linting/no_unless_with_else"
+    @describetag bad: "linting/no_unless_with_else_bad"
+    @describetag good: "linting/no_unless_with_else"
 
     test "transforms unless with else into if with else", %{bad: bad, good: good} do
       formatted = format(bad)
@@ -75,7 +79,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "nil else clauses" do
-    @describetag fixture_pair: "linting/no_nil_else"
+    @describetag bad: "linting/no_nil_else_bad"
+    @describetag good: "linting/no_nil_else"
 
     test "are removed", %{bad: bad, good: good} do
       formatted = format(bad)
@@ -91,11 +96,11 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when the match-all clause in cond is not `true`" do
-    @describetag example: "linting/true_in_cond"
+    @describetag bad: "linting/true_in_cond"
 
-    test "warns about non-true final clauses", %{example: example} do
+    test "warns about non-true final clauses", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         """
         cond final clause should use `true` instead of `:other`
         3 | cond do ... :other -> ...
@@ -103,10 +108,10 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
       )
     end
 
-    test "supports configuration to disable true_in_cond rule", %{example: example} do
+    test "supports configuration to disable true_in_cond rule", %{bad: bad} do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [true_in_cond: [enabled: false]])
+          format(bad, green: [true_in_cond: [enabled: false]])
         end)
 
       assert output == ""
@@ -114,7 +119,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when pattern_matching binaries" do
-    @describetag fixture_pair: "linting/use_string_concatenation_when_matching_binaries"
+    @describetag bad: "linting/use_string_concatenation_when_matching_binaries_bad"
+    @describetag good: "linting/use_string_concatenation_when_matching_binaries"
 
     test "extracts a final 'bytes' entry", %{bad: bad, good: good} do
       formatted = format(bad)
@@ -136,21 +142,21 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when anonymous functions are used in pipelines" do
-    @describetag example: "linting/anonymous_pipeline"
+    @describetag bad: "linting/anonymous_pipeline"
 
-    test "warns", %{example: example} do
+    test "warns", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*anonymous function found in pipeline.*\n\d+ \| \(fn words -> \[@sentence_start \| words\] end\)\.\(\)]
       )
     end
 
     test "supports configuration to disable no_anonymous_functions_in_pipelines rule", %{
-      example: example
+      bad: bad
     } do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [no_anonymous_functions_in_pipelines: [enabled: false]])
+          format(bad, green: [no_anonymous_functions_in_pipelines: [enabled: false]])
         end)
 
       assert output == ""
@@ -158,279 +164,279 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when &&/||/! is used for strictly boolean checks" do
-    @describetag example: "linting/boolean_operators"
+    @describetag bad: "linting/boolean_operators"
 
-    test "warns for boolean value &&/|| boolean value", %{example: example} do
+    test "warns for boolean value &&/|| boolean value", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| true && false]
       )
     end
 
-    test "supports configuration to disable boolean_operators rule", %{example: example} do
+    test "supports configuration to disable boolean_operators rule", %{bad: bad} do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [boolean_operators: [enabled: false]])
+          format(bad, green: [boolean_operators: [enabled: false]])
         end)
 
       assert output == ""
     end
 
-    test "doesn't warn for boolean value and/or boolean value", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for boolean value and/or boolean value", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "8 | true and false")
     end
 
-    test "warns for boolean value &&/|| guard style", %{example: example} do
+    test "warns for boolean value &&/|| guard style", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `or` instead of `\|\|` for boolean checks\n\d+ \| false \|\| is_atom\(name\)]
       )
     end
 
-    test "doesn't warn for boolean value and/or guard style", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for boolean value and/or guard style", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "16 | false or is_atom(name)")
     end
 
-    test "warns for boolean value &&/|| predicate", %{example: example} do
+    test "warns for boolean value &&/|| predicate", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| false && really\?\(name\)]
       )
     end
 
-    test "doesn't warn for boolean value and/or predicate", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for boolean value and/or predicate", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "24 | false and really?(name)")
     end
 
-    test "warns for boolean value &&/|| comparison", %{example: example} do
+    test "warns for boolean value &&/|| comparison", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `or` instead of `\|\|` for boolean checks\n\d+ \| false \|\| name == :foo]
       )
     end
 
-    test "doesn't warn for boolean value and/or comparison", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for boolean value and/or comparison", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "32 | false or name == :foo")
     end
 
-    test "warns for guard style &&/|| boolean value", %{example: example} do
+    test "warns for guard style &&/|| boolean value", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| is_atom\(name\) && true]
       )
     end
 
-    test "doesn't warn for guard style and/or boolean value", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for guard style and/or boolean value", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "40 | is_atom(name) and true")
     end
 
-    test "warns for guard style &&/|| predicate", %{example: example} do
+    test "warns for guard style &&/|| predicate", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `or` instead of `\|\|` for boolean checks\n\d+ \| is_atom\(name\) \|\| really\?\(name\)]
       )
     end
 
-    test "doesn't warn for guard style and/or predicate", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for guard style and/or predicate", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "48 | is_atom(name) or really?(name)")
     end
 
-    test "warns for guard style &&/|| comparison", %{example: example} do
+    test "warns for guard style &&/|| comparison", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| is_atom\(name\) && name != nil]
       )
     end
 
-    test "doesn't warn for guard style and/or comparison", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for guard style and/or comparison", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "56 | is_atom(name) and name != nil")
     end
 
-    test "warns for predicate &&/|| boolean value", %{example: example} do
+    test "warns for predicate &&/|| boolean value", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `or` instead of `||` for boolean checks\n\d+ \| really\?\(name\) || true]
       )
     end
 
-    test "doesn't warn for predicate and/or boolean value", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for predicate and/or boolean value", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "64 | really?(name) or true")
     end
 
-    test "warns for predicate &&/|| guard style", %{example: example} do
+    test "warns for predicate &&/|| guard style", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `and` instead of `&&` for boolean checks\n\d+ \| really\?\(name\) && is_atom\(name\)]
       )
     end
 
-    test "doesn't warn for predicate and/or guard style", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for predicate and/or guard style", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "72 | really?(name) and is_atom(name)")
     end
 
-    test "warns for predicate &&/|| comparison", %{example: example} do
+    test "warns for predicate &&/|| comparison", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `or` instead of `\|\|` for boolean checks\n\d+ \| really\?\(name\) \|\| name != nil]
       )
     end
 
-    test "doesn't warn for predicate and/or comparison", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for predicate and/or comparison", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "80 | really?(name) or name != nil")
     end
 
-    test "doesn't warn when value is first operand", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn when value is first operand", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "85 | 1 && true")
     end
 
-    test "doesn't warn when local non-boolean function call is first operand", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn when local non-boolean function call is first operand", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "89 | title(name) || false")
     end
 
-    test "doesn't warn when module function call is first operand", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn when module function call is first operand", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "93 | Foo.bar(baz) && correct?(baz)")
     end
 
-    test "doesn't warn when value is second operand", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn when value is second operand", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "99 | true && 1")
     end
 
     test "doesn't warn when local non-boolean function call is second operand", %{
-      example: example
+      bad: bad
     } do
-      output = capture_io(:stderr, fn -> format(example) end)
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "103 | false || title(name)")
     end
 
-    test "doesn't warn when module function call is second operand", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn when module function call is second operand", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "107 | correct?(baz) && Foo.bar(baz)")
     end
 
-    test "warns for ! boolean value", %{example: example} do
+    test "warns for ! boolean value", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `not` instead of `!` for boolean checks\n\d+ \| !true]
       )
     end
 
-    test "doesn't warn for not boolean value", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for not boolean value", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "118 | not true")
     end
 
-    test "warns for ! guard style", %{example: example} do
+    test "warns for ! guard style", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `not` instead of `!` for boolean checks\n\d+ \| !is_atom\(name\)]
       )
     end
 
-    test "doesn't warn for not guard style", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for not guard style", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "126 | not is_atom(name)")
     end
 
-    test "warns for ! predicate", %{example: example} do
+    test "warns for ! predicate", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `not` instead of `!` for boolean checks\n\d+ \| !really\?\(name\)]
       )
     end
 
-    test "doesn't warn for not predicate", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for not predicate", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "134 | not really?(name)")
     end
 
-    test "warns for ! comparison", %{example: example} do
+    test "warns for ! comparison", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*use `not` instead of `!` for boolean checks\n\d+ \| !\(name == :foo\)]
       )
     end
 
-    test "doesn't warn for not comparison", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "doesn't warn for not comparison", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute String.contains?(output, "142 | not (name == :foo)")
     end
   end
 
   describe "when capital letters are used in names that should be snake_case" do
-    @describetag example: "naming/avoid_caps"
+    @describetag bad: "naming/avoid_caps"
 
-    test "warns when capital letters are used in atoms", %{example: example} do
+    test "warns when capital letters are used in atoms", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*capital letter found in atom \(use snake_case for atoms\)\n\d+ \| :someAtom]
       )
     end
 
-    test "warns when capital letters are used in function names", %{example: example} do
+    test "warns when capital letters are used in function names", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*capital letter found in function name.*\n12 \| capital_in_Function_name]
       )
     end
 
-    test "warns when capital letters are used in variable names", %{example: example} do
+    test "warns when capital letters are used in variable names", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*capital letter found in variable name \(use snake_case for variable names\)\n\d+ \| myVariable]
       )
     end
 
-    test "warns when capital letters are used in attribute names", %{example: example} do
+    test "warns when capital letters are used in attribute names", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*capital letter found in attribute name \(use snake_case for attribute names\)\n\d+ \| @anAttribute]
       )
     end
 
-    test "does not warn when the __MODULE__ struct is used", %{example: example} do
-      output = capture_io(:stderr, fn -> format(example) end)
+    test "does not warn when the __MODULE__ struct is used", %{bad: bad} do
+      output = capture_io(:stderr, fn -> format(bad) end)
 
       refute output =~ "__MODULE__"
     end
 
-    test "supports configuration to disable avoid_caps rule", %{example: example} do
+    test "supports configuration to disable avoid_caps rule", %{bad: bad} do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [avoid_caps: [enabled: false]])
+          format(bad, green: [avoid_caps: [enabled: false]])
         end)
 
       assert output == ""
@@ -438,28 +444,28 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when module names don't use CamelCase" do
-    @describetag example: "naming/camelcase_modules"
+    @describetag bad: "naming/camelcase_modules"
 
-    test "warns for lower camel-case module names", %{example: example} do
+    test "warns for lower camel-case module names", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*found badly formed module name.*\n\d+ \| defmodule :appStack do]
       )
     end
 
-    test "warns with underscores in module names", %{example: example} do
+    test "warns with underscores in module names", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*found badly formed module name \(use UpperCamelCase for module names\)\n\d+ \| defmodule App_Stack do]
       )
     end
 
     test "supports configuration to disable upper_camel_case_for_modules rule", %{
-      example: example
+      bad: bad
     } do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [upper_camel_case_for_modules: [enabled: false]])
+          format(bad, green: [upper_camel_case_for_modules: [enabled: false]])
         end)
 
       refute output =~ "found badly formed module name (use UpperCamelCase for module names)"
@@ -467,18 +473,18 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "warns when there are single-letter variable names" do
-    @describetag example: "naming/single_letter_variable"
-    test "warns", %{example: example} do
+    @describetag bad: "naming/single_letter_variable"
+    test "warns", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*one-letter variable name found\n\d+ \| i]
       )
     end
 
-    test "supports configuration to disable avoid_one_letter_variables rule", %{example: example} do
+    test "supports configuration to disable avoid_one_letter_variables rule", %{bad: bad} do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [avoid_one_letter_variables: [enabled: false]])
+          format(bad, green: [avoid_one_letter_variables: [enabled: false]])
         end)
 
       assert output == ""
@@ -486,26 +492,26 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "predicate functions" do
-    @describetag example: "naming/predicate_funs_name"
+    @describetag bad: "naming/predicate_funs_name"
 
-    test "warns when predicate functions don't have ? suffix", %{example: example} do
+    test "warns when predicate functions don't have ? suffix", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*predicate function should have `\?` suffix\n\d+ \| def is_even]
       )
     end
 
-    test "warns when guard-style macros have ? suffix", %{example: example} do
+    test "warns when guard-style macros have ? suffix", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*guard-style macros should not have `\?` suffix, use `is_` prefix instead\n\d+ \| defmacro valid\?\(value\) do]
       )
     end
 
-    test "supports configuration to disable predicate_functions rule", %{example: example} do
+    test "supports configuration to disable predicate_functions rule", %{bad: bad} do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [predicate_functions: [enabled: false]])
+          format(bad, green: [predicate_functions: [enabled: false]])
         end)
 
       assert output == ""
@@ -513,7 +519,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when the order of module references is wrong" do
-    @describetag fixture_pair: "modules/module_layout"
+    @describetag bad: "modules/module_layout_bad"
+    @describetag good: "modules/module_layout"
     test "corrects the order of module references", %{bad: bad, good: good} do
       formatted = format(bad)
 
@@ -528,7 +535,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when there are references to the current module" do
-    @describetag fixture_pair: "modules/replace_current_module_reference"
+    @describetag bad: "modules/replace_current_module_reference_bad"
+    @describetag good: "modules/replace_current_module_reference"
     test "replaces references to the current module with __MODULE__", %{bad: bad, good: good} do
       formatted = format(bad)
 
@@ -543,7 +551,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when `nil` defaults are used in struct definitions" do
-    @describetag fixture_pair: "structs/skip_nil_in_struct_definition/key_value"
+    @describetag bad: "structs/skip_nil_in_struct_definition/key_value_bad"
+    @describetag good: "structs/skip_nil_in_struct_definition/key_value"
 
     test "removes the `nil`", %{bad: bad, good: good} do
       formatted = format(bad)
@@ -561,19 +570,19 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when exceptions are defined without the `Error` suffix" do
-    @describetag example: "exceptions/missing_error_suffix"
+    @describetag bad: "exceptions/missing_error_suffix"
 
-    test "warns", %{example: example} do
+    test "warns", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*exception MissingErrorSuffix should have a suffix of `Error`\n\d+ \| MissingErrorSuffix]
       )
     end
 
-    test "supports configuration to disable use_error_suffix rule", %{example: example} do
+    test "supports configuration to disable use_error_suffix rule", %{bad: bad} do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [use_error_suffix: [enabled: false]])
+          format(bad, green: [use_error_suffix: [enabled: false]])
         end)
 
       assert output == ""
@@ -581,21 +590,21 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when exception messages are capitalized" do
-    @describetag example: "exceptions/exception_message"
+    @describetag bad: "exceptions/exception_message"
 
-    test "warns", %{example: example} do
+    test "warns", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*exception message should be lowercase\n\d+ \| raise RuntimeError, "Invalid input"]
       )
     end
 
     test "supports configuration to disable lowercase_exception_messages rule", %{
-      example: example
+      bad: bad
     } do
       output =
         capture_io(:stderr, fn ->
-          format(example, green: [lowercase_exception_messages: [enabled: false]])
+          format(bad, green: [lowercase_exception_messages: [enabled: false]])
         end)
 
       refute output =~ "exception message should be lowercase"
@@ -603,22 +612,22 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when exception messages have trailing punctuation" do
-    @describetag example: "exceptions/exception_message"
+    @describetag bad: "exceptions/exception_message"
 
-    test "warns when exception messages have trailing punctuation", %{example: example} do
+    test "warns when exception messages have trailing punctuation", %{bad: bad} do
       assert_warns(
-        example,
+        bad,
         ~r[warning:.*exception message should not have trailing punctuation\n\d+ \| raise ArgumentError, "invalid argument!"]
       )
     end
 
     test "supports configuration to disable no_trailing_punctuation_in_exception_messages rule",
          %{
-           example: example
+           bad: bad
          } do
       output =
         capture_io(:stderr, fn ->
-          format(example,
+          format(bad,
             green: [no_trailing_punctuation_in_exception_messages: [enabled: false]]
           )
         end)
@@ -628,7 +637,8 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
   end
 
   describe "when zero-arity functions do not have parentheses" do
-    @describetag fixture_pair: "parentheses/use_parentheses_with_zero_arity_functions"
+    @describetag bad: "parentheses/use_parentheses_with_zero_arity_functions_bad"
+    @describetag good: "parentheses/use_parentheses_with_zero_arity_functions"
 
     test "adds parentheses", %{bad: bad, good: good} do
       formatted = format(bad)

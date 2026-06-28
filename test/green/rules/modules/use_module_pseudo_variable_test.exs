@@ -3,31 +3,31 @@ defmodule Green.Rules.Modules.UseModulePseudoVariableTest do
 
   alias Green.Rules.Modules.UseModulePseudoVariable
 
-  @tag example: "modules/use_module_pseudo_variable/nested_modules"
-  test "handles nested modules", %{forms: forms, comments: comments} do
-    UseModulePseudoVariable.apply({forms, comments}, [])
+  @tag good: "modules/use_module_pseudo_variable/nested_modules"
+  test "handles nested modules", %{good_forms: good_forms, good_comments: good_comments} do
+    UseModulePseudoVariable.apply({good_forms, good_comments}, [])
   end
 
-  @tag example: "modules/use_module_pseudo_variable/ignore_in_quote"
+  @tag good: "modules/use_module_pseudo_variable/ignore_in_quote"
   test "ignores references to the current module in `quote`", %{
-    forms: forms,
-    comments: comments,
-    example: example
+    good_forms: good_forms,
+    good_comments: good_comments,
+    good: good
   } do
-    {forms, comments} = UseModulePseudoVariable.apply({forms, comments}, [])
+    {forms, comments} = UseModulePseudoVariable.apply({good_forms, good_comments}, [])
     output = default_format({forms, comments})
-    assert output == example
+    assert output == good
   end
 
-  @tag example: "modules/use_module_pseudo_variable/ignore_in_defimpl"
+  @tag good: "modules/use_module_pseudo_variable/ignore_in_defimpl"
   test "ignores references to the current module in `defimpl`", %{
-    forms: forms,
-    comments: comments,
-    example: example
+    good_forms: good_forms,
+    good_comments: good_comments,
+    good: good
   } do
-    {forms, comments} = UseModulePseudoVariable.apply({forms, comments}, [])
+    {forms, comments} = UseModulePseudoVariable.apply({good_forms, good_comments}, [])
     output = default_format({forms, comments})
-    assert output == example
+    assert output == good
   end
 
   describe "except configuration" do

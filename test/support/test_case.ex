@@ -46,18 +46,6 @@ defmodule Green.TestCase do
     )
   end
 
-  defp handle_context(context, {:fixture_pair, fixture}) do
-    bad = read_fixture("#{fixture}_bad.ex")
-    good = read_fixture("#{fixture}.ex")
-    Map.merge(context, %{bad: bad, good: good})
-  end
-
-  defp handle_context(context, {:example, filename}) do
-    example = read_fixture("#{filename}.ex")
-    {forms, comments} = parse_code(example)
-    Map.merge(context, %{example: example, forms: forms, comments: comments})
-  end
-
   defp handle_context(context, {:bad, filename}) do
     bad = read_fixture("#{filename}.ex")
     {forms, comments} = parse_code(bad)
