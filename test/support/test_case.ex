@@ -58,5 +58,17 @@ defmodule Green.TestCase do
     Map.merge(context, %{example: example, forms: forms, comments: comments})
   end
 
+  defp handle_context(context, {:bad, filename}) do
+    bad = read_fixture("#{filename}.ex")
+    {forms, comments} = parse_code(bad)
+    Map.merge(context, %{bad: bad, bad_forms: forms, bad_comments: comments})
+  end
+
+  defp handle_context(context, {:good, filename}) do
+    good = read_fixture("#{filename}.ex")
+    {forms, comments} = parse_code(good)
+    Map.merge(context, %{good: good, good_forms: forms, good_comments: comments})
+  end
+
   defp handle_context(context, _other), do: context
 end
