@@ -20,17 +20,20 @@ defmodule Green.TestCase do
         [formatted, ?\n] |> IO.iodata_to_binary()
       end
 
-      def parse_code(code) do
-        to_quoted_opts = [
-          unescape: false,
-          literal_encoder: &{:ok, {:__block__, &2, [&1]}},
-          token_metadata: true,
-          emit_warnings: false
-        ]
-
-        Code.string_to_quoted_with_comments!(code, to_quoted_opts)
-      end
+      defdelegate parse_code(code), to: Green.TestCase
     end
+  end
+
+  def parse_code(code) do
+    to_quoted_opts =
+      [
+        unescape: false,
+        literal_encoder: &{:ok, {:__block__, &2, [&1]}},
+        token_metadata: true,
+        emit_warnings: false
+      ]
+
+    Code.string_to_quoted_with_comments!(code, to_quoted_opts)
   end
 
   setup context do
@@ -51,16 +54,7 @@ defmodule Green.TestCase do
 
   defp handle_context(context, {:example, filename}) do
     example = read_fixture("#{filename}.ex")
-
-    to_quoted_opts =
-      [
-        unescape: false,
-        literal_encoder: &{:ok, {:__block__, &2, [&1]}},
-        token_metadata: true,
-        emit_warnings: false
-      ]
-
-    {forms, comments} = Code.string_to_quoted_with_comments!(example, to_quoted_opts)
+    {forms, comments} = parse_code(example)
     Map.merge(context, %{example: example, forms: forms, comments: comments})
   end
 
