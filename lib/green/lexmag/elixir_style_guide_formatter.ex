@@ -180,8 +180,9 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
   defp default_format({forms, comments}, opts) do
     to_algebra_opts = [comments: comments] ++ opts
     doc = Code.Formatter.to_algebra(forms, to_algebra_opts)
+    line_length = Keyword.get(opts, :line_length, @line_length)
 
-    Inspect.Algebra.format(doc, @line_length)
+    Inspect.Algebra.format(doc, line_length)
   end
 
   defp check_file_name!(file) do

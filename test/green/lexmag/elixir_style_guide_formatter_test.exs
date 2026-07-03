@@ -656,6 +656,23 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
+  describe "line_length option" do
+    @long_call "foo = call(aaaaaaaaaaaa, bbbbbbbbbbbb, cccccccccccc, dddddddddddd, eeeeeeeeeeee, ffffffffffff, gggggggggggg)"
+
+    test "wraps at 98 columns by default" do
+      formatted = format(@long_call)
+
+      assert formatted =~ "call(\n"
+      refute formatted == @long_call <> "\n"
+    end
+
+    test "respects a line_length passed in opts" do
+      formatted = format(@long_call, line_length: 120)
+
+      assert formatted == @long_call <> "\n"
+    end
+  end
+
   describe "format_file/2" do
     test "fails for filenames with hyphens" do
       %ArgumentError{message: message} =
