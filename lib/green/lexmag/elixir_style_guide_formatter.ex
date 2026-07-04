@@ -137,7 +137,11 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatter do
   end
 
   @impl true
-  def format(code, opts \\ []) do
+  def format(code, opts \\ [])
+
+  def format("", _opts), do: ""
+
+  def format(code, opts) do
     formatted =
       code
       |> parse(opts)

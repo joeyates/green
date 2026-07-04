@@ -673,6 +673,10 @@ defmodule Green.Lexmag.ElixirStyleGuideFormatterTest do
     end
   end
 
+  test "leaves empty files unchanged" do
+    assert format("") == ""
+  end
+
   describe "format_file/2" do
     test "fails for filenames with hyphens" do
       %ArgumentError{message: message} =
